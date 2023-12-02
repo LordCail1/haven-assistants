@@ -1,30 +1,40 @@
-import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { CreateAssistantDto } from '../dto/openai.dto';
+import { Injectable } from '@nestjs/common';
+import { IOpenaiService } from '../interfaces/interfaces';
 import OpenAI from 'openai';
-import { APIPromise } from 'openai/core';
 
 @Injectable()
-export class OpenaiService {
+export class OpenaiService implements IOpenaiService {
+  private assistant: OpenAI.Beta.Assistants.Assistant;
+  private openai: OpenAI = new OpenAI({
+    apiKey: this.configService.get<string>('OPENAI_KEY'),
+  });
+
   constructor(private configService: ConfigService) {}
 
-  async createAssistant(): Promise<
-    APIPromise<OpenAI.Beta.Assistants.Assistant>
-  > {
-    let assistant: APIPromise<OpenAI.Beta.Assistants.Assistant>;
+  async createAssistant(
+    createAssistantDto: CreateAssistantDto,
+  ): Promise<OpenAI.Beta.Assistants.Assistant> {
+    const { description, instructions, model, name, tools } =
+      createAssistantDto;
+
     try {
-      const openai = new OpenAI({
-        apiKey: this.configService.get<string>('OPENAI_KEY'),
-      });
-      assistant = openai.beta.assistants.create({
-        name: 'First Assistant',
-        instructions:
-          'you are a clown! answer like a clown when we talk to you.',
-        tools: [{ type: 'code_interpreter' }],
-        model: 'gpt-4-1106-preview',
+      this.assistant = await this.openai.beta.assistants.create({
+        description,
+        instructions,
+        model,
+        name,
+        tools,
       });
     } catch (error) {
       console.log('there was an error!', error);
     }
-    return assistant;
+
+    return this.assistant;
   }
+
+  async listAssistants() {}
+
+  async createThread() {}
 }
