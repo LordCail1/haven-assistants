@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { OpenaiModule } from './modules/openai/openai.module';
 import { SignupStepsModule } from './modules/signup-steps/signup-steps.module';
 import { UsersModule } from './modules/users/users.module';
+import { DatabaseModule } from './modules/database/database.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { UsersModule } from './modules/users/users.module';
     OpenaiModule,
     UsersModule,
     SignupStepsModule,
+    DatabaseModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -11,7 +11,10 @@ describe('DatabaseService', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        ConfigModule.forRoot({ envFilePath: `.env.${process.env.NODE_ENV}`, isGlobal: true }),
+        ConfigModule.forRoot({
+          envFilePath: `.env.${process.env.NODE_ENV}`,
+          isGlobal: true,
+        }),
         DatabaseModule,
       ],
       providers: [DatabaseService],
