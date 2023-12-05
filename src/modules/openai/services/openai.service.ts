@@ -34,7 +34,16 @@ export class OpenaiService implements IOpenaiService {
     return this.assistant;
   }
 
-  async listAssistants() {}
+  async listAssistants(): Promise<void> {
+    return null;
+  }
 
-  async createThread() {}
+  async createThread(): Promise<OpenAI.Beta.Threads.Thread> {
+    try {
+      const thread = await this.openai.beta.threads.create();
+      return thread;
+    } catch (error) {
+      console.log('there was an error!', error);
+    }
+  }
 }
