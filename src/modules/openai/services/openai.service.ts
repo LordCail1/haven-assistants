@@ -30,7 +30,6 @@ export class OpenaiService implements IOpenaiService {
     } catch (error) {
       console.log('there was an error!', error);
     }
-
     return this.assistant;
   }
 
