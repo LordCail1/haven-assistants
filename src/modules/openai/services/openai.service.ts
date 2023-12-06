@@ -1,8 +1,8 @@
 import { ConfigService } from '@nestjs/config';
 import { Injectable } from '@nestjs/common';
 import { IOpenaiService } from '../interfaces/interfaces';
-import OpenAI from 'openai';
 import { openai_key } from 'src/shared/constants';
+import OpenAI from 'openai';
 
 @Injectable()
 export class OpenaiService implements IOpenaiService {

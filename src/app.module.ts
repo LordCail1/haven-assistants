@@ -7,6 +7,7 @@ import { DatabaseModule } from './modules/database/database.module';
 import { DevtoolsModule } from '@nestjs/devtools-integration';
 import { APP_PIPE } from '@nestjs/core';
 import { AssistantsModule } from './modules/haven-ai-agent/assistants.module';
+import { PromptCreatorModule } from './modules/prompt-creator/prompt-creator.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { AssistantsModule } from './modules/haven-ai-agent/assistants.module';
     }),
     DatabaseModule,
     AssistantsModule,
+    PromptCreatorModule,
   ],
   controllers: [AppController],
   providers: [AppService, { provide: APP_PIPE, useClass: ValidationPipe }],
