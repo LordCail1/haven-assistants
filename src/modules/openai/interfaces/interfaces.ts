@@ -1,7 +1,5 @@
 import { AssistantCreateParams } from 'openai/resources/beta/assistants/assistants';
-import { CreateFirstQuestionDto } from '../../assistants/dto/create-first-question.dto';
 import OpenAI from 'openai';
-import { CreateAssistantDto } from '../dto/create-assistant.dto';
 
 /**
  * this interface is used to extend the already-existing AssistantCreateParams interface
@@ -15,10 +13,6 @@ export interface MyAssistantCreateParams extends AssistantCreateParams {
  * This service is used to manipulate the OpenAI API
  */
 export interface IOpenaiService {
-  createAssistant(
-    createAssistantDto: MyAssistantCreateParams,
-  ): Promise<OpenAI.Beta.Assistants.Assistant>;
-
-  listAssistants(): Promise<void>;
-  createThread(): Promise<OpenAI.Beta.Threads.Thread>;
+  listAssistants(): Promise<OpenAI.Beta.Assistants.AssistantsPage>;
+  createThread(): Promise<void>;
 }

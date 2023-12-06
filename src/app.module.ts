@@ -6,7 +6,7 @@ import { OpenaiModule } from './modules/openai/openai.module';
 import { DatabaseModule } from './modules/database/database.module';
 import { DevtoolsModule } from '@nestjs/devtools-integration';
 import { APP_PIPE } from '@nestjs/core';
-import { AssistantsModule } from './modules/assistants/assistants.module';
+import { AssistantsModule } from './modules/haven-ai-agent/assistants.module';
 
 @Module({
   imports: [
