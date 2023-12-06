@@ -1,5 +1,5 @@
 import { ConfigService } from '@nestjs/config';
-import { CreateAssistantDto } from '../dto/openai.dto';
+import { CreateAssistantDto } from '../dto/create-assistant.dto';
 import { Injectable } from '@nestjs/common';
 import { IOpenaiService } from '../interfaces/interfaces';
 import OpenAI from 'openai';

@@ -1,6 +1,7 @@
-import OpenAI from 'openai';
 import { AssistantCreateParams } from 'openai/resources/beta/assistants/assistants';
-import { CreateAssistantDto } from '../dto/openai.dto';
+import { CreateFirstQuestionDto } from '../../assistants/dto/create-first-question.dto';
+import OpenAI from 'openai';
+import { CreateAssistantDto } from '../dto/create-assistant.dto';
 
 /**
  * this interface is used to extend the already-existing AssistantCreateParams interface
@@ -8,16 +9,6 @@ import { CreateAssistantDto } from '../dto/openai.dto';
  */
 export interface MyAssistantCreateParams extends AssistantCreateParams {
   model: 'gpt-4-1106-preview';
-}
-
-/**
- * This controller is used to manipulate the OpenAI API
- */
-export interface IOpenaiController {
-  createAssistant(
-    createAssistantDto: CreateAssistantDto,
-  ): Promise<OpenAI.Beta.Assistants.Assistant>;
-  createThread(): Promise<OpenAI.Beta.Threads.Thread>;
 }
 
 /**
