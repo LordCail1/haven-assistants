@@ -1,33 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import { CreateFirstQuestionDto } from '../dto/create-first-question.dto';
+import { CreateQuestionDto } from '../dto/create-question.dto';
 import { OpenaiService } from 'src/modules/openai/services/openai.service';
+import { PromptCreatorService } from 'src/modules/prompt-creator/services/prompt-creator.service';
 
 @Injectable()
 export class HavenAiAgentService {
-  constructor(private readonly openaiService: OpenaiService) {}
-  async createFirstQuestion(
-    createFirstQuestionDto: CreateFirstQuestionDto,
+  constructor(
+    private readonly openaiService: OpenaiService,
+    private readonly promptCreatorService: PromptCreatorService,
+  ) {}
+  async createQuestion(
+    createFirstQuestionDto: CreateQuestionDto,
   ): Promise<string> {
-    const {
-      CountryOfBirth,
-      currentCity,
-      currentCountry,
-      currentProvinceOrTerritory,
-      email,
-      familyName,
-      familyStructure,
-      gender,
-      highestEducation,
-      howManyPeopleInYourGroup,
-      languages,
-      myStory,
-      name,
-      resettlementCity,
-      resettlementProvinceOrTerritory,
-      stageOfResettlement,
-    } = createFirstQuestionDto;
-    await this.openaiService.createThread();
-
+    this.promptCreatorService.createQuestionPrompt(createFirstQuestionDto);
     return 'success!';
   }
 }
