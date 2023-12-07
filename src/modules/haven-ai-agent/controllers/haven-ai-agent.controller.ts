@@ -1,12 +1,26 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { CreateQuestionDto } from '../dto/create-question.dto';
+import { GenerateFirstQuestionDto } from '../dto/generate-first-question.dto';
 import { HavenAiAgentService } from '../services/haven-ai-agent.service';
+import { GenerateFollowUpQuestionDto } from '../dto/generate-followup-question.dto';
 
 @Controller('api/v1/haven-ai-agent')
 export class AssistantsController {
   constructor(private readonly havenAiAgentService: HavenAiAgentService) {}
-  @Post('create-question')
-  createQuestion(@Body() createQuestionDto: CreateQuestionDto) {
-    return this.havenAiAgentService.createQuestion(createQuestionDto);
+  @Post('generate-first-question')
+  generateFirstQuestion(
+    @Body() generateFirstQuestionDto: GenerateFirstQuestionDto,
+  ) {
+    return this.havenAiAgentService.generateFirstQuestion(
+      generateFirstQuestionDto,
+    );
+  }
+
+  @Post('generate-follow-up-question')
+  generateFollowUpQuestion(
+    @Body() generateFollowUpQuestionDto: GenerateFollowUpQuestionDto,
+  ) {
+    return this.havenAiAgentService.generateFollowUpQuestion(
+      generateFollowUpQuestionDto,
+    );
   }
 }
