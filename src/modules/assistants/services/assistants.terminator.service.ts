@@ -1,10 +1,10 @@
-import { Assistant } from '../../types/types';
+import { Assistant } from '../../openai/types/types';
+import { AssistantName } from '../../openai/services/enums/enums';
 import { Injectable } from '@nestjs/common';
-import { OpenaiService } from '../openai.service';
-import { AssistantName, Gpt_Models } from '../enums/enums';
+import { OpenaiService } from '../../openai/services/openai.service';
 
 @Injectable()
-export class OpenaiTerminatorService {
+export class AssistantsTerminatorService {
   private assistant: Assistant;
   constructor(private readonly openaiService: OpenaiService) {}
 

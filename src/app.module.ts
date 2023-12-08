@@ -2,12 +2,11 @@ import { Module, ValidationPipe } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
-import { OpenaiModule } from './modules/openai/openai.module';
 import { DatabaseModule } from './modules/database/database.module';
 import { DevtoolsModule } from '@nestjs/devtools-integration';
 import { APP_PIPE } from '@nestjs/core';
-import { AssistantsModule } from './modules/haven-ai-agent/assistants.module';
 import { PromptCreatorModule } from './modules/prompt-creator/prompt-creator.module';
+import { HavenAiAgentModule } from './modules/haven-ai-agent/haven-ai-agent.module';
 
 @Module({
   imports: [
@@ -21,7 +20,7 @@ import { PromptCreatorModule } from './modules/prompt-creator/prompt-creator.mod
         process.env.NODE_ENV !== 'test',
     }),
     DatabaseModule,
-    AssistantsModule,
+    HavenAiAgentModule,
     PromptCreatorModule,
   ],
   controllers: [AppController],

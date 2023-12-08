@@ -4,7 +4,7 @@ import { HavenAiAgentService } from '../services/haven-ai-agent.service';
 import { GenerateFollowUpQuestionDto } from '../dto/generate-followup-question.dto';
 
 @Controller('api/v1/haven-ai-agent')
-export class AssistantsController {
+export class HavenAiAgentController {
   constructor(private readonly havenAiAgentService: HavenAiAgentService) {}
   @Post('generate-first-question')
   generateFirstQuestion(

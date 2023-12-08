@@ -1,10 +1,10 @@
+import { Assistant } from '../../openai/types/types';
+import { AssistantName, Gpt_Models } from '../../openai/services/enums/enums';
 import { Inject, Injectable, forwardRef } from '@nestjs/common';
-import { Assistant } from '../../types/types';
-import { OpenaiService } from '../openai.service';
-import { AssistantName, Gpt_Models } from '../enums/enums';
+import { OpenaiService } from '../../openai/services/openai.service';
 
 @Injectable()
-export class OpenaiQuestionerService {
+export class AssistantsQuestionerService {
   private assistant: Assistant;
   constructor(
     @Inject(forwardRef(() => OpenaiService))
