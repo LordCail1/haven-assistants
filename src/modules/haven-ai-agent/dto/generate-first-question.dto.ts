@@ -1,10 +1,4 @@
-import {
-  IsBoolean,
-  IsEmail,
-  IsNotEmpty,
-  IsNumber,
-  IsString,
-} from 'class-validator';
+import { IsEmail, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class GenerateFirstQuestionDto {
   /**
@@ -118,11 +112,4 @@ export class GenerateFirstQuestionDto {
   @IsNotEmpty()
   @IsString()
   currentProvinceOrTerritory: string;
-
-  /**
-   * this is a boolean value that mentions if this is the first question that is being generated or not
-   */
-  @IsBoolean()
-  @IsNotEmpty()
-  isFirstQuestion: boolean;
 }

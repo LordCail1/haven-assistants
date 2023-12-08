@@ -1,34 +1,44 @@
 import { GenerateFirstQuestionDto } from '../dto/generate-first-question.dto';
 import { GenerateFollowUpQuestionDto } from '../dto/generate-followup-question.dto';
-import { Inject, Injectable, forwardRef } from '@nestjs/common';
-import { OpenaiService } from 'src/modules/openai/services/openai.service';
 import { PromptCreatorService } from 'src/modules/prompt-creator/services/prompt-creator.service';
-import { Run } from 'openai/resources/beta/threads/runs/runs';
-import { Thread } from 'src/modules/openai/types/types';
-import { ThreadMessage } from 'openai/resources/beta/threads/messages/messages';
 import { UserMessage } from 'src/shared/interfaces/interfaces';
+import { AssistantsQuestionerService } from 'src/modules/assistants/services/questioner/assistants.questioner.service';
+import { Injectable } from '@nestjs/common';
+import { OpenaiMessagesService } from 'src/modules/openai/services/openai.messages.service';
+import { OpenaiRunsService } from 'src/modules/openai/services/openai.runs.service';
+import { OpenaiThreadsService } from 'src/modules/openai/services/openai.threads.service';
 
 @Injectable()
 export class HavenAiAgentService {
   constructor(
     private readonly promptCreatorService: PromptCreatorService,
-    @Inject(forwardRef(() => OpenaiService))
-    private readonly openaiService: OpenaiService,
+    private readonly openaiThreadsService: OpenaiThreadsService,
+    private readonly openaiMessagesService: OpenaiMessagesService,
+    private readonly openaiRunsService: OpenaiRunsService,
+    private readonly assistantsQuestionerService: AssistantsQuestionerService,
   ) {}
 
   async generateFirstQuestion(
     generateFirstQuestionDto: GenerateFirstQuestionDto,
   ) {
-    const thread: Thread = await this.openaiService.createConversation();
+    const questionerAssistant = this.assistantsQuestionerService.getAssistant();
+
+    const thread = await this.openaiThreadsService.createThread();
+
     const firstPrompt: UserMessage =
       this.promptCreatorService.createFirstPrompt(generateFirstQuestionDto);
 
-    const message: ThreadMessage = await this.openaiService.createFirstMessage(
+    await this.openaiMessagesService.createMessage(thread.id, firstPrompt);
+
+    const run = await this.openaiRunsService.runThread(
       thread.id,
-      firstPrompt,
+      questionerAssistant.id,
     );
 
-    const run: Run = await this.openaiService.runThead(thread.id);
+    await this.openaiRunsService.retrieveRun(thread.id, run.id);
+
+    const messages = await this.openaiMessagesService.listMessages(thread.id);
+    return messages.data;
   }
 
   async generateFollowUpQuestion(

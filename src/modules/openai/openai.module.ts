@@ -1,31 +1,16 @@
-import { AssistantsQuestionerService } from '../assistants/services/assistants.questioner.service';
-import { AssistantsTerminatorService } from '../assistants/services/assistants.terminator.service';
 import { Module } from '@nestjs/common';
-import { OpenaiAssistantsService } from './services/api/openai.assistants.service';
-import { OpenaiMessagesService } from './services/api/openai.messages.service';
-import { OpenaiRunsService } from './services/api/openai.runs.service';
-import { OpenaiService } from './services/openai.service';
-import { OpenaiThreadsService } from './services/api/openai.threads.service';
-import { AssistantsModule } from '../assistants/assistants.module';
+import { OpenaiAssistantsService } from './services/openai.assistants.service';
+import { OpenaiMessagesService } from './services/openai.messages.service';
+import { OpenaiRunsService } from './services/openai.runs.service';
+import { OpenaiThreadsService } from './services/openai.threads.service';
 
 @Module({
-  imports: [AssistantsModule],
   providers: [
     OpenaiAssistantsService,
     OpenaiMessagesService,
     OpenaiRunsService,
-    OpenaiService,
     OpenaiThreadsService,
   ],
-  exports: [OpenaiService],
+  exports: [OpenaiThreadsService, OpenaiMessagesService, OpenaiRunsService],
 })
-export class OpenaiModule {
-  constructor(
-    private readonly assistantsQuestionerService: AssistantsQuestionerService,
-    private readonly assistantsTerminatorService: AssistantsTerminatorService,
-  ) {}
-  async onModuleInit() {
-    // await this.openaiQuestionerService.createAssistant();
-    // await this.assistantsTerminatorService.createAssistant();
-  }
-}
+export class OpenaiModule {}

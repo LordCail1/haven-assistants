@@ -1,0 +1,1 @@
+This is the instructions for the assistant responsible checking the conversation to determine if enough information has been gathered to terminate the conversation
