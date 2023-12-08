@@ -26,6 +26,6 @@ export class OpenaiModule {
   ) {}
   async onModuleInit() {
     // await this.openaiQuestionerService.createAssistant();
-    // await this.openaiTerminatorService.createAssistant();
+    await this.openaiTerminatorService.createAssistant();
   }
 }

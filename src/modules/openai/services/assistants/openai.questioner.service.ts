@@ -1,20 +1,24 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import { Assistant } from '../../types/types';
 import { OpenaiService } from '../openai.service';
+import { AssistantName, Gpt_Models } from '../enums/enums';
 
 @Injectable()
 export class OpenaiQuestionerService {
   private assistant: Assistant;
-  constructor(private readonly openaiService: OpenaiService) {}
+  constructor(
+    @Inject(forwardRef(() => OpenaiService))
+    private readonly openaiService: OpenaiService,
+  ) {}
 
   async createAssistant() {
     try {
       this.assistant = await this.openaiService
         .getOpenaiInstance()
         .beta.assistants.create({
-          name: 'Questioner',
+          name: AssistantName.QUESTIONER,
           description: 'I ask questions to refugees',
-          model: 'gpt-4-1106-preview',
+          model: Gpt_Models.GPT_4_TURBO_1106_PREVIEW,
         });
     } catch (error) {
       console.log(

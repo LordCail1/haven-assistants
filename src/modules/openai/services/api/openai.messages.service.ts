@@ -8,6 +8,7 @@ export class OpenaiMessagesService {
     @Inject(forwardRef(() => OpenaiService))
     private readonly openaiService: OpenaiService,
   ) {}
+
   createMessage(threadId: string, userMessage: UserMessage) {
     return this.openaiService
       .getOpenaiInstance()

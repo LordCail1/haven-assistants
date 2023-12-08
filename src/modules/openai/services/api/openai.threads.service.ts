@@ -12,12 +12,4 @@ export class OpenaiThreadsService {
   async createThread(): Promise<Thread> {
     return this.openaiService.getOpenaiInstance().beta.threads.create();
   }
-
-  async runThread(threadId: string, assistantId: string) {
-    return this.openaiService
-      .getOpenaiInstance()
-      .beta.threads.runs.create(threadId, {
-        assistant_id: assistantId,
-      });
-  }
 }

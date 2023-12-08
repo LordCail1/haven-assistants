@@ -1,12 +1,13 @@
 import { ConfigService } from '@nestjs/config';
-import { Inject, Injectable, forwardRef } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { openai_key } from 'src/shared/constants';
-import OpenAI from 'openai';
+import { OpenaiMessagesService } from './api/openai.messages.service';
+import { OpenaiQuestionerService } from './assistants/openai.questioner.service';
+import { OpenaiRunsService } from './api/openai.runs.service';
 import { OpenaiThreadsService } from './api/openai.threads.service';
 import { Thread } from '../types/types';
-import { OpenaiMessagesService } from './api/openai.messages.service';
 import { UserMessage } from 'src/shared/interfaces/interfaces';
-import { OpenaiQuestionerService } from './assistants/openai.questioner.service';
+import OpenAI from 'openai';
 
 @Injectable()
 export class OpenaiService {
@@ -16,10 +17,10 @@ export class OpenaiService {
 
   constructor(
     private readonly configService: ConfigService,
-    @Inject(forwardRef(() => OpenaiThreadsService))
     private readonly openaiThreadsService: OpenaiThreadsService,
     private readonly openaiMessagesService: OpenaiMessagesService,
     private readonly openaiQuestionerService: OpenaiQuestionerService,
+    private readonly openaiRunsService: OpenaiRunsService,
   ) {}
 
   async createConversation(): Promise<Thread> {
@@ -31,7 +32,7 @@ export class OpenaiService {
   }
 
   async runThead(threadId: string) {
-    return this.openaiThreadsService.runThread(
+    return this.openaiRunsService.runThread(
       threadId,
       this.openaiQuestionerService.getAssistantInstance().id,
     );
