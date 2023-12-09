@@ -13,14 +13,14 @@ export class OpenaiMessagesService {
 
   constructor(private readonly configService: ConfigService) {}
 
-  createMessage(
+  async createMessage(
     threadId: string,
     userMessage: UserMessage,
   ): Promise<ThreadMessage> {
     return this.openai.beta.threads.messages.create(threadId, userMessage);
   }
 
-  listMessages(threadId: string) {
+  async listMessages(threadId: string) {
     return this.openai.beta.threads.messages.list(threadId);
   }
 }

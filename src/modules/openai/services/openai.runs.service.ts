@@ -25,7 +25,8 @@ export class OpenaiRunsService {
       run.status === 'in_progress' ||
       run.status === 'queued'
     ) {
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // wait for 1 second
+      const newPromise = new Promise((resolve) => setTimeout(resolve, 1000));
+      await newPromise;
       run = await this.openai.beta.threads.runs.retrieve(threadId, runId);
     }
     switch (run.status) {

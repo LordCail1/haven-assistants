@@ -60,7 +60,6 @@ Please jump right in to asking me a question and do not present yourself, say hi
 Just start asking a question. I will send you my responses.
 
 Ahmed Al-Mustafa
-      
       `,
     };
   }

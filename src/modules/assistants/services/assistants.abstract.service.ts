@@ -1,8 +1,8 @@
-import { Assistant } from 'src/modules/openai/types/types';
 import { ConfigService } from '@nestjs/config';
 import { Injectable } from '@nestjs/common';
 import { openai_key } from 'src/shared/constants';
 import OpenAI from 'openai';
+import { Assistant } from 'openai/resources/beta/assistants/assistants';
 
 @Injectable()
 export abstract class AssistantsAbstractService {

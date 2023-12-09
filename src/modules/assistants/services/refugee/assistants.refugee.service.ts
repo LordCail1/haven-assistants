@@ -1,10 +1,10 @@
-import { Assistant } from '../../../openai/types/types';
 import { Injectable } from '@nestjs/common';
 import { AssistantsAbstractService } from '../assistants.abstract.service';
 import { join } from 'path';
 import { promises as fs } from 'fs';
 import { Gpt_Models } from 'src/modules/openai/enums/enums';
 import { AssistantName } from '../../enums/enums';
+import { Assistant } from 'openai/resources/beta/assistants/assistants';
 
 @Injectable()
 export class AssistantsRefugeeService extends AssistantsAbstractService {

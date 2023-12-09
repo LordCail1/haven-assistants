@@ -7,6 +7,9 @@ import { Injectable } from '@nestjs/common';
 import { OpenaiMessagesService } from 'src/modules/openai/services/openai.messages.service';
 import { OpenaiRunsService } from 'src/modules/openai/services/openai.runs.service';
 import { OpenaiThreadsService } from 'src/modules/openai/services/openai.threads.service';
+import { Assistant } from 'openai/resources/beta/assistants/assistants';
+import { Thread } from 'openai/resources/beta/threads/threads';
+import { ThreadMessage } from 'openai/resources/beta/threads/messages/messages';
 
 @Injectable()
 export class HavenAiAgentService {
@@ -20,10 +23,11 @@ export class HavenAiAgentService {
 
   async generateFirstQuestion(
     generateFirstQuestionDto: GenerateFirstQuestionDto,
-  ) {
-    const questionerAssistant = this.assistantsQuestionerService.getAssistant();
+  ): Promise<ThreadMessage[]> {
+    const questionerAssistant: Assistant =
+      this.assistantsQuestionerService.getAssistant();
 
-    const thread = await this.openaiThreadsService.createThread();
+    const thread: Thread = await this.openaiThreadsService.createThread();
 
     const firstPrompt: UserMessage =
       this.promptCreatorService.createFirstPrompt(generateFirstQuestionDto);
@@ -37,13 +41,17 @@ export class HavenAiAgentService {
 
     await this.openaiRunsService.retrieveRun(thread.id, run.id);
 
-    const messages = await this.openaiMessagesService.listMessages(thread.id);
-    return messages.data;
+    const { data } = await this.openaiMessagesService.listMessages(thread.id);
+    return data;
   }
 
   async generateFollowUpQuestion(
     generateFollowUpQuestionDto: GenerateFollowUpQuestionDto,
   ) {
     return 'success';
+  }
+
+  async getAllMessages() {
+    return this.openaiMessagesService.listMessages('fjf');
   }
 }
