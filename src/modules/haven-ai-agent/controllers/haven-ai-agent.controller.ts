@@ -1,8 +1,7 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { GenerateFirstQuestionDto } from '../dto/generate-first-question.dto';
-import { HavenAiAgentService } from '../services/haven-ai-agent.service';
 import { GenerateFollowUpQuestionDto } from '../dto/generate-followup-question.dto';
-import { ThreadMessage } from 'openai/resources/beta/threads/messages/messages';
+import { HavenAiAgentService } from '../services/haven-ai-agent.service';
 import { ResponseObject } from '../interfaces/interfaces';
 
 @Controller('api/v1/haven-ai-agent')

@@ -9,12 +9,11 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { OpenaiMessagesService } from 'src/modules/openai/services/openai.messages.service';
 import { OpenaiRunsService } from 'src/modules/openai/services/openai.runs.service';
 import { OpenaiThreadsService } from 'src/modules/openai/services/openai.threads.service';
+import { ResponseObject } from 'src/modules/haven-ai-agent/interfaces/interfaces';
 import { Run } from 'openai/resources/beta/threads/runs/runs';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Thread } from 'openai/resources/beta/threads/threads';
 import * as request from 'supertest';
-import { ResponseObject } from 'src/modules/haven-ai-agent/interfaces/interfaces';
-import { lookup } from 'dns';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -131,7 +130,7 @@ describe('AppController (e2e)', () => {
       assistantsRefugeeService.getAssistant().id,
     );
 
-    const newRun = await openaiRunsService.retrieveRun(newThread.id, run.id);
+    await openaiRunsService.retrieveRun(newThread.id, run.id);
     const data = await openaiMessagesService.listMessages(newThread.id);
 
     let responseText: string;

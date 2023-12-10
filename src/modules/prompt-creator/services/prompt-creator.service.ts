@@ -1,5 +1,4 @@
 import { GenerateFirstQuestionDto } from 'src/modules/haven-ai-agent/dto/generate-first-question.dto';
-import { GenerateFollowUpQuestionDto } from 'src/modules/haven-ai-agent/dto/generate-followup-question.dto';
 import { Injectable } from '@nestjs/common';
 import { UserMessage } from 'src/shared/interfaces/interfaces';
 
