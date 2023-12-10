@@ -64,9 +64,12 @@ Ahmed Al-Mustafa
     };
   }
 
-  createFollowUpPrompt(
-    generateFollowUpQuestionDto: GenerateFollowUpQuestionDto,
-  ) {}
+  createFollowUpPrompt(refugeeResponse: string): UserMessage {
+    return {
+      role: 'user',
+      content: refugeeResponse,
+    };
+  }
 
   private loopLanguagesArray(languages: string[]): string {
     let languagesInTextFormat = '';

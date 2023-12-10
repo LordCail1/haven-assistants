@@ -21,6 +21,7 @@ export class OpenaiMessagesService {
   }
 
   async listMessages(threadId: string) {
-    return this.openai.beta.threads.messages.list(threadId);
+    const { data } = await this.openai.beta.threads.messages.list(threadId);
+    return data;
   }
 }

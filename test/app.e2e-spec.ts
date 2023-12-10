@@ -1,9 +1,11 @@
+import { APP_PIPE } from '@nestjs/core';
 import { AppModule } from './../src/app.module';
 import { AssistantsRefugeeService } from 'src/modules/assistants/services/refugee/assistants.refugee.service';
 import { Connection } from 'mongoose';
 import { DatabaseService } from 'src/modules/database/services/database.service';
 import { GenerateFirstQuestionDto } from 'src/modules/haven-ai-agent/dto/generate-first-question.dto';
-import { INestApplication } from '@nestjs/common';
+import { GenerateFollowUpQuestionDto } from 'src/modules/haven-ai-agent/dto/generate-followup-question.dto';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { OpenaiMessagesService } from 'src/modules/openai/services/openai.messages.service';
 import { OpenaiRunsService } from 'src/modules/openai/services/openai.runs.service';
 import { OpenaiThreadsService } from 'src/modules/openai/services/openai.threads.service';
@@ -11,6 +13,8 @@ import { Run } from 'openai/resources/beta/threads/runs/runs';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Thread } from 'openai/resources/beta/threads/threads';
 import * as request from 'supertest';
+import { ResponseObject } from 'src/modules/haven-ai-agent/interfaces/interfaces';
+import { lookup } from 'dns';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -24,6 +28,7 @@ describe('AppController (e2e)', () => {
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
+      providers: [{ provide: APP_PIPE, useValue: new ValidationPipe() }],
     }).compile();
 
     openaiThreadsService =
@@ -39,6 +44,8 @@ describe('AppController (e2e)', () => {
       .get<DatabaseService>(DatabaseService)
       .getDbHandle();
 
+    await dbConnection.close();
+
     app = moduleFixture.createNestApplication();
     httpServer = app.getHttpServer();
     await app.init();
@@ -49,42 +56,68 @@ describe('AppController (e2e)', () => {
     await app.close();
   });
 
-  // it('services should be defined', () => {
-  //   expect(openaiThreadsService).toBeDefined();
-  //   expect(openaiMessagesService).toBeDefined();
-  //   expect(openaiRunsService).toBeDefined();
-  // });
+  it('services should be defined', () => {
+    expect(openaiThreadsService).toBeDefined();
+    expect(openaiMessagesService).toBeDefined();
+    expect(openaiRunsService).toBeDefined();
+  });
 
-  it('/api/v1/haven-ai-agent/generate-first-question (POST)', async () => {
-    const generateFirstQuestionDto: GenerateFirstQuestionDto = {
-      name: 'Ahmed',
-      familyName: 'Al-Mustafa',
-      email: 'ahmed.mustafa@example.com',
-      gender: 'Male',
-      highestEducation: "Bachelor's Degree",
-      languages: ['Arabic', 'English'],
-      myStory:
-        'I am originally from Syria and have been living in a refugee camp in Turkey for the past three years. I hope to start a new life in Canada.',
-      CountryOfBirth: 'Syria',
-      familyStructure: 'Family with children',
-      howManyPeopleInYourGroup: 4,
-      resettlementProvinceOrTerritory: 'Ontario',
-      stageOfResettlement: 'Application Submitted',
-      resettlementCity: 'Toronto',
-      currentCity: 'Istanbul',
-      currentCountry: 'Turkey',
-      currentProvinceOrTerritory: 'Istanbul',
-    };
-    const response = await request(httpServer)
-      .post('/api/v1/haven-ai-agent/generate-first-question')
-      .send(generateFirstQuestionDto);
+  describe('first question', () => {
+    it('/api/v1/haven-ai-agent/generate-first-question (POST)', async () => {
+      const generateFirstQuestionDto: GenerateFirstQuestionDto = {
+        name: 'Ahmed',
+        familyName: 'Al-Mustafa',
+        email: 'ahmed.mustafa@example.com',
+        gender: 'Male',
+        highestEducation: "Bachelor's Degree",
+        languages: ['Arabic', 'English'],
+        myStory:
+          'I am originally from Syria and have been living in a refugee camp in Turkey for the past three years. I hope to start a new life in Canada.',
+        CountryOfBirth: 'Syria',
+        familyStructure: 'Family with children',
+        howManyPeopleInYourGroup: 4,
+        resettlementProvinceOrTerritory: 'Ontario',
+        stageOfResettlement: 'Application Submitted',
+        resettlementCity: 'Toronto',
+        currentCity: 'Istanbul',
+        currentCountry: 'Turkey',
+        currentProvinceOrTerritory: 'Istanbul',
+      };
+      const response = await request(httpServer)
+        .post('/api/v1/haven-ai-agent/generate-first-question')
+        .send(generateFirstQuestionDto);
 
-    const QuestionerResponse: string = response.body[0].content[0].text.value;
-    console.log(QuestionerResponse);
+      await loopUntilStoryIsGoodEnough(response.body);
+    }, 120000);
+  });
 
-    const refugeeResponse: string = await refugeeAnswering(QuestionerResponse);
-    console.log(refugeeResponse);
-  }, 120000);
+  async function loopUntilStoryIsGoodEnough(responseObject: ResponseObject) {
+    const {
+      threadId,
+      isStoryGoodEnough,
+      response: QuestionerResponse,
+    } = responseObject;
+
+    if (isStoryGoodEnough) {
+      console.log('STORY FINISHED');
+    } else {
+      console.log(QuestionerResponse);
+      const refugeeResponse: string =
+        await refugeeAnswering(QuestionerResponse);
+      console.log(refugeeResponse);
+
+      const generateFollowUpQuestionDto: GenerateFollowUpQuestionDto = {
+        refugeeResponse,
+        threadId,
+      };
+
+      const nextResponse = await request(httpServer)
+        .post('/api/v1/haven-ai-agent/generate-follow-up-question')
+        .send(generateFollowUpQuestionDto);
+
+      await loopUntilStoryIsGoodEnough(nextResponse.body);
+    }
+  }
 
   async function refugeeAnswering(generatedQuestion: string): Promise<string> {
     const newThread: Thread = await openaiThreadsService.createThread();
@@ -99,7 +132,7 @@ describe('AppController (e2e)', () => {
     );
 
     const newRun = await openaiRunsService.retrieveRun(newThread.id, run.id);
-    const { data } = await openaiMessagesService.listMessages(newThread.id);
+    const data = await openaiMessagesService.listMessages(newThread.id);
 
     let responseText: string;
     if ('text' in data[0].content[0]) {

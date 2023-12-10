@@ -16,18 +16,10 @@ export class OpenaiThreadsService {
   constructor(private readonly configService: ConfigService) {}
 
   /**
-   * Creates a new thread with no message history.
+   * Creates a new thread
+   * @param threadCreateParams - Optional array of thread messages
    */
-  async createThread(): Promise<Thread> {
-    return this.openai.beta.threads.create();
-  }
-
-  /**
-   * Creates a new thread with a message history.
-   */
-  async createThreadWithMessageHistory(
-    threadCreateParams: ThreadCreateParams,
-  ): Promise<Thread> {
+  async createThread(threadCreateParams?: ThreadCreateParams): Promise<Thread> {
     return this.openai.beta.threads.create(threadCreateParams);
   }
 }
