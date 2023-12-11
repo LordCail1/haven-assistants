@@ -10,10 +10,22 @@ import { OpenaiMessagesService } from 'src/modules/openai/services/openai.messag
 import { OpenaiRunsService } from 'src/modules/openai/services/openai.runs.service';
 import { ThreadMessage } from 'openai/resources/beta/threads/messages/messages';
 import { ThreadCreateParams } from 'openai/resources/beta/threads/threads';
+import { HelpersService } from 'src/modules/helpers/services/helpers.service';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AssistantsTerminatorService extends AssistantsAbstractService {
   private assistant: Assistant;
+
+  constructor(
+    private readonly helpersService: HelpersService,
+    private readonly openaiMessagesService: OpenaiMessagesService,
+    private readonly openaiRunsService: OpenaiRunsService,
+    private readonly openaiThreadsService: OpenaiThreadsService,
+    configService: ConfigService,
+  ) {
+    super(configService);
+  }
 
   getAssistant(): Assistant {
     return this.assistant;
@@ -71,81 +83,42 @@ export class AssistantsTerminatorService extends AssistantsAbstractService {
     }
   }
 
-  async determineIfStoryIsGoodEnough(
-    threadId: string,
-    openaiMessagesService: OpenaiMessagesService,
-    openaiThreadsService: OpenaiThreadsService,
-    openaiRunsService: OpenaiRunsService,
-  ): Promise<boolean> {
+  async determineIfStoryIsGoodEnough(threadId: string): Promise<boolean> {
     const threadMessagesBeforeVerification: ThreadMessage[] =
-      await openaiMessagesService.listMessages(threadId);
+      await this.openaiMessagesService.listMessages(threadId);
 
     const messages: ThreadCreateParams.Message[] =
-      await this.convertThreadMessagesToMessageArray(
+      await this.helpersService.convertThreadMessagesToMessageArray(
         threadMessagesBeforeVerification,
       );
 
-    const terminatorThread = await openaiThreadsService.createThread({
+    const terminatorThread = await this.openaiThreadsService.createThread({
       messages,
     });
 
-    const run = await openaiRunsService.runThread(
+    const run = await this.openaiRunsService.runThread(
       terminatorThread.id,
       this.assistant.id,
     );
 
-    await openaiRunsService.retrieveRun(terminatorThread.id, run.id);
+    await this.openaiRunsService.retrieveRun(terminatorThread.id, run.id);
 
     const terminatorThreadMessages: ThreadMessage[] =
-      await openaiMessagesService.listMessages(terminatorThread.id);
+      await this.openaiMessagesService.listMessages(terminatorThread.id);
 
     if ('text' in terminatorThreadMessages[0].content[0]) {
       const terminatorResponseText: string =
         terminatorThreadMessages[0].content[0].text.value;
 
-      const isStoryGoodEnough = this.parseLastResponseForJson(
+      const isStoryGoodEnough = this.helpersService.parseLastResponseForJson(
         terminatorResponseText,
       );
 
-      if (isStoryGoodEnough) {
-        return true;
-      } else return false;
-    } else {
-      throw new Error('Message content does not have the right format');
-    }
-  }
-
-  parseLastResponseForJson(response: string): boolean {
-    console.log(response);
-    try {
-      const parsedJson = JSON.parse(response);
-      const isStoryGoodEnough = parsedJson.isStoryGoodEnough;
-      if (typeof isStoryGoodEnough !== 'boolean') {
-        throw new Error('isStoryGoodEnough is not a boolean');
-      }
-      return isStoryGoodEnough;
-    } catch (error) {
-      console.log('something went wrong parsinng the json!', error);
-    }
-  }
-
-  /**
-   * Converts the thread messages from one format to another
-   * @param threadMessages the thread messages that are in the format 'ThreadMessage[]'
-   * @returns an array of messages that is in the format 'Message[]'
-   */
-  async convertThreadMessagesToMessageArray(
-    threadMessages: ThreadMessage[],
-  ): Promise<ThreadCreateParams.Message[]> {
-    return threadMessages.map((message: ThreadMessage) => {
-      if ('text' in message.content[0]) {
-        return {
-          content: message.content[0].text.value,
-          role: 'user',
-        };
+      if (!isStoryGoodEnough) {
+        return false;
       } else {
-        throw new Error('Message content contained files is not text');
+        return true;
       }
-    });
+    }
   }
 }

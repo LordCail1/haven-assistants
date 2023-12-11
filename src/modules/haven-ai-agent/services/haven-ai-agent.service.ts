@@ -11,6 +11,7 @@ import { ResponseObject } from '../interfaces/interfaces';
 import { Thread } from 'openai/resources/beta/threads/threads';
 import { ThreadMessage } from 'openai/resources/beta/threads/messages/messages';
 import { UserMessage } from 'src/shared/interfaces/interfaces';
+import { AssistantsSummarizerService } from 'src/modules/assistants/services/summarizer/assistants.summarizer.service';
 @Injectable()
 export class HavenAiAgentService {
   constructor(
@@ -20,6 +21,7 @@ export class HavenAiAgentService {
     private readonly openaiRunsService: OpenaiRunsService,
     private readonly assistantsQuestionerService: AssistantsQuestionerService,
     private readonly assistantsTerminatorService: AssistantsTerminatorService,
+    private readonly assistantsSummarizerService: AssistantsSummarizerService,
   ) {}
 
   async generateFirstQuestion(
@@ -76,15 +78,16 @@ export class HavenAiAgentService {
     const isStoryGoodEnough =
       await this.assistantsTerminatorService.determineIfStoryIsGoodEnough(
         threadId,
-        this.openaiMessagesService,
-        this.openaiThreadsService,
-        this.openaiRunsService,
       );
     if (isStoryGoodEnough) {
+      const summarizedStory =
+        await this.assistantsSummarizerService.createSummary(threadId);
+      console.log(summarizedStory);
       return {
         response: null,
         isStoryGoodEnough: true,
         threadId,
+        summarizedStory,
       };
     }
 
