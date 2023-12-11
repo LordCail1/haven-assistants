@@ -1,17 +1,15 @@
-import { Injectable } from '@nestjs/common';
-import { AssistantsAbstractService } from '../assistants.abstract.service';
-import { join } from 'path';
-import { promises as fs } from 'fs';
-import { Gpt_Models } from 'src/modules/openai/enums/enums';
-import { AssistantName } from '../../enums/enums';
 import { Assistant } from 'openai/resources/beta/assistants/assistants';
+import { AssistantName } from '../../enums/enums';
+import { AssistantsAbstractService } from '../assistants.abstract.service';
+import { Gpt_Models } from 'src/modules/openai/enums/enums';
+import { ImageNotTextException } from 'src/shared/exceptions/image-not-text.exception';
+import { Injectable } from '@nestjs/common';
+import { Run } from 'openai/resources/beta/threads/runs/runs';
 import { ThreadMessage } from 'openai/resources/beta/threads/messages/messages';
 import {
   Thread,
   ThreadCreateParams,
 } from 'openai/resources/beta/threads/threads';
-import { Run } from 'openai/resources/beta/threads/runs/runs';
-import { ImageNotTextException } from 'src/shared/exceptions/image-not-text.exception';
 
 /**
  * This service is responsible for the 'Terminator' assistant.
@@ -31,8 +29,18 @@ export class AssistantsTerminatorService extends AssistantsAbstractService {
     if (assistant) {
       this.assistant = assistant;
     } else {
-      const instructions = await this.loadInstructions();
-      const description = await this.loadDescription();
+      const instructions = await this.loadInstructions(
+        __dirname,
+        'v2/instructions.txt',
+        AssistantName.TERMINATOR,
+      );
+
+      const description = await this.loadDescription(
+        __dirname,
+        'description.txt',
+        AssistantName.TERMINATOR,
+      );
+
       this.assistant = await this.openaiAssistantsService.createAssistant({
         name: AssistantName.TERMINATOR,
         description,
@@ -42,27 +50,11 @@ export class AssistantsTerminatorService extends AssistantsAbstractService {
     }
   }
 
-  protected async loadInstructions(): Promise<string> {
-    try {
-      const filePath = join(__dirname, 'v1/instructions.txt');
-      return fs.readFile(filePath, 'utf-8');
-    } catch (error) {
-      console.log('something went wrong loading the instructions', error);
-    }
-  }
-
-  protected async loadDescription(): Promise<string> {
-    try {
-      const filePath = join(__dirname, 'description.txt');
-      return fs.readFile(filePath, 'utf-8');
-    } catch (error) {
-      console.log('something went wrong loading the description', error);
-    }
-  }
-
   async determineIfStoryIsGoodEnough(threadId: string): Promise<boolean> {
     const threadMessages: ThreadMessage[] =
       await this.openaiMessagesService.listMessages(threadId);
+
+    threadMessages.pop();
 
     const messages: ThreadCreateParams.Message[] =
       await this.helpersService.convertThreadMessagesToMessageArray(

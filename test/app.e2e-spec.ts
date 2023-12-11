@@ -15,6 +15,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Thread } from 'openai/resources/beta/threads/threads';
 import * as request from 'supertest';
 import { ImageNotTextException } from 'src/shared/exceptions/image-not-text.exception';
+import {
+  generateFirstQuestionDtoAhmed,
+  generateFirstQuestionDtoCarlos,
+} from './__mocks__/refugeeDto.mock';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -64,46 +68,24 @@ describe('AppController (e2e)', () => {
 
   describe('first question', () => {
     it('/api/v1/haven-ai-agent/generate-first-question (POST)', async () => {
-      const generateFirstQuestionDto: GenerateFirstQuestionDto = {
-        name: 'Ahmed',
-        familyName: 'Al-Mustafa',
-        email: 'ahmed.mustafa@example.com',
-        gender: 'Male',
-        highestEducation: "Bachelor's Degree",
-        languages: ['Arabic', 'English'],
-        myStory:
-          'I am originally from Syria and have been living in a refugee camp in Turkey for the past three years. I hope to start a new life in Canada.',
-        CountryOfBirth: 'Syria',
-        familyStructure: 'Family with children',
-        howManyPeopleInYourGroup: 4,
-        resettlementProvinceOrTerritory: 'Ontario',
-        stageOfResettlement: 'Application Submitted',
-        resettlementCity: 'Toronto',
-        currentCity: 'Istanbul',
-        currentCountry: 'Turkey',
-        currentProvinceOrTerritory: 'Istanbul',
-      };
       const response = await request(httpServer)
         .post('/api/v1/haven-ai-agent/generate-first-question')
-        .send(generateFirstQuestionDto);
+        .send(generateFirstQuestionDtoAhmed);
 
       await loopUntilStoryIsGoodEnough(response.body);
     }, 120000);
   });
 
   async function loopUntilStoryIsGoodEnough(responseObject: ResponseObject) {
-    const {
-      threadId,
-      isStoryGoodEnough,
-      response: QuestionerResponse,
-    } = responseObject;
+    const { threadId, isStoryGoodEnough } = responseObject;
 
     if (isStoryGoodEnough) {
       console.log('STORY FINISHED');
     } else {
-      console.log(QuestionerResponse);
-      const refugeeResponse: string =
-        await refugeeAnswering(QuestionerResponse);
+      console.log(responseObject.response);
+      const refugeeResponse: string = await refugeeAnswering(
+        responseObject.response,
+      );
       console.log(refugeeResponse);
 
       const generateFollowUpQuestionDto: GenerateFollowUpQuestionDto = {

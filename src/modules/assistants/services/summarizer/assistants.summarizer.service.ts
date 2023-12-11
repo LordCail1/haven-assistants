@@ -4,8 +4,6 @@ import { AssistantsAbstractService } from '../assistants.abstract.service';
 import { Gpt_Models } from 'src/modules/openai/enums/enums';
 import { ImageNotTextException } from 'src/shared/exceptions/image-not-text.exception';
 import { Injectable } from '@nestjs/common';
-import { join } from 'path';
-import { promises as fs } from 'fs';
 import { ThreadCreateParams } from 'openai/resources/beta/threads/threads';
 import { ThreadMessage } from 'openai/resources/beta/threads/messages/messages';
 
@@ -27,32 +25,24 @@ export class AssistantsSummarizerService extends AssistantsAbstractService {
     if (assistant) {
       this.assistant = assistant;
     } else {
-      const instructions = await this.loadInstructions();
-      const description = await this.loadDescription();
+      const instructions = await this.loadInstructions(
+        __dirname,
+        'v1/instructions.txt',
+        AssistantName.SUMMARIZER,
+      );
+
+      const description = await this.loadDescription(
+        __dirname,
+        'description.txt',
+        AssistantName.SUMMARIZER,
+      );
+
       this.assistant = await this.openaiAssistantsService.createAssistant({
         name: AssistantName.SUMMARIZER,
         description,
         instructions,
         model: Gpt_Models.GPT_4_TURBO_1106_PREVIEW,
       });
-    }
-  }
-
-  protected async loadInstructions(): Promise<string> {
-    try {
-      const filePath = join(__dirname, 'v1/instructions.txt');
-      return fs.readFile(filePath, 'utf-8');
-    } catch (error) {
-      console.log('something went wrong loading the instructions', error);
-    }
-  }
-
-  protected async loadDescription(): Promise<string> {
-    try {
-      const filePath = join(__dirname, 'description.txt');
-      return fs.readFile(filePath, 'utf-8');
-    } catch (error) {
-      console.log('something went wrong loading the description', error);
     }
   }
 
