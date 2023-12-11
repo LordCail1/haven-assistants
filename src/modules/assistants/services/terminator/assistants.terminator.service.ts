@@ -9,9 +9,13 @@ import { OpenaiThreadsService } from 'src/modules/openai/services/openai.threads
 import { OpenaiMessagesService } from 'src/modules/openai/services/openai.messages.service';
 import { OpenaiRunsService } from 'src/modules/openai/services/openai.runs.service';
 import { ThreadMessage } from 'openai/resources/beta/threads/messages/messages';
-import { ThreadCreateParams } from 'openai/resources/beta/threads/threads';
+import {
+  Thread,
+  ThreadCreateParams,
+} from 'openai/resources/beta/threads/threads';
 import { HelpersService } from 'src/modules/helpers/services/helpers.service';
 import { ConfigService } from '@nestjs/config';
+import { Run } from 'openai/resources/beta/threads/runs/runs';
 
 @Injectable()
 export class AssistantsTerminatorService extends AssistantsAbstractService {
@@ -67,7 +71,7 @@ export class AssistantsTerminatorService extends AssistantsAbstractService {
 
   protected async loadInstructions(): Promise<string> {
     try {
-      const filePath = join(__dirname, 'instructions.txt');
+      const filePath = join(__dirname, 'v1/instructions.txt');
       return fs.readFile(filePath, 'utf-8');
     } catch (error) {
       console.log('something went wrong loading the instructions', error);
@@ -84,27 +88,27 @@ export class AssistantsTerminatorService extends AssistantsAbstractService {
   }
 
   async determineIfStoryIsGoodEnough(threadId: string): Promise<boolean> {
-    const threadMessagesBeforeVerification: ThreadMessage[] =
+    const threadMessages: ThreadMessage[] =
       await this.openaiMessagesService.listMessages(threadId);
 
     const messages: ThreadCreateParams.Message[] =
       await this.helpersService.convertThreadMessagesToMessageArray(
-        threadMessagesBeforeVerification,
+        threadMessages,
       );
 
-    const terminatorThread = await this.openaiThreadsService.createThread({
+    const thread: Thread = await this.openaiThreadsService.createThread({
       messages,
     });
 
-    const run = await this.openaiRunsService.runThread(
-      terminatorThread.id,
+    const run: Run = await this.openaiRunsService.runThread(
+      thread.id,
       this.assistant.id,
     );
 
-    await this.openaiRunsService.retrieveRun(terminatorThread.id, run.id);
+    await this.openaiRunsService.retrieveRun(thread.id, run.id);
 
     const terminatorThreadMessages: ThreadMessage[] =
-      await this.openaiMessagesService.listMessages(terminatorThread.id);
+      await this.openaiMessagesService.listMessages(thread.id);
 
     if ('text' in terminatorThreadMessages[0].content[0]) {
       const terminatorResponseText: string =
@@ -114,10 +118,10 @@ export class AssistantsTerminatorService extends AssistantsAbstractService {
         terminatorResponseText,
       );
 
-      if (!isStoryGoodEnough) {
-        return false;
-      } else {
+      if (isStoryGoodEnough) {
         return true;
+      } else {
+        return false;
       }
     }
   }

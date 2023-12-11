@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { error } from 'console';
 import { ThreadMessage } from 'openai/resources/beta/threads/messages/messages';
 import { ThreadCreateParams } from 'openai/resources/beta/threads/threads';
 
@@ -10,11 +11,23 @@ export class HelpersService {
       const parsedJson = JSON.parse(response);
       const isStoryGoodEnough = parsedJson.isStoryGoodEnough;
       if (typeof isStoryGoodEnough !== 'boolean') {
-        throw new Error('isStoryGoodEnough is not a boolean');
+        throw new HttpException(
+          {
+            status: HttpStatus.INTERNAL_SERVER_ERROR,
+            error: 'isStoryGoodEnough is not a boolean',
+          },
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
       }
       return isStoryGoodEnough;
     } catch (error) {
-      console.log('something went wrong parsinng the json!', error);
+      throw new HttpException(
+        {
+          status: HttpStatus.INTERNAL_SERVER_ERROR,
+          error: 'something went wrong parsinng the json!',
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 

@@ -67,7 +67,7 @@ export class AssistantsSummarizerService extends AssistantsAbstractService {
 
   protected async loadInstructions(): Promise<string> {
     try {
-      const filePath = join(__dirname, 'instructions.txt');
+      const filePath = join(__dirname, 'v1/instructions.txt');
       return fs.readFile(filePath, 'utf-8');
     } catch (error) {
       console.log('something went wrong loading the instructions', error);

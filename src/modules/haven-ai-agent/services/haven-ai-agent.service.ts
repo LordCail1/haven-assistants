@@ -12,6 +12,7 @@ import { Thread } from 'openai/resources/beta/threads/threads';
 import { ThreadMessage } from 'openai/resources/beta/threads/messages/messages';
 import { UserMessage } from 'src/shared/interfaces/interfaces';
 import { AssistantsSummarizerService } from 'src/modules/assistants/services/summarizer/assistants.summarizer.service';
+import { Run } from 'openai/resources/beta/threads/runs/runs';
 @Injectable()
 export class HavenAiAgentService {
   constructor(
@@ -35,7 +36,7 @@ export class HavenAiAgentService {
 
       await this.openaiMessagesService.createMessage(thread.id, firstPrompt);
 
-      const run = await this.openaiRunsService.runThread(
+      const run: Run = await this.openaiRunsService.runThread(
         thread.id,
         this.assistantsQuestionerService.getAssistant().id,
       );
@@ -70,12 +71,12 @@ export class HavenAiAgentService {
   ): Promise<ResponseObject> {
     const { refugeeResponse, threadId } = generateFollowUpQuestionDto;
 
-    const followUpPrompt =
+    const followUpPrompt: UserMessage =
       this.promptCreatorService.createFollowUpPrompt(refugeeResponse);
 
     await this.openaiMessagesService.createMessage(threadId, followUpPrompt);
 
-    const isStoryGoodEnough =
+    const isStoryGoodEnough: boolean =
       await this.assistantsTerminatorService.determineIfStoryIsGoodEnough(
         threadId,
       );
