@@ -1,6 +1,6 @@
 export interface ResponseObject {
   isStoryGoodEnough: boolean;
-  response: string;
-  threadId: string;
+  response?: string;
   summarizedStory?: string;
+  threadId: string;
 }

@@ -5,6 +5,10 @@ import { UserMessage } from 'src/shared/interfaces/interfaces';
 import OpenAI from 'openai';
 import { ThreadMessage } from 'openai/resources/beta/threads/messages/messages';
 
+/**
+ * This service is responsible for interacting with the OpenAI messages API
+ * https://platform.openai.com/docs/api-reference/messages
+ */
 @Injectable()
 export class OpenaiMessagesService {
   private openai: OpenAI = new OpenAI({

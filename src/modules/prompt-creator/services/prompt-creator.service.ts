@@ -2,6 +2,9 @@ import { GenerateFirstQuestionDto } from 'src/modules/haven-ai-agent/dto/generat
 import { Injectable } from '@nestjs/common';
 import { UserMessage } from 'src/shared/interfaces/interfaces';
 
+/**
+ * This service is responsible for creating prompts for the AI assistant
+ */
 @Injectable()
 export class PromptCreatorService {
   createFirstPrompt(

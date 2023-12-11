@@ -14,6 +14,7 @@ import { Run } from 'openai/resources/beta/threads/runs/runs';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Thread } from 'openai/resources/beta/threads/threads';
 import * as request from 'supertest';
+import { ImageNotTextException } from 'src/shared/exceptions/image-not-text.exception';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -125,7 +126,7 @@ describe('AppController (e2e)', () => {
       content: generatedQuestion,
     });
 
-    const run: Run = await openaiRunsService.runThread(
+    const run: Run = await openaiRunsService.createRun(
       newThread.id,
       assistantsRefugeeService.getAssistant().id,
     );
@@ -136,6 +137,8 @@ describe('AppController (e2e)', () => {
     let responseText: string;
     if ('text' in data[0].content[0]) {
       responseText = data[0].content[0].text.value;
+    } else {
+      throw new ImageNotTextException();
     }
 
     return responseText;

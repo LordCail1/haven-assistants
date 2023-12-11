@@ -1,7 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { error } from 'console';
-import { ThreadMessage } from 'openai/resources/beta/threads/messages/messages';
 import { ThreadCreateParams } from 'openai/resources/beta/threads/threads';
+import { ThreadMessage } from 'openai/resources/beta/threads/messages/messages';
 
 @Injectable()
 export class HelpersService {
@@ -12,10 +11,7 @@ export class HelpersService {
       const isStoryGoodEnough = parsedJson.isStoryGoodEnough;
       if (typeof isStoryGoodEnough !== 'boolean') {
         throw new HttpException(
-          {
-            status: HttpStatus.INTERNAL_SERVER_ERROR,
-            error: 'isStoryGoodEnough is not a boolean',
-          },
+          'isStoryGoodEnough is not a boolean',
           HttpStatus.INTERNAL_SERVER_ERROR,
         );
       }
@@ -25,6 +21,7 @@ export class HelpersService {
         {
           status: HttpStatus.INTERNAL_SERVER_ERROR,
           error: 'something went wrong parsinng the json!',
+          errorDetails: error,
         },
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
@@ -46,7 +43,10 @@ export class HelpersService {
           role: 'user',
         };
       } else {
-        throw new Error('Message content contained files is not text');
+        throw new HttpException(
+          'an image was trying to be sent instead of text from the AI!',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
       }
     });
   }

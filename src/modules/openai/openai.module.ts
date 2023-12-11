@@ -11,6 +11,11 @@ import { OpenaiRunsService } from './services/openai.runs.service';
     OpenaiRunsService,
     OpenaiThreadsService,
   ],
-  exports: [OpenaiThreadsService, OpenaiMessagesService, OpenaiRunsService],
+  exports: [
+    OpenaiAssistantsService,
+    OpenaiMessagesService,
+    OpenaiRunsService,
+    OpenaiThreadsService,
+  ],
 })
 export class OpenaiModule {}
