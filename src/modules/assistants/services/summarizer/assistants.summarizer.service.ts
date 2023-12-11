@@ -19,31 +19,31 @@ export class AssistantsSummarizerService extends AssistantsAbstractService {
     return this.assistant;
   }
 
-  async createAssistant(): Promise<void> {
+  async initializeAssistant(): Promise<void> {
     const assistant: Assistant | undefined =
       await this.checkIfAssistantAlreadyExists(AssistantName.SUMMARIZER);
     if (assistant) {
-      this.assistant = assistant;
-    } else {
-      const instructions = await this.loadInstructions(
-        __dirname,
-        'v1/instructions.txt',
-        AssistantName.SUMMARIZER,
-      );
-
-      const description = await this.loadDescription(
-        __dirname,
-        'description.txt',
-        AssistantName.SUMMARIZER,
-      );
-
-      this.assistant = await this.openaiAssistantsService.createAssistant({
-        name: AssistantName.SUMMARIZER,
-        description,
-        instructions,
-        model: Gpt_Models.GPT_4_TURBO_1106_PREVIEW,
-      });
+      await this.openaiAssistantsService.deleteAssistant(assistant.id);
     }
+
+    const instructions = await this.loadInstructions(
+      __dirname,
+      'v1/instructions.txt',
+      AssistantName.SUMMARIZER,
+    );
+
+    const description = await this.loadDescription(
+      __dirname,
+      'description.txt',
+      AssistantName.SUMMARIZER,
+    );
+
+    this.assistant = await this.openaiAssistantsService.createAssistant({
+      name: AssistantName.SUMMARIZER,
+      description,
+      instructions,
+      model: Gpt_Models.GPT_4_TURBO_1106_PREVIEW,
+    });
   }
 
   async createSummary(threadId: string) {

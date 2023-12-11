@@ -41,7 +41,7 @@ export abstract class AssistantsAbstractService {
   /**
    * This method will create the assistant if it doesn't already exist.
    */
-  abstract createAssistant(): Promise<void>;
+  abstract initializeAssistant(): Promise<void>;
 
   /**
    * This method will check if the assistant already exists.

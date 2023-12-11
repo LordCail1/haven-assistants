@@ -1,6 +1,7 @@
 import {
   Assistant,
   AssistantCreateParams,
+  AssistantDeleted,
   AssistantsPage,
 } from 'openai/resources/beta/assistants/assistants';
 import { ConfigService } from '@nestjs/config';
@@ -44,5 +45,9 @@ export class OpenaiAssistantsService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+  }
+
+  async deleteAssistant(assistantId: string): Promise<AssistantDeleted> {
+    return this.openai.beta.assistants.del(assistantId);
   }
 }

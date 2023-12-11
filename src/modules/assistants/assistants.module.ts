@@ -31,9 +31,9 @@ export class AssistantsModule {
     private readonly assistantsRefugeeService: AssistantsRefugeeService,
   ) {}
   async onModuleInit() {
-    await this.assistantsQuestionerService.createAssistant();
-    await this.assistantsTerminatorService.createAssistant();
-    await this.assistantsSummarizerService.createAssistant();
-    await this.assistantsRefugeeService.createAssistant();
+    await this.assistantsQuestionerService.initializeAssistant();
+    await this.assistantsTerminatorService.initializeAssistant();
+    await this.assistantsSummarizerService.initializeAssistant();
+    await this.assistantsRefugeeService.initializeAssistant();
   }
 }

@@ -23,31 +23,31 @@ export class AssistantsTerminatorService extends AssistantsAbstractService {
     return this.assistant;
   }
 
-  async createAssistant(): Promise<void> {
+  async initializeAssistant(): Promise<void> {
     const assistant: Assistant | undefined =
       await this.checkIfAssistantAlreadyExists(AssistantName.TERMINATOR);
     if (assistant) {
-      this.assistant = assistant;
-    } else {
-      const instructions = await this.loadInstructions(
-        __dirname,
-        'v2/instructions.txt',
-        AssistantName.TERMINATOR,
-      );
-
-      const description = await this.loadDescription(
-        __dirname,
-        'description.txt',
-        AssistantName.TERMINATOR,
-      );
-
-      this.assistant = await this.openaiAssistantsService.createAssistant({
-        name: AssistantName.TERMINATOR,
-        description,
-        instructions,
-        model: Gpt_Models.GPT_4_TURBO_1106_PREVIEW,
-      });
+      await this.openaiAssistantsService.deleteAssistant(assistant.id);
     }
+
+    const instructions = await this.loadInstructions(
+      __dirname,
+      'v2/instructions.txt',
+      AssistantName.TERMINATOR,
+    );
+
+    const description = await this.loadDescription(
+      __dirname,
+      'description.txt',
+      AssistantName.TERMINATOR,
+    );
+
+    this.assistant = await this.openaiAssistantsService.createAssistant({
+      name: AssistantName.TERMINATOR,
+      description,
+      instructions,
+      model: Gpt_Models.GPT_4_TURBO_1106_PREVIEW,
+    });
   }
 
   async determineIfStoryIsGoodEnough(threadId: string): Promise<boolean> {
