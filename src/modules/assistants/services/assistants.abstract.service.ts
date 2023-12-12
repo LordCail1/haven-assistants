@@ -39,7 +39,7 @@ export abstract class AssistantsAbstractService {
   abstract getAssistant(): Assistant;
 
   /**
-   * This method will create the assistant if it doesn't already exist.
+   * This method will syncronize the assistants in the repository with the assistants in OpenAI.
    */
   abstract initializeAssistant(): Promise<void>;
 

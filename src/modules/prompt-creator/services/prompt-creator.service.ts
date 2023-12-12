@@ -56,12 +56,13 @@ My name is ${name} ${familyName}. I'd like to share some information about mysel
 16. **Current Province/Territory:** the current province/territory I am currently in is: ${currentProvinceOrTerritory}.
 
 I hope this information helps you create questions that are relevant to my journey and aspirations.
-
 Please jump right in to asking me a question and do not present yourself, say hi to me or anything like this. 
-
 Just start asking a question. I will send you my responses.
-
-${name} ${familyName}
+Please note that, even though this message is written in english, this message is actually a template that
+'Haven' wrote to inject the information I provided into the template! This means that I might not actually speak
+english. The language that I actually speak will be the language that is used in the 'My Story' section.
+Please analyze what language is written in 'My Story', and answer me in that language so that I can understand when you
+generate the questions for me.
       `,
     };
   }

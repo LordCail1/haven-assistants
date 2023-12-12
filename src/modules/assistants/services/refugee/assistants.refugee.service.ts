@@ -21,7 +21,7 @@ export class AssistantsRefugeeService extends AssistantsAbstractService {
 
     const instructions = await this.loadInstructions(
       __dirname,
-      'v1/instructions.txt',
+      'russia/Anastasia/v1/instructions.txt',
       AssistantName.REFUGEE,
     );
 

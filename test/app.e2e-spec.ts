@@ -3,8 +3,8 @@ import { AppModule } from './../src/app.module';
 import { AssistantsRefugeeService } from 'src/modules/assistants/services/refugee/assistants.refugee.service';
 import { Connection } from 'mongoose';
 import { DatabaseService } from 'src/modules/database/services/database.service';
-import { GenerateFirstQuestionDto } from 'src/modules/haven-ai-agent/dto/generate-first-question.dto';
 import { GenerateFollowUpQuestionDto } from 'src/modules/haven-ai-agent/dto/generate-followup-question.dto';
+import { ImageNotTextException } from 'src/shared/exceptions/image-not-text.exception';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { OpenaiMessagesService } from 'src/modules/openai/services/openai.messages.service';
 import { OpenaiRunsService } from 'src/modules/openai/services/openai.runs.service';
@@ -14,11 +14,7 @@ import { Run } from 'openai/resources/beta/threads/runs/runs';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Thread } from 'openai/resources/beta/threads/threads';
 import * as request from 'supertest';
-import { ImageNotTextException } from 'src/shared/exceptions/image-not-text.exception';
-import {
-  generateFirstQuestionDtoAhmed,
-  generateFirstQuestionDtoCarlos,
-} from './__mocks__/refugeeDto.mock';
+import { russia_Anastasia } from './__mocks__/refugees/russia/refugees.russia.mock';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -70,10 +66,10 @@ describe('AppController (e2e)', () => {
     it('/api/v1/haven-ai-agent/generate-first-question (POST)', async () => {
       const response = await request(httpServer)
         .post('/api/v1/haven-ai-agent/generate-first-question')
-        .send(generateFirstQuestionDtoAhmed);
+        .send(russia_Anastasia);
 
       await loopUntilStoryIsGoodEnough(response.body);
-    }, 120000);
+    }, 600000);
   });
 
   async function loopUntilStoryIsGoodEnough(responseObject: ResponseObject) {
