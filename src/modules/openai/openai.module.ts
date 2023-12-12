@@ -4,6 +4,9 @@ import { OpenaiThreadsService } from './services/openai.threads.service';
 import { OpenaiMessagesService } from './services/openai.messages.service';
 import { OpenaiRunsService } from './services/openai.runs.service';
 
+/**
+ * This module warps the OpenAI API
+ */
 @Module({
   providers: [
     OpenaiAssistantsService,

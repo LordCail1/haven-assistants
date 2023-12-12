@@ -9,6 +9,10 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { openai_key } from 'src/shared/constants';
 import OpenAI from 'openai';
 
+/**
+ * This service is responsible for interacting with the OpenAI assistants API
+ * https://platform.openai.com/docs/api-reference/assistants
+ */
 @Injectable()
 export class OpenaiAssistantsService {
   private openai: OpenAI = new OpenAI({
