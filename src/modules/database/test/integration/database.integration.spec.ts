@@ -25,7 +25,7 @@ describe('DatabaseService', () => {
   });
 
   afterEach(async () => {
-    dbConnection.close();
+    await dbConnection.close();
   });
 
   it('should be defined', () => {

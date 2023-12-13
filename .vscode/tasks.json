@@ -27,18 +27,22 @@
       "script": "test:watch",
       "type": "npm"
     },
-    {
-      "label": "E2E Tests",
-      "detail": "jest --config ./test/jest-e2e.json --watchAll",
-      "group": "build",
-      "isBackground": true,
-      "problemMatcher": [],
-      "script": "test:e2e:watch",
-      "type": "npm"
-    },
+    // {
+    //   "label": "E2E Tests",
+    //   "detail": "jest --config ./test/jest-e2e.json --watchAll",
+    //   "group": "build",
+    //   "isBackground": true,
+    //   "problemMatcher": [],
+    //   "script": "test:e2e:watch",
+    //   "type": "npm"
+    // },
     {
       "label": "Run all tasks",
-      "dependsOn": ["E2E Tests", "Unit Tests/Integration Tests", "Dev Server", "TypeScript Watch"],
+      "dependsOn": [
+        "Unit Tests/Integration Tests",
+        "Dev Server",
+        "TypeScript Watch"
+      ],
       "group": {
         "kind": "build",
         "isDefault": true

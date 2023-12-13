@@ -1,9 +1,24 @@
 import { Module } from '@nestjs/common';
-import { OpenaiController } from './controller/openai.controller';
-import { OpenaiService } from './services/openai.service';
+import { OpenaiAssistantsService } from './services/openai.assistants.service';
+import { OpenaiThreadsService } from './services/openai.threads.service';
+import { OpenaiMessagesService } from './services/openai.messages.service';
+import { OpenaiRunsService } from './services/openai.runs.service';
 
+/**
+ * This module warps the OpenAI API
+ */
 @Module({
-  controllers: [OpenaiController],
-  providers: [OpenaiService],
+  providers: [
+    OpenaiAssistantsService,
+    OpenaiMessagesService,
+    OpenaiRunsService,
+    OpenaiThreadsService,
+  ],
+  exports: [
+    OpenaiAssistantsService,
+    OpenaiMessagesService,
+    OpenaiRunsService,
+    OpenaiThreadsService,
+  ],
 })
 export class OpenaiModule {}

@@ -1,1 +1,1 @@
-Ca te vas si je t'envoi un array de questions au lieu de faire plusieurs appels au API?
+ou sont ces choix de reponses?

@@ -1,0 +1,8 @@
+{
+  "Family Structure": "string",
+  "How many people in your group?": 0,
+  "Resettlement Province": "string",
+  "stage of resettlement ": "string",
+  "Resettlement City": "string",
+  "Destination Country": "string"
+}

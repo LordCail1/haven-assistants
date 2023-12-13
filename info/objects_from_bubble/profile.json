@@ -1,0 +1,14 @@
+{
+  "Current City": "string",
+  "Current Country": "string",
+  "Current Province / Territory": "string",
+  "Highest Education": "Unknown Type: option set",
+  "Languages": ["string"],
+  "My Resettlement": "string",
+  "My Reviews": ["string"],
+  "My Story": "string",
+  "Country of Birth": "string",
+  "Profile Photo": "string",
+  "WhatsApp": true,
+  "Whatsapp Number": "string"
+}

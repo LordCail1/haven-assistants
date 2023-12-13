@@ -1,3 +1,13 @@
-Je n'ai pas vu ces infos nul part
-c'est normal? 
-le plus de details qu'on va avoir, le meilleur le prompt :D
+veux-tu qu'on garde le API stateless ou pas?
+
+-stateful (avec un user database et le thread_id)
+-stateless (envoyer toutes l'info a chatGPT a chaque fois) $$$
+
+stateful ideas:
+
+-keep track of number of questions?
+
+-have an API with 
+  /create-first-question
+  /create-question
+  /create-last-question
