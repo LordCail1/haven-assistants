@@ -15,6 +15,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Thread } from 'openai/resources/beta/threads/threads';
 import * as request from 'supertest';
 import { russia_Anastasia } from './__mocks__/refugees/russia/refugees.russia.mock';
+import { spain_Carlos } from './__mocks__/refugees/spain/refugees.spain.mock';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -66,7 +67,7 @@ describe('AppController (e2e)', () => {
     it('/api/v1/haven-ai-agent/generate-first-question (POST)', async () => {
       const response = await request(httpServer)
         .post('/api/v1/haven-ai-agent/generate-first-question')
-        .send(russia_Anastasia);
+        .send(spain_Carlos);
 
       await loopUntilStoryIsGoodEnough(response.body);
     }, 600000);
