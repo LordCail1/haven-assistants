@@ -33,6 +33,7 @@ export class OpenaiRunsService extends OpenaiAbstractService {
       run.status === 'in_progress' ||
       run.status === 'queued'
     ) {
+      console.log('waiting for run to complete - ', run.status);
       const newPromise = new Promise((resolve) => setTimeout(resolve, 1000));
       await newPromise;
       run = await this.openai.beta.threads.runs.retrieve(threadId, runId);

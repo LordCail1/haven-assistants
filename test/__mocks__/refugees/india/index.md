@@ -1,7 +1,6 @@
 **Questioner**:
 Priya ji, I would like to know more about your experiences and your work in the field of education. Please describe what types of educational endeavors
 you have contributed to and what challenges and successes it has brought about in your life?
-
 **refugee**:
 I worked as a school teacher. Taught children in primary education. We increased the importance of education in the community, but sometimes lack of resources was a challenge.
 
