@@ -21,9 +21,7 @@ export class OpenaiThreadsService extends OpenaiAbstractService {
       return await this.openai.beta.threads.create(threadCreateParams);
     } catch (error) {
       throw new HttpException(
-        {
-          message: 'Error creating thread',
-        },
+        'Error creating thread',
         HttpStatus.INTERNAL_SERVER_ERROR,
         { cause: error },
       );

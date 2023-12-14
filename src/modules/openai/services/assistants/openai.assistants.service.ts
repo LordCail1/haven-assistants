@@ -50,10 +50,18 @@ export class OpenaiAssistantsService extends OpenaiAbstractService {
 
   /**
    * This method is responsible for deleting an assistant
-   * @param assistantId - the assistant id
-   * @returns - the assistant deleted object
+   * @param assistantId The assistant id
+   * @returns The assistant deleted object
    */
   async deleteAssistant(assistantId: string): Promise<AssistantDeleted> {
-    return this.openai.beta.assistants.del(assistantId);
+    try {
+      return await this.openai.beta.assistants.del(assistantId);
+    } catch (error) {
+      throw new HttpException(
+        'Something went wrong deleting the assistant',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        { cause: error },
+      );
+    }
   }
 }
