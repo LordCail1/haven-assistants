@@ -3,6 +3,9 @@ import { InjectConnection } from '@nestjs/mongoose';
 import { Connection } from 'mongoose';
 import { IDatabaseService } from '../interfaces/interfaces';
 
+/**
+ * This service is responsible for managing the database.
+ */
 @Injectable()
 export class DatabaseService implements IDatabaseService {
   /**
