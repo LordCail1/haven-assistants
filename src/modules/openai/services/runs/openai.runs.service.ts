@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { OpenaiAbstractService } from '../openai.abstract.service';
 import { Run } from 'openai/resources/beta/threads/runs/runs';
+import { CreateRunException } from '../../exceptions/runs/create-run.exception';
 
 /**
  * This service is responsible for interacting with the OpenAI runs API
@@ -25,15 +26,7 @@ export class OpenaiRunsService extends OpenaiAbstractService {
         assistant_id: assistantId,
       });
     } catch (error) {
-      throw new HttpException(
-        {
-          message: 'The run could not be created',
-          threadId,
-          assistantId,
-        },
-        HttpStatus.INTERNAL_SERVER_ERROR,
-        { cause: error },
-      );
+      throw new CreateRunException(threadId, assistantId, error);
     }
   }
 
