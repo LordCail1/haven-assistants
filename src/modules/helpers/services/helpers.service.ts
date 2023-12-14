@@ -2,8 +2,17 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ThreadCreateParams } from 'openai/resources/beta/threads/threads';
 import { ThreadMessage } from 'openai/resources/beta/threads/messages/messages';
 
+/**
+ * This service is a helper service. It groups together some helper functions
+ * that do not have any particular domain.
+ */
 @Injectable()
 export class HelpersService {
+  /**
+   * This method is responsible for parsing the last response from the AI
+   * @param response - the response from the AI
+   * @returns - a boolean that indicates whether the story is good enough
+   */
   parseLastResponseForJson(response: string): boolean {
     console.log(response);
     try {
