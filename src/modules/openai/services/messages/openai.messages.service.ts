@@ -16,7 +16,12 @@ export class OpenaiMessagesService extends OpenaiAbstractService {
     return this.openai.beta.threads.messages.create(threadId, userMessage);
   }
 
-  async listMessages(threadId: string) {
+  /**
+   * this method is responsible for listing all the messages in a thread
+   * @param threadId - the thread id associated with the run
+   * @returns - an array of messages
+   */
+  async listMessages(threadId: string): Promise<ThreadMessage[]> {
     const { data } = await this.openai.beta.threads.messages.list(threadId);
     return data;
   }

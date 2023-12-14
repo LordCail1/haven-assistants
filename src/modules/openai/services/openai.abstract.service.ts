@@ -7,9 +7,16 @@ import OpenAI from 'openai';
  */
 @Injectable()
 export class OpenaiAbstractService {
+  /**
+   * The OpenAI client instance
+   */
   protected openai: OpenAI = new OpenAI({
     apiKey: this.configService.get<string>(openai_key),
   });
 
+  /**
+   *
+   * @param configService - The injected config service. (allows us to access the .env variables)
+   */
   constructor(private readonly configService: ConfigService) {}
 }

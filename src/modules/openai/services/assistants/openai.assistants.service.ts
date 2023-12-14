@@ -13,6 +13,10 @@ import { OpenaiAbstractService } from '../openai.abstract.service';
  */
 @Injectable()
 export class OpenaiAssistantsService extends OpenaiAbstractService {
+  /**
+   * This method is responsible for listing all the assistants
+   * @returns - an array of assistants
+   */
   async listAllAssistants(): Promise<AssistantsPage> {
     try {
       return this.openai.beta.assistants.list();
@@ -27,6 +31,11 @@ export class OpenaiAssistantsService extends OpenaiAbstractService {
     }
   }
 
+  /**
+   * This method is responsible for creating a new assistant
+   * @param assistantCreateParams - the assistant create params
+   * @returns - the assistant object
+   */
   async createAssistant(
     assistantCreateParams: AssistantCreateParams,
   ): Promise<Assistant> {
@@ -43,6 +52,11 @@ export class OpenaiAssistantsService extends OpenaiAbstractService {
     }
   }
 
+  /**
+   * This method is responsible for deleting an assistant
+   * @param assistantId - the assistant id
+   * @returns - the assistant deleted object
+   */
   async deleteAssistant(assistantId: string): Promise<AssistantDeleted> {
     return this.openai.beta.assistants.del(assistantId);
   }
