@@ -3,8 +3,8 @@ import { AssistantsSummarizerService } from 'src/modules/assistants/services/sum
 import { AssistantsTerminatorService } from 'src/modules/assistants/services/terminator/assistants.terminator.service';
 import { GenerateFirstQuestionDto } from '../dto/generate-first-question.dto';
 import { GenerateFollowUpQuestionDto } from '../dto/generate-followup-question.dto';
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ImageNotTextException } from 'src/shared/exceptions/image-not-text.exception';
+import { Injectable } from '@nestjs/common';
 import { OpenaiMessagesService } from 'src/modules/openai/services/messages/openai.messages.service';
 import { OpenaiRunsService } from 'src/modules/openai/services/runs/openai.runs.service';
 import { OpenaiThreadsService } from 'src/modules/openai/services/threads/openai.threads.service';
@@ -33,9 +33,9 @@ export class HavenAiAgentService {
   ) {}
 
   /**
-   * this method is responsible for generating the first question that will be sent to the AI assistant.
+   * This method is responsible for generating the first question that will be sent to the AI assistant.
    * @param generateFirstQuestionDto The DTO that contains the information that the refugee provided.
-   * @returns the first question in the correct format
+   * @returns The first question in the correct format
    */
   async generateFirstQuestion(
     generateFirstQuestionDto: GenerateFirstQuestionDto,
@@ -74,8 +74,8 @@ export class HavenAiAgentService {
 
   /**
    * This method is responsible for generating the follow up question that will be sent to the AI assistant.
-   * @param generateFollowUpQuestionDto - The DTO that contains the answer tha the refugee provided.
-   * @returns - The answer to the followup quesiton
+   * @param generateFollowUpQuestionDto The DTO that contains the answer tha the refugee provided.
+   * @returns The answer to the follow-up quesiton
    */
   async generateFollowUpQuestion(
     generateFollowUpQuestionDto: GenerateFollowUpQuestionDto,
@@ -123,10 +123,7 @@ export class HavenAiAgentService {
         throw new ImageNotTextException();
       }
     } catch (error) {
-      throw new HttpException(
-        'Something went wrong during the follow up question being generated',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw error;
     }
   }
 }

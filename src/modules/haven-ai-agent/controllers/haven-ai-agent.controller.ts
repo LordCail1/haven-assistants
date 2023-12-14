@@ -13,8 +13,8 @@ export class HavenAiAgentController {
   constructor(private readonly havenAiAgentService: HavenAiAgentService) {}
   /**
    * This method is responsible for generating the first question that will be sent to the AI assistant.
-   * @param generateFirstQuestionDto - The DTO that contains the information that the refugee provided.
-   * @returns - the first question in the correct format
+   * @param generateFirstQuestionDto The DTO that contains the information that the refugee provided.
+   * @returns The first question in the correct format
    */
   @Post('generate-first-question')
   generateFirstQuestion(
@@ -27,8 +27,8 @@ export class HavenAiAgentController {
 
   /**
    * This method is responsible for generating the follow up question that will be sent to the AI assistant.
-   * @param generateFollowUpQuestionDto - The DTO that contains the information that the refugee provided.
-   * @returns  - the follow up question in the correct format
+   * @param generateFollowUpQuestionDto The DTO that contains the information that the refugee provided.
+   * @returns The follow up question in the correct format
    */
   @Post('generate-follow-up-question')
   generateFollowUpQuestion(

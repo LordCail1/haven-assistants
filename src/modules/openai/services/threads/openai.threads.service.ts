@@ -14,7 +14,7 @@ export class OpenaiThreadsService extends OpenaiAbstractService {
   /**
    * Creates a new thread
    * https://platform.openai.com/docs/api-reference/threads/createThread
-   * @param threadCreateParams Optional array of thread messages
+   * @param threadCreateParams A thread
    */
   async createThread(threadCreateParams?: ThreadCreateParams): Promise<Thread> {
     try {

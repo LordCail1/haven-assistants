@@ -41,7 +41,7 @@ export class OpenaiRunsService extends OpenaiAbstractService {
    * This method is responsible for polling the run until it is completed
    * @param threadId The thread id associated with the run
    * @param runId The id of the run
-   * @returns The run object
+   * @returns The run object once retrieved
    */
   async retrieveRun(threadId: string, runId: string): Promise<Run> {
     try {
