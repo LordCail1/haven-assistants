@@ -50,6 +50,11 @@ export class AssistantsTerminatorService extends AssistantsAbstractService {
     });
   }
 
+  /**
+   * This method is responsible for determining if the story is good enough.
+   * @param threadId - thread id that is used to identify the conversation between the refugee and the 'questioner'.
+   * @returns - true if the story is good enough, false otherwise.
+   */
   async determineIfStoryIsGoodEnough(threadId: string): Promise<boolean> {
     const threadMessages: ThreadMessage[] =
       await this.openaiMessagesService.listMessages(threadId);

@@ -4,6 +4,11 @@ import { AssistantsAbstractService } from '../assistants.abstract.service';
 import { Gpt_Models } from 'src/modules/openai/enums/enums';
 import { Injectable } from '@nestjs/common';
 
+/**
+ * This service is responsible for the 'Refugee' assistant.
+ * The 'Refugee' assistant exists simply for the sake of testing the 'Questioner' assistant.
+ * It simulates a refugee.
+ */
 @Injectable()
 export class AssistantsRefugeeService extends AssistantsAbstractService {
   private assistant: Assistant;

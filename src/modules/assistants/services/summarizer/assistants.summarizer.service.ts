@@ -46,7 +46,12 @@ export class AssistantsSummarizerService extends AssistantsAbstractService {
     });
   }
 
-  async createSummary(threadId: string) {
+  /**
+   * This method is responsible for summarizing the entire story
+   * @param threadId - The thread id that is used to identify the conversation between the refugee and the 'questioner'.
+   * @returns - The summary of the story.
+   */
+  async createSummary(threadId: string): Promise<string> {
     const threadMessagesOfEntireConvo: ThreadMessage[] =
       await this.openaiMessagesService.listMessages(threadId);
 

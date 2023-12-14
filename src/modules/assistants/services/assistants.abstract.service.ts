@@ -34,7 +34,7 @@ export abstract class AssistantsAbstractService {
   ) {}
 
   /**
-   * This method will return the assistant that is being used.
+   * This method will return the assistant
    */
   abstract getAssistant(): Assistant;
 
