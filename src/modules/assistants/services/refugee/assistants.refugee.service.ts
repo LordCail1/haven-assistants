@@ -2,7 +2,7 @@ import { Assistant } from 'openai/resources/beta/assistants/assistants';
 import { AssistantName } from '../../enums/enums';
 import { AssistantsAbstractService } from '../assistants.abstract.service';
 import { Gpt_Models } from 'src/modules/openai/enums/enums';
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 
 /**
  * This service is responsible for the 'Refugee' assistant.
@@ -14,7 +14,14 @@ export class AssistantsRefugeeService extends AssistantsAbstractService {
   private assistant: Assistant;
 
   getAssistant(): Assistant {
-    return this.assistant;
+    if (this.assistant) {
+      return this.assistant;
+    } else {
+      throw new HttpException(
+        'Assistant not initialized',
+        HttpStatus.FAILED_DEPENDENCY,
+      );
+    }
   }
 
   async initializeAssistant(): Promise<void> {

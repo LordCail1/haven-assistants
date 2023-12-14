@@ -3,7 +3,7 @@ import { AssistantName } from '../../enums/enums';
 import { AssistantsAbstractService } from '../assistants.abstract.service';
 import { Gpt_Models } from 'src/modules/openai/enums/enums';
 import { ImageNotTextException } from 'src/shared/exceptions/image-not-text.exception';
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ThreadCreateParams } from 'openai/resources/beta/threads/threads';
 import { ThreadMessage } from 'openai/resources/beta/threads/messages/messages';
 
@@ -16,7 +16,14 @@ export class AssistantsSummarizerService extends AssistantsAbstractService {
   private assistant: Assistant;
 
   getAssistant(): Assistant {
-    return this.assistant;
+    if (this.assistant) {
+      return this.assistant;
+    } else {
+      throw new HttpException(
+        'Assistant not initialized',
+        HttpStatus.FAILED_DEPENDENCY,
+      );
+    }
   }
 
   async initializeAssistant(): Promise<void> {

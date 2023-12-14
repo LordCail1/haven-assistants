@@ -9,7 +9,7 @@ import { IDatabaseService } from '../interfaces/interfaces';
 @Injectable()
 export class DatabaseService implements IDatabaseService {
   /**
-   * @param connection - The database connection.
+   * @param connection The database connection.
    */
   constructor(@InjectConnection() private readonly connection: Connection) {}
   getDbHandle(): Connection {

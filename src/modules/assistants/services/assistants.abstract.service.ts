@@ -12,7 +12,7 @@ import { OpenaiMessagesService } from 'src/modules/openai/services/messages/open
 import { OpenaiRunsService } from 'src/modules/openai/services/runs/openai.runs.service';
 import { OpenaiThreadsService } from 'src/modules/openai/services/threads/openai.threads.service';
 /**
- * This is an abstract class/service that all the assistants will extend.
+ * This is an abstract service that all the assistants will extend.
  * It contains all the common functionality that all the assistants will use.
  */
 @Injectable()
@@ -22,7 +22,7 @@ export abstract class AssistantsAbstractService {
   });
 
   /**
-   * @param configService - The injected config service. (allows us to access the .env variables)
+   * @param configService The injected config service. (allows us to access the .env variables)
    */
   constructor(
     private readonly configService: ConfigService,
@@ -34,7 +34,8 @@ export abstract class AssistantsAbstractService {
   ) {}
 
   /**
-   * This method will return the assistant
+   * This method is responsible for getting the assistant
+   * @returns The assistant
    */
   abstract getAssistant(): Assistant;
 
@@ -45,8 +46,8 @@ export abstract class AssistantsAbstractService {
 
   /**
    * This method will check if the assistant already exists.
-   * @param assistantName - The name of the assistant.
-   * @returns the assistant if it exists
+   * @param assistantName The name of the assistant.
+   * @returns The assistant if it exists
    */
   protected async checkIfAssistantAlreadyExists(
     assistantName: AssistantName,
@@ -59,10 +60,10 @@ export abstract class AssistantsAbstractService {
 
   /**
    * This method is responsible for loading the instructions into the assistant.
-   * @param dirname - the value of __dirname where the assistant is located.
-   * @param fileLocation - the location of the instructions file relative to the assistant's service.
-   * @param assistantName - the name of the assistant.
-   * @returns the instructions as a string.
+   * @param dirname The value of __dirname where the assistant is located.
+   * @param fileLocation The location of the instructions file relative to the assistant's service.
+   * @param assistantName The name of the assistant.
+   * @returns The instructions as a string.
    */
   protected async loadInstructions(
     dirname: string,
@@ -74,21 +75,19 @@ export abstract class AssistantsAbstractService {
       return fs.readFile(filePath, 'utf-8');
     } catch (error) {
       throw new HttpException(
-        {
-          message: `Something went wrong loading the instructions for the ${assistantName} assistant`,
-          error,
-        },
+        `Something went wrong loading the instructions for the ${assistantName} assistant`,
         HttpStatus.INTERNAL_SERVER_ERROR,
+        { cause: error },
       );
     }
   }
 
   /**
    * This method is responsible for loading the description into the assistant.
-   * @param dirname - the value of __dirname where the assistant is located.
-   * @param fileLocation - the location of the description file relative to the assistant's service.
-   * @param assistantName - the name of the assistant.
-   * @returns the description as a string.
+   * @param dirname The value of __dirname where the assistant is located.
+   * @param fileLocation The location of the description file relative to the assistant's service.
+   * @param assistantName The name of the assistant.
+   * @returns The description as a string.
    */
   protected async loadDescription(
     dirname: string,
@@ -100,11 +99,9 @@ export abstract class AssistantsAbstractService {
       return fs.readFile(filePath, 'utf-8');
     } catch (error) {
       throw new HttpException(
-        {
-          message: `Something went wrong loading the description for the ${assistantName} assistant`,
-          error,
-        },
+        `Something went wrong loading the description for the ${assistantName} assistant`,
         HttpStatus.INTERNAL_SERVER_ERROR,
+        { cause: error },
       );
     }
   }
