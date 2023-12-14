@@ -10,6 +10,8 @@ import {
   Thread,
   ThreadCreateParams,
 } from 'openai/resources/beta/threads/threads';
+import { InitializingAssistantException } from '../../exceptions/initializing-assistant.exception';
+import { GettingAssistantException } from '../../exceptions/geting-assistant.exception';
 
 /**
  * This service is responsible for the 'Terminator' assistant.
@@ -23,10 +25,7 @@ export class AssistantsTerminatorService extends AssistantsAbstractService {
     if (this.assistant) {
       return this.assistant;
     } else {
-      throw new HttpException(
-        'Assistant not initialized',
-        HttpStatus.FAILED_DEPENDENCY,
-      );
+      throw new GettingAssistantException(AssistantName.TERMINATOR);
     }
   }
 
@@ -57,11 +56,7 @@ export class AssistantsTerminatorService extends AssistantsAbstractService {
         model: Gpt_Models.GPT_4_TURBO_1106_PREVIEW,
       });
     } catch (error) {
-      throw new HttpException(
-        'There was a problem initializing the assistant',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-        { cause: error },
-      );
+      throw new InitializingAssistantException(AssistantName.TERMINATOR, error);
     }
   }
 

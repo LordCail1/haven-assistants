@@ -1,11 +1,13 @@
 import { Assistant } from 'openai/resources/beta/assistants/assistants';
 import { AssistantName } from '../../enums/enums';
 import { AssistantsAbstractService } from '../assistants.abstract.service';
+import { GettingAssistantException } from '../../exceptions/geting-assistant.exception';
 import { Gpt_Models } from 'src/modules/openai/enums/enums';
 import { ImageNotTextException } from 'src/shared/exceptions/image-not-text.exception';
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ThreadCreateParams } from 'openai/resources/beta/threads/threads';
 import { ThreadMessage } from 'openai/resources/beta/threads/messages/messages';
+import { InitializingAssistantException } from '../../exceptions/initializing-assistant.exception';
 
 /**
  * This service is responsible for the 'Summarizer' assistant.
@@ -19,38 +21,39 @@ export class AssistantsSummarizerService extends AssistantsAbstractService {
     if (this.assistant) {
       return this.assistant;
     } else {
-      throw new HttpException(
-        'Assistant not initialized',
-        HttpStatus.FAILED_DEPENDENCY,
-      );
+      throw new GettingAssistantException(AssistantName.SUMMARIZER);
     }
   }
 
   async initializeAssistant(): Promise<void> {
-    const assistant: Assistant | undefined =
-      await this.checkIfAssistantAlreadyExists(AssistantName.SUMMARIZER);
-    if (assistant) {
-      await this.openaiAssistantsService.deleteAssistant(assistant.id);
+    try {
+      const assistant: Assistant | undefined =
+        await this.checkIfAssistantAlreadyExists(AssistantName.SUMMARIZER);
+      if (assistant) {
+        await this.openaiAssistantsService.deleteAssistant(assistant.id);
+      }
+
+      const instructions = await this.loadInstructions(
+        __dirname,
+        'v1/instructions.txt',
+        AssistantName.SUMMARIZER,
+      );
+
+      const description = await this.loadDescription(
+        __dirname,
+        'description.txt',
+        AssistantName.SUMMARIZER,
+      );
+
+      this.assistant = await this.openaiAssistantsService.createAssistant({
+        name: AssistantName.SUMMARIZER,
+        description,
+        instructions,
+        model: Gpt_Models.GPT_4_TURBO_1106_PREVIEW,
+      });
+    } catch (error) {
+      throw new InitializingAssistantException(AssistantName.SUMMARIZER, error);
     }
-
-    const instructions = await this.loadInstructions(
-      __dirname,
-      'v1/instructions.txt',
-      AssistantName.SUMMARIZER,
-    );
-
-    const description = await this.loadDescription(
-      __dirname,
-      'description.txt',
-      AssistantName.SUMMARIZER,
-    );
-
-    this.assistant = await this.openaiAssistantsService.createAssistant({
-      name: AssistantName.SUMMARIZER,
-      description,
-      instructions,
-      model: Gpt_Models.GPT_4_TURBO_1106_PREVIEW,
-    });
   }
 
   /**

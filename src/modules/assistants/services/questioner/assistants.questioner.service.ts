@@ -1,8 +1,10 @@
 import { Assistant } from 'openai/resources/beta/assistants/assistants';
 import { AssistantName } from '../../enums/enums';
 import { AssistantsAbstractService } from '../assistants.abstract.service';
+import { GettingAssistantException } from '../../exceptions/geting-assistant.exception';
 import { Gpt_Models } from 'src/modules/openai/enums/enums';
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { InitializingAssistantException } from '../../exceptions/initializing-assistant.exception';
 
 /**
  * This service is responsible for the 'Questioner' assistant.
@@ -16,37 +18,38 @@ export class AssistantsQuestionerService extends AssistantsAbstractService {
     if (this.assistant) {
       return this.assistant;
     } else {
-      throw new HttpException(
-        'Assistant not initialized',
-        HttpStatus.FAILED_DEPENDENCY,
-      );
+      throw new GettingAssistantException(AssistantName.QUESTIONER);
     }
   }
 
   async initializeAssistant(): Promise<void> {
-    const assistant: Assistant | undefined =
-      await this.checkIfAssistantAlreadyExists(AssistantName.QUESTIONER);
-    if (assistant) {
-      await this.openaiAssistantsService.deleteAssistant(assistant.id);
+    try {
+      const assistant: Assistant | undefined =
+        await this.checkIfAssistantAlreadyExists(AssistantName.QUESTIONER);
+      if (assistant) {
+        await this.openaiAssistantsService.deleteAssistant(assistant.id);
+      }
+
+      const instructions = await this.loadInstructions(
+        __dirname,
+        'v1/instructions.txt',
+        AssistantName.QUESTIONER,
+      );
+
+      const description = await this.loadDescription(
+        __dirname,
+        'description.txt',
+        AssistantName.QUESTIONER,
+      );
+
+      this.assistant = await this.openaiAssistantsService.createAssistant({
+        name: AssistantName.QUESTIONER,
+        description,
+        instructions,
+        model: Gpt_Models.GPT_4_TURBO_1106_PREVIEW,
+      });
+    } catch (error) {
+      throw new InitializingAssistantException(AssistantName.QUESTIONER, error);
     }
-
-    const instructions = await this.loadInstructions(
-      __dirname,
-      'v1/instructions.txt',
-      AssistantName.QUESTIONER,
-    );
-
-    const description = await this.loadDescription(
-      __dirname,
-      'description.txt',
-      AssistantName.QUESTIONER,
-    );
-
-    this.assistant = await this.openaiAssistantsService.createAssistant({
-      name: AssistantName.QUESTIONER,
-      description,
-      instructions,
-      model: Gpt_Models.GPT_4_TURBO_1106_PREVIEW,
-    });
   }
 }
