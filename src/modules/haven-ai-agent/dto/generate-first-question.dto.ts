@@ -5,14 +5,14 @@ import { IsEmail, IsNotEmpty, IsNumber, IsString } from 'class-validator';
  */
 export class GenerateFirstQuestionDto {
   /**
-   * The name of the user
+   * The name of the refugee
    */
   @IsNotEmpty()
   @IsString()
   name: string;
 
   /**
-   * The family name of the user
+   * The family name of the refugee
    */
   @IsNotEmpty()
   @IsString()
@@ -47,14 +47,14 @@ export class GenerateFirstQuestionDto {
   languages: string[];
 
   /**
-   * the small story that the refugee told about himself/herself
+   * the small story that the refugee told about himself/herself. Will be in his/her language.
    */
   @IsNotEmpty()
   @IsString()
   myStory: string;
 
   /**
-   * What
+   * What coutnry the refugee was born in.
    */
   @IsNotEmpty()
   @IsString()
