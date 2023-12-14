@@ -1,5 +1,8 @@
 import { IsEmail, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
+/**
+ * The data transfer object that is used when generating the first question.
+ */
 export class GenerateFirstQuestionDto {
   /**
    * The name of the user

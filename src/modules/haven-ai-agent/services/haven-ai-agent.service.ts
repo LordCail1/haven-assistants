@@ -31,6 +31,11 @@ export class HavenAiAgentService {
     private readonly assistantsSummarizerService: AssistantsSummarizerService,
   ) {}
 
+  /**
+   * this method is responsible for generating the first question that will be sent to the AI assistant.
+   * @param generateFirstQuestionDto - The DTO that contains the information that the refugee provided.
+   * @returns - the first question in the correct format
+   */
   async generateFirstQuestion(
     generateFirstQuestionDto: GenerateFirstQuestionDto,
   ): Promise<ResponseObject> {
@@ -69,6 +74,11 @@ export class HavenAiAgentService {
     }
   }
 
+  /**
+   * This method is responsible for generating the follow up question that will be sent to the AI assistant.
+   * @param generateFollowUpQuestionDto - The DTO that contains the answer tha the refugee provided.
+   * @returns - The answer to the followup quesiton
+   */
   async generateFollowUpQuestion(
     generateFollowUpQuestionDto: GenerateFollowUpQuestionDto,
   ): Promise<ResponseObject> {

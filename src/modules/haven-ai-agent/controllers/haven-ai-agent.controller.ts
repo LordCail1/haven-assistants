@@ -4,9 +4,18 @@ import { GenerateFollowUpQuestionDto } from '../dto/generate-followup-question.d
 import { HavenAiAgentService } from '../services/haven-ai-agent.service';
 import { ResponseObject } from '../interfaces/interfaces';
 
+/**
+ * This controller is responsible for managing the Haven AI agent.
+ * It orchestrates the behavior of multiple assistants.
+ */
 @Controller('api/v1/haven-ai-agent')
 export class HavenAiAgentController {
   constructor(private readonly havenAiAgentService: HavenAiAgentService) {}
+  /**
+   * This method is responsible for generating the first question that will be sent to the AI assistant.
+   * @param generateFirstQuestionDto - The DTO that contains the information that the refugee provided.
+   * @returns - the first question in the correct format
+   */
   @Post('generate-first-question')
   generateFirstQuestion(
     @Body() generateFirstQuestionDto: GenerateFirstQuestionDto,
@@ -16,6 +25,11 @@ export class HavenAiAgentController {
     );
   }
 
+  /**
+   * This method is responsible for generating the follow up question that will be sent to the AI assistant.
+   * @param generateFollowUpQuestionDto - The DTO that contains the information that the refugee provided.
+   * @returns  - the follow up question in the correct format
+   */
   @Post('generate-follow-up-question')
   generateFollowUpQuestion(
     @Body() generateFollowUpQuestionDto: GenerateFollowUpQuestionDto,
