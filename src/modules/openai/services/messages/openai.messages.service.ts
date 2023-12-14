@@ -9,6 +9,12 @@ import { UserMessage } from 'src/shared/interfaces/interfaces';
  */
 @Injectable()
 export class OpenaiMessagesService extends OpenaiAbstractService {
+  /**
+   * Creates a message in a thread
+   * @param threadId The thread id associated with the thread where the message will be created
+   * @param userMessage The message that will be created
+   * @returns A thread message
+   */
   async createMessage(
     threadId: string,
     userMessage: UserMessage,
@@ -22,18 +28,18 @@ export class OpenaiMessagesService extends OpenaiAbstractService {
       throw new HttpException(
         {
           message: 'The message could not be created',
-          error,
           threadId,
         },
         HttpStatus.INTERNAL_SERVER_ERROR,
+        { cause: error },
       );
     }
   }
 
   /**
-   * this method is responsible for listing all the messages in a thread
-   * @param threadId - the thread id associated with the run
-   * @returns an array of messages
+   * This method is responsible for listing all the messages in a thread
+   * @param threadId The thread id associated with the run
+   * @returns An array of thread messages
    */
   async listMessages(threadId: string): Promise<ThreadMessage[]> {
     try {
@@ -43,10 +49,10 @@ export class OpenaiMessagesService extends OpenaiAbstractService {
       throw new HttpException(
         {
           message: 'The messages could not be listed',
-          error,
           threadId,
         },
         HttpStatus.INTERNAL_SERVER_ERROR,
+        { cause: error },
       );
     }
   }
