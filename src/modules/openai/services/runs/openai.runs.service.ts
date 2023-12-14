@@ -47,7 +47,7 @@ export class OpenaiRunsService extends OpenaiAbstractService {
     try {
       let run = await this.openai.beta.threads.runs.retrieve(threadId, runId);
       const startTime: number = Date.now();
-      const timeout: number = 1500;
+      const timeout: number = 30000;
       while (
         run.status === 'cancelling' ||
         run.status === 'in_progress' ||

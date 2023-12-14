@@ -13,9 +13,8 @@ import { ResponseObject } from 'src/modules/haven-ai-agent/interfaces/interfaces
 import { Run } from 'openai/resources/beta/threads/runs/runs';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Thread } from 'openai/resources/beta/threads/threads';
-import { turkey_Emre } from './__mocks__/refugees/turkey/refugees.turkey.mock';
-import * as request from 'supertest';
 import { ukrain_Olena } from './__mocks__/refugees/ukrain/refugees.ukrain.mock';
+import * as request from 'supertest';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -70,14 +69,6 @@ describe('AppController (e2e)', () => {
         .send(ukrain_Olena);
 
       await loopUntilStoryIsGoodEnough(response.body);
-    }, 600000);
-
-    it('test', async () => {
-      await request(httpServer)
-        .post('/api/v1/haven-ai-agent/generate-first-question')
-        .send(turkey_Emre)
-        .then((response) => console.log(response))
-        .catch((err) => console.log(err));
     }, 600000);
   });
 
