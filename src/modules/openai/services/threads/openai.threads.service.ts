@@ -4,7 +4,7 @@ import {
   Thread,
 } from 'openai/resources/beta/threads/threads';
 import { OpenaiAbstractService } from '../openai.abstract.service';
-import { CreatingThreadException } from '../../exceptions/creating-thread.exception';
+import { CreatingThreadException } from '../../exceptions/threads/creating-thread.exception';
 
 /**
  * This service is responsible for interacting with the OpenAI threads API
