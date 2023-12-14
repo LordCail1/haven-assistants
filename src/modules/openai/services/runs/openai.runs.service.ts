@@ -7,6 +7,7 @@ import {
 import { OpenaiAbstractService } from '../openai.abstract.service';
 import { Run } from 'openai/resources/beta/threads/runs/runs';
 import { CreateRunException } from '../../exceptions/runs/create-run.exception';
+import { RetrieveRunException } from '../../exceptions/runs/retrive-run.exception';
 
 /**
  * This service is responsible for interacting with the OpenAI runs API
@@ -54,68 +55,51 @@ export class OpenaiRunsService extends OpenaiAbstractService {
         }
 
         console.log('waiting for run to complete - ', run.status);
-        const newPromise = new Promise((resolve) => setTimeout(resolve, 1000));
-        await newPromise;
+        await new Promise((resolve) => setTimeout(resolve, 1000));
         run = await this.openai.beta.threads.runs.retrieve(threadId, runId);
       }
       switch (run.status) {
         case 'cancelled': {
-          throw new HttpException(
-            {
-              message: 'The run was cancelled',
-              threadId,
-              runId,
-            },
-            HttpStatus.INTERNAL_SERVER_ERROR,
-            { cause: run.last_error },
+          throw new RetrieveRunException(
+            'The run was cancelled',
+            threadId,
+            runId,
+            run.last_error,
           );
         }
         case 'failed': {
-          throw new HttpException(
-            {
-              message: 'The run failed',
-              threadId,
-              runId,
-            },
-            HttpStatus.INTERNAL_SERVER_ERROR,
-            { cause: run.last_error },
+          throw new RetrieveRunException(
+            'The run failed',
+            threadId,
+            runId,
+            run.last_error,
           );
         }
         case 'requires_action': {
-          // throw new Error('The run requires action');
-          throw new HttpException(
-            {
-              message: 'The run requires action',
-              threadId,
-              runId,
-            },
-            HttpStatus.INTERNAL_SERVER_ERROR,
-            { cause: run.last_error },
+          throw new RetrieveRunException(
+            'The run requires action',
+            threadId,
+            runId,
+            run.last_error,
           );
         }
         case 'expired': {
-          throw new HttpException(
-            {
-              message: 'The run expired',
-              threadId,
-              runId,
-            },
-            HttpStatus.INTERNAL_SERVER_ERROR,
-            { cause: run.last_error },
+          throw new RetrieveRunException(
+            'The run expired',
+            threadId,
+            runId,
+            run.last_error,
           );
         }
         case 'completed': {
           return run;
         }
         default: {
-          throw new HttpException(
-            {
-              message: 'Something went wrong',
-              threadId,
-              runId,
-            },
-            HttpStatus.INTERNAL_SERVER_ERROR,
-            { cause: run.last_error },
+          throw new RetrieveRunException(
+            'Something went wrong',
+            threadId,
+            runId,
+            run.last_error,
           );
         }
       }
