@@ -6,16 +6,15 @@ import { DatabaseService } from 'src/modules/database/services/database.service'
 import { GenerateFollowUpQuestionDto } from 'src/modules/haven-ai-agent/dto/generate-followup-question.dto';
 import { ImageNotTextException } from 'src/shared/exceptions/image-not-text.exception';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
-import { OpenaiMessagesService } from 'src/modules/openai/services/openai.messages.service';
-import { OpenaiRunsService } from 'src/modules/openai/services/openai.runs.service';
-import { OpenaiThreadsService } from 'src/modules/openai/services/openai.threads.service';
 import { ResponseObject } from 'src/modules/haven-ai-agent/interfaces/interfaces';
 import { Run } from 'openai/resources/beta/threads/runs/runs';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Thread } from 'openai/resources/beta/threads/threads';
 import * as request from 'supertest';
-import { russia_Anastasia } from './__mocks__/refugees/russia/refugees.russia.mock';
 import { spain_Carlos } from './__mocks__/refugees/spain/refugees.spain.mock';
+import { OpenaiMessagesService } from 'src/modules/openai/services/messages/openai.messages.service';
+import { OpenaiRunsService } from 'src/modules/openai/services/runs/openai.runs.service';
+import { OpenaiThreadsService } from 'src/modules/openai/services/threads/openai.threads.service';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;

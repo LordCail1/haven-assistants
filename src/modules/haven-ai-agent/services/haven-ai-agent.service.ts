@@ -5,15 +5,15 @@ import { GenerateFirstQuestionDto } from '../dto/generate-first-question.dto';
 import { GenerateFollowUpQuestionDto } from '../dto/generate-followup-question.dto';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ImageNotTextException } from 'src/shared/exceptions/image-not-text.exception';
-import { OpenaiMessagesService } from 'src/modules/openai/services/openai.messages.service';
-import { OpenaiRunsService } from 'src/modules/openai/services/openai.runs.service';
-import { OpenaiThreadsService } from 'src/modules/openai/services/openai.threads.service';
 import { PromptCreatorService } from 'src/modules/prompt-creator/services/prompt-creator.service';
 import { ResponseObject } from '../interfaces/interfaces';
 import { Run } from 'openai/resources/beta/threads/runs/runs';
 import { Thread } from 'openai/resources/beta/threads/threads';
 import { ThreadMessage } from 'openai/resources/beta/threads/messages/messages';
 import { UserMessage } from 'src/shared/interfaces/interfaces';
+import { OpenaiMessagesService } from 'src/modules/openai/services/messages/openai.messages.service';
+import { OpenaiRunsService } from 'src/modules/openai/services/runs/openai.runs.service';
+import { OpenaiThreadsService } from 'src/modules/openai/services/threads/openai.threads.service';
 /**
  * This service is responsible for managing the Haven AI agent.
  * It orchestrates the behavior of multiple assistants.

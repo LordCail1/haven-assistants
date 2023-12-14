@@ -3,14 +3,14 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { openai_key } from 'src/shared/constants';
 import OpenAI from 'openai';
 import { Assistant } from 'openai/resources/beta/assistants/assistants';
-import { OpenaiAssistantsService } from 'src/modules/openai/services/openai.assistants.service';
-import { OpenaiMessagesService } from 'src/modules/openai/services/openai.messages.service';
-import { OpenaiThreadsService } from 'src/modules/openai/services/openai.threads.service';
-import { OpenaiRunsService } from 'src/modules/openai/services/openai.runs.service';
 import { HelpersService } from 'src/modules/helpers/services/helpers.service';
 import { AssistantName } from '../enums/enums';
 import { promises as fs } from 'fs';
 import { join } from 'path';
+import { OpenaiAssistantsService } from 'src/modules/openai/services/assistants/openai.assistants.service';
+import { OpenaiMessagesService } from 'src/modules/openai/services/messages/openai.messages.service';
+import { OpenaiRunsService } from 'src/modules/openai/services/runs/openai.runs.service';
+import { OpenaiThreadsService } from 'src/modules/openai/services/threads/openai.threads.service';
 /**
  * This is an abstract class/service that all the assistants will extend.
  * It contains all the common functionality that all the assistants will use.

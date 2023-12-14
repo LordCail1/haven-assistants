@@ -1,26 +1,18 @@
 import {
-  Assistant,
-  AssistantCreateParams,
-  AssistantDeleted,
   AssistantsPage,
+  AssistantCreateParams,
+  Assistant,
+  AssistantDeleted,
 } from 'openai/resources/beta/assistants/assistants';
-import { ConfigService } from '@nestjs/config';
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { openai_key } from 'src/shared/constants';
-import OpenAI from 'openai';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { OpenaiAbstractService } from '../openai.abstract.service';
 
 /**
  * This service is responsible for interacting with the OpenAI assistants API
  * https://platform.openai.com/docs/api-reference/assistants
  */
 @Injectable()
-export class OpenaiAssistantsService {
-  private openai: OpenAI = new OpenAI({
-    apiKey: this.configService.get<string>(openai_key),
-  });
-
-  constructor(private readonly configService: ConfigService) {}
-
+export class OpenaiAssistantsService extends OpenaiAbstractService {
   async listAllAssistants(): Promise<AssistantsPage> {
     try {
       return this.openai.beta.assistants.list();

@@ -1,22 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { openai_key } from 'src/shared/constants';
-import { UserMessage } from 'src/shared/interfaces/interfaces';
-import OpenAI from 'openai';
+import { OpenaiAbstractService } from '../openai.abstract.service';
 import { ThreadMessage } from 'openai/resources/beta/threads/messages/messages';
+import { UserMessage } from 'src/shared/interfaces/interfaces';
 
 /**
  * This service is responsible for interacting with the OpenAI messages API
  * https://platform.openai.com/docs/api-reference/messages
  */
 @Injectable()
-export class OpenaiMessagesService {
-  private openai: OpenAI = new OpenAI({
-    apiKey: this.configService.get<string>(openai_key),
-  });
-
-  constructor(private readonly configService: ConfigService) {}
-
+export class OpenaiMessagesService extends OpenaiAbstractService {
   async createMessage(
     threadId: string,
     userMessage: UserMessage,

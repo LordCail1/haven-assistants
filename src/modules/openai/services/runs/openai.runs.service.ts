@@ -1,7 +1,5 @@
-import { ConfigService } from '@nestjs/config';
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { openai_key } from 'src/shared/constants';
-import OpenAI from 'openai';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { OpenaiAbstractService } from '../openai.abstract.service';
 import { Run } from 'openai/resources/beta/threads/runs/runs';
 
 /**
@@ -9,13 +7,7 @@ import { Run } from 'openai/resources/beta/threads/runs/runs';
  * https://platform.openai.com/docs/api-reference/runs
  */
 @Injectable()
-export class OpenaiRunsService {
-  private openai: OpenAI = new OpenAI({
-    apiKey: this.configService.get<string>(openai_key),
-  });
-
-  constructor(private readonly configService: ConfigService) {}
-
+export class OpenaiRunsService extends OpenaiAbstractService {
   /**
    * creates a run for a specific thread
    * @param threadId - the thread id associated with the run

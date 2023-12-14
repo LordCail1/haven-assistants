@@ -1,24 +1,16 @@
-import { ConfigService } from '@nestjs/config';
 import { Injectable } from '@nestjs/common';
-import { openai_key } from 'src/shared/constants';
-import OpenAI from 'openai';
 import {
-  Thread,
   ThreadCreateParams,
+  Thread,
 } from 'openai/resources/beta/threads/threads';
+import { OpenaiAbstractService } from '../openai.abstract.service';
 
 /**
  * This service is responsible for interacting with the OpenAI threads API
  * https://platform.openai.com/docs/api-reference/threads
  */
 @Injectable()
-export class OpenaiThreadsService {
-  private openai: OpenAI = new OpenAI({
-    apiKey: this.configService.get<string>(openai_key),
-  });
-
-  constructor(private readonly configService: ConfigService) {}
-
+export class OpenaiThreadsService extends OpenaiAbstractService {
   /**
    * Creates a new thread
    * https://platform.openai.com/docs/api-reference/threads/createThread
