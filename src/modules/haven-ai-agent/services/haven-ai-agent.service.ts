@@ -34,8 +34,8 @@ export class HavenAiAgentService {
 
   /**
    * this method is responsible for generating the first question that will be sent to the AI assistant.
-   * @param generateFirstQuestionDto - The DTO that contains the information that the refugee provided.
-   * @returns - the first question in the correct format
+   * @param generateFirstQuestionDto The DTO that contains the information that the refugee provided.
+   * @returns the first question in the correct format
    */
   async generateFirstQuestion(
     generateFirstQuestionDto: GenerateFirstQuestionDto,
@@ -68,10 +68,7 @@ export class HavenAiAgentService {
         throw new ImageNotTextException();
       }
     } catch (error) {
-      throw new HttpException(
-        'Something went wrong during the first question being generated',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw error;
     }
   }
 

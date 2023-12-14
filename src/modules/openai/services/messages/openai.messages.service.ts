@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { OpenaiAbstractService } from '../openai.abstract.service';
 import { ThreadMessage } from 'openai/resources/beta/threads/messages/messages';
 import { UserMessage } from 'src/shared/interfaces/interfaces';
@@ -13,16 +13,41 @@ export class OpenaiMessagesService extends OpenaiAbstractService {
     threadId: string,
     userMessage: UserMessage,
   ): Promise<ThreadMessage> {
-    return this.openai.beta.threads.messages.create(threadId, userMessage);
+    try {
+      return await this.openai.beta.threads.messages.create(
+        threadId,
+        userMessage,
+      );
+    } catch (error) {
+      throw new HttpException(
+        {
+          message: 'The message could not be created',
+          error,
+          threadId,
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   /**
    * this method is responsible for listing all the messages in a thread
    * @param threadId - the thread id associated with the run
-   * @returns - an array of messages
+   * @returns an array of messages
    */
   async listMessages(threadId: string): Promise<ThreadMessage[]> {
-    const { data } = await this.openai.beta.threads.messages.list(threadId);
-    return data;
+    try {
+      const { data } = await this.openai.beta.threads.messages.list(threadId);
+      return data;
+    } catch (error) {
+      throw new HttpException(
+        {
+          message: 'The messages could not be listed',
+          error,
+          threadId,
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }

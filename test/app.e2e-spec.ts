@@ -71,6 +71,14 @@ describe('AppController (e2e)', () => {
 
       await loopUntilStoryIsGoodEnough(response.body);
     }, 600000);
+
+    it('test', async () => {
+      await request(httpServer)
+        .post('/api/v1/haven-ai-agent/generate-first-question')
+        .send(turkey_Emre)
+        .then((response) => console.log(response))
+        .catch((err) => console.log(err));
+    }, 600000);
   });
 
   async function loopUntilStoryIsGoodEnough(responseObject: ResponseObject) {

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import {
   ThreadCreateParams,
   Thread,
@@ -17,6 +17,16 @@ export class OpenaiThreadsService extends OpenaiAbstractService {
    * @param threadCreateParams - Optional array of thread messages
    */
   async createThread(threadCreateParams?: ThreadCreateParams): Promise<Thread> {
-    return this.openai.beta.threads.create(threadCreateParams);
+    try {
+      return await this.openai.beta.threads.create(threadCreateParams);
+    } catch (error) {
+      throw new HttpException(
+        {
+          message: 'Error creating thread',
+          error,
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }
