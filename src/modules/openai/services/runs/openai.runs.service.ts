@@ -14,10 +14,10 @@ import { Run } from 'openai/resources/beta/threads/runs/runs';
 @Injectable()
 export class OpenaiRunsService extends OpenaiAbstractService {
   /**
-   * creates a run for a specific thread
-   * @param threadId - the thread id associated with the run
-   * @param assistantId - the assistant id associated with the run
-   * @returns the run object
+   * Creates a run for a specific thread
+   * @param threadId The thread id associated with the run
+   * @param assistantId The assistant id associated with the run
+   * @returns The run object
    */
   async createRun(threadId: string, assistantId: string): Promise<Run> {
     try {
@@ -28,20 +28,20 @@ export class OpenaiRunsService extends OpenaiAbstractService {
       throw new HttpException(
         {
           message: 'The run could not be created',
-          error,
           threadId,
           assistantId,
         },
         HttpStatus.INTERNAL_SERVER_ERROR,
+        { cause: error },
       );
     }
   }
 
   /**
-   * this method is responsible for polling the run until it is completed
-   * @param threadId - the thread id associated with the run
-   * @param runId - the id of the run
-   * @returns the run object
+   * This method is responsible for polling the run until it is completed
+   * @param threadId The thread id associated with the run
+   * @param runId The id of the run
+   * @returns The run object
    */
   async retrieveRun(threadId: string, runId: string): Promise<Run> {
     try {
@@ -70,22 +70,22 @@ export class OpenaiRunsService extends OpenaiAbstractService {
           throw new HttpException(
             {
               message: 'The run was cancelled',
-              error: run.last_error,
               threadId,
               runId,
             },
             HttpStatus.INTERNAL_SERVER_ERROR,
+            { cause: run.last_error },
           );
         }
         case 'failed': {
           throw new HttpException(
             {
               message: 'The run failed',
-              error: run.last_error,
               threadId,
               runId,
             },
             HttpStatus.INTERNAL_SERVER_ERROR,
+            { cause: run.last_error },
           );
         }
         case 'requires_action': {
@@ -93,22 +93,22 @@ export class OpenaiRunsService extends OpenaiAbstractService {
           throw new HttpException(
             {
               message: 'The run requires action',
-              error: run.last_error,
               threadId,
               runId,
             },
             HttpStatus.INTERNAL_SERVER_ERROR,
+            { cause: run.last_error },
           );
         }
         case 'expired': {
           throw new HttpException(
             {
               message: 'The run expired',
-              error: run.last_error,
               threadId,
               runId,
             },
             HttpStatus.INTERNAL_SERVER_ERROR,
+            { cause: run.last_error },
           );
         }
         case 'completed': {
@@ -118,11 +118,11 @@ export class OpenaiRunsService extends OpenaiAbstractService {
           throw new HttpException(
             {
               message: 'Something went wrong',
-              error: run.last_error,
               threadId,
               runId,
             },
             HttpStatus.INTERNAL_SERVER_ERROR,
+            { cause: run.last_error },
           );
         }
       }

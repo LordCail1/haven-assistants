@@ -9,8 +9,8 @@ import { UserMessage } from 'src/shared/interfaces/interfaces';
 export class PromptCreatorService {
   /**
    * This method is responsible for creating the first prompt that will be sent to the AI assistant.
-   * @param generateFirstQuestionDto - The DTO that contains the information that the refugee provided.
-   * @returns the first prompt in the correct format
+   * @param generateFirstQuestionDto The DTO that contains the information that the refugee provided.
+   * @returns The first prompt in the correct format
    */
   createFirstPrompt(
     generateFirstQuestionDto: GenerateFirstQuestionDto,
@@ -74,8 +74,8 @@ generate the questions for me.
 
   /**
    * This method is responsible for creating the prompt that will be sent to the AI assistant when the refugee responds to a question.
-   * @param refugeeResponse the response that the refugee provided.
-   * @returns the prompt in the correct format
+   * @param refugeeResponse The response that the refugee provided.
+   * @returns The prompt in the correct format
    */
   createFollowUpPrompt(refugeeResponse: string): UserMessage {
     return {
@@ -86,8 +86,8 @@ generate the questions for me.
 
   /**
    * This method is responsible for looping through the languages array and returning the languages in text format.
-   * @param languages the languages that the refugee speaks
-   * @returns the languages in text format
+   * @param languages The languages that the refugee speaks
+   * @returns The languages in text format
    */
   private loopLanguagesArray(languages: string[]): string {
     let languagesInTextFormat = '';

@@ -16,7 +16,7 @@ export class OpenaiAbstractService {
 
   /**
    *
-   * @param configService - The injected config service. (allows us to access the .env variables)
+   * @param configService The injected config service. (allows us to access the .env variables)
    */
   constructor(private readonly configService: ConfigService) {}
 }

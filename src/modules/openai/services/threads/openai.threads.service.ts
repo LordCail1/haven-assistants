@@ -14,7 +14,7 @@ export class OpenaiThreadsService extends OpenaiAbstractService {
   /**
    * Creates a new thread
    * https://platform.openai.com/docs/api-reference/threads/createThread
-   * @param threadCreateParams - Optional array of thread messages
+   * @param threadCreateParams Optional array of thread messages
    */
   async createThread(threadCreateParams?: ThreadCreateParams): Promise<Thread> {
     try {
@@ -23,9 +23,9 @@ export class OpenaiThreadsService extends OpenaiAbstractService {
       throw new HttpException(
         {
           message: 'Error creating thread',
-          error,
         },
         HttpStatus.INTERNAL_SERVER_ERROR,
+        { cause: error },
       );
     }
   }
