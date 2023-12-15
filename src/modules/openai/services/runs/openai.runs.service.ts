@@ -1,7 +1,7 @@
 import { CreateRunException } from '../../exceptions/runs/create-run.exception';
-import { Injectable, RequestTimeoutException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { OpenaiAbstractService } from '../openai.abstract.service';
-import { RetrieveRunException } from '../../exceptions/runs/retrive-run.exception';
+import { RetrieveRunException } from '../../exceptions/runs/retrieve-run.exception';
 import { Run } from 'openai/resources/beta/threads/runs/runs';
 import { RunTimeoutException } from '../../exceptions/runs/run-timeout.exception';
 

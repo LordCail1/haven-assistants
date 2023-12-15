@@ -1,4 +1,6 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { CreateMessageException } from '../../exceptions/messages/create-message.exception';
+import { Injectable } from '@nestjs/common';
+import { ListMessagesException } from '../../exceptions/messages/list-messages.exception';
 import { OpenaiAbstractService } from '../openai.abstract.service';
 import { ThreadMessage } from 'openai/resources/beta/threads/messages/messages';
 import { UserMessage } from 'src/shared/interfaces/interfaces';
@@ -11,8 +13,8 @@ import { UserMessage } from 'src/shared/interfaces/interfaces';
 export class OpenaiMessagesService extends OpenaiAbstractService {
   /**
    * Creates a message in a thread
-   * @param threadId The thread id associated with the thread where the message will be created
-   * @param userMessage The message that will be created
+   * @param threadId The thread id
+   * @param userMessage The message
    * @returns A thread message
    */
   async createMessage(
@@ -25,14 +27,7 @@ export class OpenaiMessagesService extends OpenaiAbstractService {
         userMessage,
       );
     } catch (error) {
-      throw new HttpException(
-        {
-          message: 'The message could not be created',
-          threadId,
-        },
-        HttpStatus.INTERNAL_SERVER_ERROR,
-        { cause: error },
-      );
+      throw new CreateMessageException(threadId, error);
     }
   }
 
@@ -46,14 +41,7 @@ export class OpenaiMessagesService extends OpenaiAbstractService {
       const { data } = await this.openai.beta.threads.messages.list(threadId);
       return data;
     } catch (error) {
-      throw new HttpException(
-        {
-          message: 'The messages could not be listed',
-          threadId,
-        },
-        HttpStatus.INTERNAL_SERVER_ERROR,
-        { cause: error },
-      );
+      throw new ListMessagesException(threadId, error);
     }
   }
 }
