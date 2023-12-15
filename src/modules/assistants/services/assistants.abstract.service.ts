@@ -1,36 +1,27 @@
-import { ConfigService } from '@nestjs/config';
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { openai_key } from 'src/shared/constants';
-import OpenAI from 'openai';
 import { Assistant } from 'openai/resources/beta/assistants/assistants';
-import { HelpersService } from 'src/modules/helpers/services/helpers.service';
 import { AssistantName } from '../enums/enums';
-import { promises as fs } from 'fs';
+import { HelpersService } from 'src/modules/helpers/services/helpers.service';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { join } from 'path';
 import { OpenaiAssistantsService } from 'src/modules/openai/services/assistants/openai.assistants.service';
 import { OpenaiMessagesService } from 'src/modules/openai/services/messages/openai.messages.service';
 import { OpenaiRunsService } from 'src/modules/openai/services/runs/openai.runs.service';
 import { OpenaiThreadsService } from 'src/modules/openai/services/threads/openai.threads.service';
+import { promises as fs } from 'fs';
+import OpenAI from 'openai';
 /**
  * This is an abstract service that all the assistants will extend.
  * It contains all the common functionality that all the assistants will use.
  */
 @Injectable()
 export abstract class AssistantsAbstractService {
-  protected openai: OpenAI = new OpenAI({
-    apiKey: this.configService.get<string>(openai_key),
-  });
-
-  /**
-   * @param configService The injected config service. (allows us to access the .env variables)
-   */
   constructor(
-    private readonly configService: ConfigService,
+    protected openai: OpenAI,
+    protected readonly helpersService: HelpersService,
     protected readonly openaiAssistantsService: OpenaiAssistantsService,
     protected readonly openaiMessagesService: OpenaiMessagesService,
-    protected readonly openaiThreadsService: OpenaiThreadsService,
     protected readonly openaiRunsService: OpenaiRunsService,
-    protected readonly helpersService: HelpersService,
+    protected readonly openaiThreadsService: OpenaiThreadsService,
   ) {}
 
   /**

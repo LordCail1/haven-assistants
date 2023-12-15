@@ -1,3 +1,6 @@
+import { ConfigService } from '@nestjs/config';
+import OpenAI from 'openai';
+import { openai_key } from 'src/shared/constants';
 import { HelpersModule } from '../helpers/helpers.module';
 import { OpenaiModule } from '../openai/openai.module';
 import { AssistantsQuestionerService } from './services/questioner/assistants.questioner.service';
@@ -15,6 +18,15 @@ import { Module } from '@nestjs/common';
     AssistantsTerminatorService,
     AssistantsSummarizerService,
     AssistantsRefugeeService,
+    {
+      provide: OpenAI,
+      useFactory: (configService: ConfigService) => {
+        return new OpenAI({
+          apiKey: configService.get<string>(openai_key),
+        });
+      },
+      inject: [ConfigService],
+    },
   ],
   exports: [
     AssistantsQuestionerService,

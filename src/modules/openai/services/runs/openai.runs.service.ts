@@ -1,16 +1,17 @@
 import { CreateRunException } from '../../exceptions/runs/create-run.exception';
 import { Injectable } from '@nestjs/common';
-import { OpenaiAbstractService } from '../openai.abstract.service';
 import { RetrieveRunException } from '../../exceptions/runs/retrieve-run.exception';
 import { Run } from 'openai/resources/beta/threads/runs/runs';
 import { RunTimeoutException } from '../../exceptions/runs/run-timeout.exception';
+import OpenAI from 'openai';
 
 /**
  * This service is responsible for interacting with the OpenAI runs API
  * https://platform.openai.com/docs/api-reference/runs
  */
 @Injectable()
-export class OpenaiRunsService extends OpenaiAbstractService {
+export class OpenaiRunsService {
+  constructor(private openai: OpenAI) {}
   /**
    * Creates a run for a specific thread
    * @param threadId The thread id associated with the run

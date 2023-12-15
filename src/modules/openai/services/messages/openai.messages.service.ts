@@ -1,16 +1,17 @@
 import { CreateMessageException } from '../../exceptions/messages/create-message.exception';
 import { Injectable } from '@nestjs/common';
 import { ListMessagesException } from '../../exceptions/messages/list-messages.exception';
-import { OpenaiAbstractService } from '../openai.abstract.service';
 import { ThreadMessage } from 'openai/resources/beta/threads/messages/messages';
 import { UserMessage } from 'src/shared/interfaces/interfaces';
+import OpenAI from 'openai';
 
 /**
  * This service is responsible for interacting with the OpenAI messages API
  * https://platform.openai.com/docs/api-reference/messages
  */
 @Injectable()
-export class OpenaiMessagesService extends OpenaiAbstractService {
+export class OpenaiMessagesService {
+  constructor(private openai: OpenAI) {}
   /**
    * Creates a message in a thread
    * @param threadId The thread id

@@ -1,17 +1,19 @@
+import { CreateThreadException } from '../../exceptions/threads/create-thread.exception';
 import { Injectable } from '@nestjs/common';
 import {
   ThreadCreateParams,
   Thread,
 } from 'openai/resources/beta/threads/threads';
-import { OpenaiAbstractService } from '../openai.abstract.service';
-import { CreateThreadException } from '../../exceptions/threads/create-thread.exception';
+import OpenAI from 'openai';
 
 /**
  * This service is responsible for interacting with the OpenAI threads API
  * https://platform.openai.com/docs/api-reference/threads
  */
 @Injectable()
-export class OpenaiThreadsService extends OpenaiAbstractService {
+export class OpenaiThreadsService {
+  constructor(private openai: OpenAI) {}
+
   /**
    * Creates a new thread
    * https://platform.openai.com/docs/api-reference/threads/createThread

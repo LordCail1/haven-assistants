@@ -8,14 +8,16 @@ import { CreateAssistantException } from '../../exceptions/assistants/create-ass
 import { DeleteAssistantException } from '../../exceptions/assistants/delete-assistant.exception';
 import { Injectable } from '@nestjs/common';
 import { ListAllAssistantsException } from '../../exceptions/assistants/list-all-assistants.exception';
-import { OpenaiAbstractService } from '../openai.abstract.service';
+import OpenAI from 'openai';
 
 /**
  * This service is responsible for interacting with the OpenAI assistants API
  * https://platform.openai.com/docs/api-reference/assistants
  */
 @Injectable()
-export class OpenaiAssistantsService extends OpenaiAbstractService {
+export class OpenaiAssistantsService {
+  constructor(private openai: OpenAI) {}
+
   /**
    * This method is responsible for listing all the assistants
    * @returns An array of assistants
