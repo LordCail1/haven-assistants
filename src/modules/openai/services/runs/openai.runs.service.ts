@@ -1,13 +1,9 @@
-import {
-  Injectable,
-  HttpException,
-  HttpStatus,
-  RequestTimeoutException,
-} from '@nestjs/common';
-import { OpenaiAbstractService } from '../openai.abstract.service';
-import { Run } from 'openai/resources/beta/threads/runs/runs';
 import { CreateRunException } from '../../exceptions/runs/create-run.exception';
+import { Injectable, RequestTimeoutException } from '@nestjs/common';
+import { OpenaiAbstractService } from '../openai.abstract.service';
 import { RetrieveRunException } from '../../exceptions/runs/retrive-run.exception';
+import { Run } from 'openai/resources/beta/threads/runs/runs';
+import { RunTimeoutException } from '../../exceptions/runs/run-timeout.exception';
 
 /**
  * This service is responsible for interacting with the OpenAI runs API
@@ -48,13 +44,9 @@ export class OpenaiRunsService extends OpenaiAbstractService {
         run.status === 'queued'
       ) {
         if (Date.now() - startTime > timeout) {
-          console.log('time was no good!');
-          throw new RequestTimeoutException(
-            'OpenAI API took too long to respond',
-          );
+          throw new RunTimeoutException();
         }
 
-        console.log('waiting for run to complete - ', run.status);
         await new Promise((resolve) => setTimeout(resolve, 1000));
         run = await this.openai.beta.threads.runs.retrieve(threadId, runId);
       }
