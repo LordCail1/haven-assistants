@@ -4,7 +4,10 @@ import {
   Assistant,
   AssistantDeleted,
 } from 'openai/resources/beta/assistants/assistants';
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { CreateAssistantException } from '../../exceptions/assistants/create-assistant.exception';
+import { DeleteAssistantException } from '../../exceptions/assistants/delete-assistant.exception';
+import { Injectable } from '@nestjs/common';
+import { ListAllAssistantsException } from '../../exceptions/assistants/list-all-assistants.exception';
 import { OpenaiAbstractService } from '../openai.abstract.service';
 
 /**
@@ -21,11 +24,7 @@ export class OpenaiAssistantsService extends OpenaiAbstractService {
     try {
       return await this.openai.beta.assistants.list();
     } catch (error) {
-      throw new HttpException(
-        'Something went wrong listing all the assistants',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-        { cause: error },
-      );
+      throw new ListAllAssistantsException(error);
     }
   }
 
@@ -40,11 +39,7 @@ export class OpenaiAssistantsService extends OpenaiAbstractService {
     try {
       return await this.openai.beta.assistants.create(assistantCreateParams);
     } catch (error) {
-      throw new HttpException(
-        `Something went wrong creating the assistant ${assistantCreateParams.name}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-        { cause: error },
-      );
+      throw new CreateAssistantException(error);
     }
   }
 
@@ -57,11 +52,7 @@ export class OpenaiAssistantsService extends OpenaiAbstractService {
     try {
       return await this.openai.beta.assistants.del(assistantId);
     } catch (error) {
-      throw new HttpException(
-        'Something went wrong deleting the assistant',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-        { cause: error },
-      );
+      throw new DeleteAssistantException(assistantId, error);
     }
   }
 }
