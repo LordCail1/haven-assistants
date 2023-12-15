@@ -4,10 +4,11 @@ import { AssistantsAbstractService } from '../assistants.abstract.service';
 import { GettingAssistantException } from '../../exceptions/geting-assistant.exception';
 import { Gpt_Models } from 'src/modules/openai/enums/enums';
 import { ImageNotTextException } from 'src/shared/exceptions/image-not-text.exception';
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { ThreadCreateParams } from 'openai/resources/beta/threads/threads';
 import { ThreadMessage } from 'openai/resources/beta/threads/messages/messages';
 import { InitializingAssistantException } from '../../exceptions/initializing-assistant.exception';
+import { CreateSummaryException } from '../../exceptions/summarizer/create-summary.exception';
 
 /**
  * This service is responsible for the 'Summarizer' assistant.
@@ -58,36 +59,44 @@ export class AssistantsSummarizerService extends AssistantsAbstractService {
 
   /**
    * This method is responsible for summarizing the entire story
-   * @param threadId - The thread id that is used to identify the conversation between the refugee and the 'questioner'.
-   * @returns - The summary of the story.
+   * @param threadId The thread id that is used to identify the conversation between the refugee and the 'questioner'.
+   * @returns The summary of the story.
    */
   async createSummary(threadId: string): Promise<string> {
-    const threadMessagesOfEntireConvo: ThreadMessage[] =
-      await this.openaiMessagesService.listMessages(threadId);
+    try {
+      const threadMessagesOfEntireConvo: ThreadMessage[] =
+        await this.openaiMessagesService.listMessages(threadId);
 
-    const transformedMessages: ThreadCreateParams.Message[] =
-      await this.helpersService.convertThreadMessagesToMessageArray(
-        threadMessagesOfEntireConvo,
+      const transformedMessages: ThreadCreateParams.Message[] =
+        await this.helpersService.convertThreadMessagesToMessageArray(
+          threadMessagesOfEntireConvo,
+        );
+
+      const thread = await this.openaiThreadsService.createThread({
+        messages: transformedMessages,
+      });
+
+      const run = await this.openaiRunsService.createRun(
+        thread.id,
+        this.assistant.id,
       );
 
-    const thread = await this.openaiThreadsService.createThread({
-      messages: transformedMessages,
-    });
+      await this.openaiRunsService.retrieveRun(thread.id, run.id);
 
-    const run = await this.openaiRunsService.createRun(
-      thread.id,
-      this.assistant.id,
-    );
+      const messages: ThreadMessage[] =
+        await this.openaiMessagesService.listMessages(thread.id);
 
-    await this.openaiRunsService.retrieveRun(thread.id, run.id);
-
-    const messages: ThreadMessage[] =
-      await this.openaiMessagesService.listMessages(thread.id);
-
-    if ('text' in messages[0].content[0]) {
-      return messages[0].content[0].text.value;
-    } else {
-      throw new ImageNotTextException();
+      if ('text' in messages[0].content[0]) {
+        return messages[0].content[0].text.value;
+      } else {
+        throw new ImageNotTextException();
+      }
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      } else {
+        throw new CreateSummaryException(error);
+      }
     }
   }
 }
