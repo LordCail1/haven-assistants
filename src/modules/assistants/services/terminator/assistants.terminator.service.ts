@@ -1,17 +1,18 @@
 import { Assistant } from 'openai/resources/beta/assistants/assistants';
 import { AssistantName } from '../../enums/enums';
 import { AssistantsAbstractService } from '../assistants.abstract.service';
+import { DetermineStoryGoodEnoughException } from '../../exceptions/terminator/determine-story-good-enough.exception';
+import { GettingAssistantException } from '../../exceptions/geting-assistant.exception';
 import { Gpt_Models } from 'src/modules/openai/enums/enums';
 import { ImageNotTextException } from 'src/shared/exceptions/image-not-text.exception';
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { InitializingAssistantException } from '../../exceptions/initializing-assistant.exception';
+import { Injectable } from '@nestjs/common';
 import { Run } from 'openai/resources/beta/threads/runs/runs';
 import { ThreadMessage } from 'openai/resources/beta/threads/messages/messages';
 import {
   Thread,
   ThreadCreateParams,
 } from 'openai/resources/beta/threads/threads';
-import { InitializingAssistantException } from '../../exceptions/initializing-assistant.exception';
-import { GettingAssistantException } from '../../exceptions/geting-assistant.exception';
 
 /**
  * This service is responsible for the 'Terminator' assistant.
@@ -107,11 +108,7 @@ export class AssistantsTerminatorService extends AssistantsAbstractService {
         throw new ImageNotTextException();
       }
     } catch (error) {
-      throw new HttpException(
-        'There was a problem determining if the story was good or not',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-        { cause: error },
-      );
+      throw new DetermineStoryGoodEnoughException(error);
     }
   }
 }

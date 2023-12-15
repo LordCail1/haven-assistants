@@ -1,4 +1,8 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
+import { ImageNotTextException } from 'src/shared/exceptions/image-not-text.exception';
+import { IsNotBooleanException } from '../exceptions/is-not-boolean.exception';
+import { MessageConversionException } from '../exceptions/message-conversion.exception';
+import { ParseLastResponseForJsonException } from '../exceptions/parse-last-response-for-json.exception';
 import { ThreadCreateParams } from 'openai/resources/beta/threads/threads';
 import { ThreadMessage } from 'openai/resources/beta/threads/messages/messages';
 
@@ -19,21 +23,14 @@ export class HelpersService {
       const parsedJson = JSON.parse(response);
       const isStoryGoodEnough = parsedJson.isStoryGoodEnough;
       if (typeof isStoryGoodEnough !== 'boolean') {
-        throw new HttpException(
-          'isStoryGoodEnough is not a boolean',
-          HttpStatus.INTERNAL_SERVER_ERROR,
-        );
+        throw new IsNotBooleanException('isStoryGoodEnough');
       }
       return isStoryGoodEnough;
     } catch (error) {
       if (error instanceof HttpException) {
         throw error;
       } else {
-        throw new HttpException(
-          'something went wrong parsinng the json!',
-          HttpStatus.INTERNAL_SERVER_ERROR,
-          { cause: error },
-        );
+        throw new ParseLastResponseForJsonException(error);
       }
     }
   }
@@ -54,21 +51,14 @@ export class HelpersService {
             role: 'user',
           };
         } else {
-          throw new HttpException(
-            'An image was trying to be sent instead of text from the AI!',
-            HttpStatus.INTERNAL_SERVER_ERROR,
-          );
+          throw new ImageNotTextException();
         }
       });
     } catch (error) {
       if (error instanceof HttpException) {
         throw error;
       } else {
-        throw new HttpException(
-          'something went wrong converting the thread messages to the correct format',
-          HttpStatus.INTERNAL_SERVER_ERROR,
-          { cause: error },
-        );
+        throw new MessageConversionException(error);
       }
     }
   }

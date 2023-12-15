@@ -2,9 +2,11 @@ import { AssistantsQuestionerService } from 'src/modules/assistants/services/que
 import { AssistantsSummarizerService } from 'src/modules/assistants/services/summarizer/assistants.summarizer.service';
 import { AssistantsTerminatorService } from 'src/modules/assistants/services/terminator/assistants.terminator.service';
 import { GenerateFirstQuestionDto } from '../dto/generate-first-question.dto';
+import { GenerateFirstQuestionException } from '../exceptions/generate-first-question.exception';
 import { GenerateFollowUpQuestionDto } from '../dto/generate-followup-question.dto';
+import { GenerateFollowUpQuestionException } from '../exceptions/generate-follow-up-question.exception';
+import { HttpException, Injectable } from '@nestjs/common';
 import { ImageNotTextException } from 'src/shared/exceptions/image-not-text.exception';
-import { Injectable } from '@nestjs/common';
 import { OpenaiMessagesService } from 'src/modules/openai/services/messages/openai.messages.service';
 import { OpenaiRunsService } from 'src/modules/openai/services/runs/openai.runs.service';
 import { OpenaiThreadsService } from 'src/modules/openai/services/threads/openai.threads.service';
@@ -68,7 +70,11 @@ export class HavenAiAgentService {
         throw new ImageNotTextException();
       }
     } catch (error) {
-      throw error;
+      if (error instanceof HttpException) {
+        throw error;
+      } else {
+        throw new GenerateFirstQuestionException(error);
+      }
     }
   }
 
@@ -123,7 +129,11 @@ export class HavenAiAgentService {
         throw new ImageNotTextException();
       }
     } catch (error) {
-      throw error;
+      if (error instanceof HttpException) {
+        throw error;
+      } else {
+        throw new GenerateFollowUpQuestionException(error);
+      }
     }
   }
 }
