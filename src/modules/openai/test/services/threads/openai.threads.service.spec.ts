@@ -4,6 +4,8 @@ import { OpenaiThreadsService } from '../../../services/threads/openai.threads.s
 import { Test, TestingModule } from '@nestjs/testing';
 import OpenAI from 'openai';
 import { ThreadCreateParams } from 'openai/resources/beta/threads/threads';
+import { CreateThreadException } from 'src/modules/openai/exceptions/threads/create-thread.exception';
+import { HttpStatus } from '@nestjs/common';
 
 describe('OpenaiThreadsService', () => {
   let openaiThreadsService: OpenaiThreadsService;
@@ -46,6 +48,27 @@ describe('OpenaiThreadsService', () => {
       const result =
         await openaiThreadsService.createThread(threadCreateParams);
       expect(result).toBeDefined();
+    });
+  });
+
+  describe('Exception should od its job', () => {
+    let threadCreateParams: ThreadCreateParams;
+
+    beforeEach(async () => {
+      threadCreateParams = {
+        messages: [{ content: 'Hello', role: 'user' }],
+      };
+    });
+    it('should throw an error', async () => {
+      jest.spyOn(openai.beta.threads, 'create').mockRejectedValue(new Error());
+
+      try {
+        await openaiThreadsService.createThread(threadCreateParams);
+        fail('The service did not throw the expected exception'); // This ensures the test fails if no exception is thrown
+      } catch (error) {
+        expect(error).toBeInstanceOf(CreateThreadException);
+        expect(error.status).toEqual(HttpStatus.INTERNAL_SERVER_ERROR);
+      }
     });
   });
 });
