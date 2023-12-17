@@ -1,15 +1,16 @@
 import { ConfigService } from '@nestjs/config';
-import { openaiMock } from '../../__mocks__/openai.stub';
-import { OpenaiThreadsService } from '../../../services/threads/openai.threads.service';
-import { Test, TestingModule } from '@nestjs/testing';
-import OpenAI from 'openai';
-import { ThreadCreateParams } from 'openai/resources/beta/threads/threads';
 import { CreateThreadException } from 'src/modules/openai/exceptions/threads/create-thread.exception';
 import { HttpStatus } from '@nestjs/common';
+import { openaiMock } from '../../__mocks__/openai.mock';
+import { OpenaiThreadsService } from '../../../services/threads/openai.threads.service';
+import { Test, TestingModule } from '@nestjs/testing';
+import { ThreadCreateParams } from 'openai/resources/beta/threads/threads';
+import OpenAI from 'openai';
 
 describe('OpenaiThreadsService', () => {
   let openaiThreadsService: OpenaiThreadsService;
   let openai: OpenAI;
+
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -21,6 +22,10 @@ describe('OpenaiThreadsService', () => {
     openaiThreadsService =
       module.get<OpenaiThreadsService>(OpenaiThreadsService);
     openai = module.get<OpenAI>(OpenAI);
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
   });
 
   it('should be defined', () => {
@@ -51,7 +56,7 @@ describe('OpenaiThreadsService', () => {
     });
   });
 
-  describe('Exception should od its job', () => {
+  describe('exception should od its job', () => {
     let threadCreateParams: ThreadCreateParams;
 
     beforeEach(async () => {
@@ -59,6 +64,7 @@ describe('OpenaiThreadsService', () => {
         messages: [{ content: 'Hello', role: 'user' }],
       };
     });
+
     it('should throw an error', async () => {
       jest.spyOn(openai.beta.threads, 'create').mockRejectedValue(new Error());
 

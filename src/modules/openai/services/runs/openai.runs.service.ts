@@ -1,5 +1,5 @@
 import { CreateRunException } from '../../exceptions/runs/create-run.exception';
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { RetrieveRunException } from '../../exceptions/runs/retrieve-run.exception';
 import { Run } from 'openai/resources/beta/threads/runs/runs';
 import { RunTimeoutException } from '../../exceptions/runs/run-timeout.exception';
@@ -97,7 +97,16 @@ export class OpenaiRunsService {
         }
       }
     } catch (error) {
-      throw error;
+      if (error instanceof HttpException) {
+        throw error;
+      } else {
+        throw new RetrieveRunException(
+          'Something went wrong retrieving the run',
+          threadId,
+          runId,
+          error,
+        );
+      }
     }
   }
 }
