@@ -112,7 +112,6 @@ describe('OpenaiRunsService', () => {
           await openaiRunsService.retrieveRun(threadId, runId);
           fail('The service did not throw the expected exception'); // This ensures the test fails if no exception is thrown
         } catch (error) {
-          console.log(error);
           expect(error).toBeInstanceOf(RetrieveRunException);
         }
       });

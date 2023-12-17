@@ -6,6 +6,11 @@ import {
 } from 'openai/resources/beta/threads/threads';
 import { v4 as uuid } from 'uuid';
 import { Gpt_Models } from '../../enums/enums';
+import {
+  MessageContentText,
+  MessageCreateParams,
+  ThreadMessage,
+} from 'openai/resources/beta/threads/messages/messages';
 
 export const openaiMock = {
   beta: {
@@ -77,6 +82,53 @@ export const openaiMock = {
             };
             return Promise.resolve(run);
           }),
+      },
+
+      messages: {
+        create: jest
+          .fn()
+          .mockImplementation(
+            (threadId: string, messageCreateParams: MessageCreateParams) => {
+              const { content, role, file_ids, metadata } = messageCreateParams;
+              const messageContent: MessageContentText = {
+                text: {
+                  value: 'random Text',
+                  annotations: [],
+                },
+                type: 'text',
+              };
+              const threadMessage: ThreadMessage = {
+                id: uuid(),
+                assistant_id: uuid(),
+                content: [messageContent],
+                created_at: new Date().getTime(),
+                file_ids,
+                metadata,
+                object: 'thread.message',
+                role,
+                run_id: uuid(),
+                thread_id: threadId,
+              };
+
+              return Promise.resolve(threadMessage);
+            },
+          ),
+        list: jest.fn().mockImplementation((threadId: string) => {
+          const threadMessage: ThreadMessage = {
+            id: uuid(),
+            assistant_id: uuid(),
+            content: [],
+            created_at: new Date().getTime(),
+            file_ids: [],
+            metadata: null,
+            object: 'thread.message',
+            role: 'user',
+            run_id: uuid(),
+            thread_id: threadId,
+          };
+
+          return Promise.resolve({ data: [threadMessage] });
+        }),
       },
     },
   },
