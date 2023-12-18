@@ -74,9 +74,7 @@ export class AssistantsTerminatorService extends AssistantsAbstractService {
       threadMessages.pop();
 
       const messages: ThreadCreateParams.Message[] =
-        await this.helpersService.convertThreadMessagesToMessageArray(
-          threadMessages,
-        );
+        this.helpersService.convertThreadMessagesToMessageArray(threadMessages);
 
       const thread: Thread = await this.openaiThreadsService.createThread({
         messages,

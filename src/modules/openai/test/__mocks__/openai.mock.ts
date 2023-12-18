@@ -11,6 +11,11 @@ import {
   MessageCreateParams,
   ThreadMessage,
 } from 'openai/resources/beta/threads/messages/messages';
+import {
+  Assistant,
+  AssistantCreateParams,
+  AssistantDeleted,
+} from 'openai/resources/beta/assistants/assistants';
 
 export const openaiMock = {
   beta: {
@@ -130,6 +135,62 @@ export const openaiMock = {
           return Promise.resolve({ data: [threadMessage] });
         }),
       },
+    },
+    assistants: {
+      list: jest
+        .fn()
+        .mockImplementation((assistantCreateParams: AssistantCreateParams) => {
+          const assistant: Assistant = {
+            created_at: new Date().getTime(),
+            description: 'random instructions',
+            file_ids: [],
+            id: uuid(),
+            instructions: '',
+            metadata: null,
+            model: Gpt_Models.GPT_4_TURBO_1106_PREVIEW,
+            name: 'random assistant',
+            object: 'assistant',
+            tools: [],
+          };
+
+          return Promise.resolve({ data: [assistant] });
+        }),
+      create: jest
+        .fn()
+        .mockImplementation((assistantCreateParams: AssistantCreateParams) => {
+          const {
+            model,
+            description,
+            file_ids,
+            instructions,
+            metadata,
+            name,
+            tools,
+          } = assistantCreateParams;
+          const assistant: Assistant = {
+            created_at: new Date().getTime(),
+            description,
+            file_ids,
+            id: uuid(),
+            instructions,
+            metadata,
+            model,
+            name,
+            object: 'assistant',
+            tools,
+          };
+
+          return Promise.resolve(assistant);
+        }),
+      del: jest.fn().mockImplementation((assistantId: string) => {
+        const assistantDeleted: AssistantDeleted = {
+          deleted: false,
+          id: assistantId,
+          object: 'assistant.deleted',
+        };
+
+        return Promise.resolve(assistantDeleted);
+      }),
     },
   },
 };

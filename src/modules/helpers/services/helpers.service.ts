@@ -40,9 +40,9 @@ export class HelpersService {
    * @param threadMessages The thread messages that are in wrong format
    * @returns An array of messages that is in the right format
    */
-  async convertThreadMessagesToMessageArray(
+  convertThreadMessagesToMessageArray(
     threadMessages: ThreadMessage[],
-  ): Promise<ThreadCreateParams.Message[]> {
+  ): ThreadCreateParams.Message[] {
     try {
       return threadMessages.map((message: ThreadMessage) => {
         if ('text' in message.content[0]) {

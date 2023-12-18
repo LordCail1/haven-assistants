@@ -68,7 +68,7 @@ export class AssistantsSummarizerService extends AssistantsAbstractService {
         await this.openaiMessagesService.listMessages(threadId);
 
       const transformedMessages: ThreadCreateParams.Message[] =
-        await this.helpersService.convertThreadMessagesToMessageArray(
+        this.helpersService.convertThreadMessagesToMessageArray(
           threadMessagesOfEntireConvo,
         );
 

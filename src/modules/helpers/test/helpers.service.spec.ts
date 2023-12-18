@@ -1,0 +1,113 @@
+import { HelpersService } from '../services/helpers.service';
+import { ImageNotTextException } from 'src/shared/exceptions/image-not-text.exception';
+import { IsNotBooleanException } from '../exceptions/is-not-boolean.exception';
+import { ParseLastResponseForJsonException } from '../exceptions/parse-last-response-for-json.exception';
+import { Test, TestingModule } from '@nestjs/testing';
+import { ThreadMessage } from 'openai/resources/beta/threads/messages/messages';
+import { v4 as uuid } from 'uuid';
+
+describe('HelpersService', () => {
+  let helpersService: HelpersService;
+
+  beforeAll(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [HelpersService],
+    }).compile();
+
+    helpersService = module.get<HelpersService>(HelpersService);
+  });
+
+  it('should be defined', () => {
+    expect(helpersService).toBeDefined();
+  });
+
+  describe('parseLastResponseForJson', () => {
+    it('should return true if the response is true', () => {
+      const response: string = '{"isStoryGoodEnough": true}';
+      const result = helpersService.parseLastResponseForJson(response);
+      expect(result).toBe(true);
+    });
+
+    it('should return false if the response is false', () => {
+      const response: string = '{"isStoryGoodEnough": false}';
+      const result = helpersService.parseLastResponseForJson(response);
+      expect(result).toBe(false);
+    });
+
+    it('should throw IsNotBooleanException if the response is not a boolean', () => {
+      const response: string = '{"isStoryGoodEnough": "true"}';
+      expect(() => {
+        helpersService.parseLastResponseForJson(response);
+      }).toThrow(IsNotBooleanException);
+    });
+
+    it('should throw ParseLastResponseForJsonException if the response is not a valid JSON', () => {
+      const response: string = 'This is not a valid JSON';
+      expect(() => {
+        helpersService.parseLastResponseForJson(response);
+      }).toThrow(ParseLastResponseForJsonException);
+    });
+  });
+
+  describe('convertThreadMessagesToMessageArray', () => {
+    let threadMessages: ThreadMessage[];
+
+    it('should work if the thread messages are in the right format', async () => {
+      threadMessages = [
+        {
+          id: uuid(),
+          assistant_id: uuid(),
+          content: [
+            {
+              text: {
+                value: 'random Text',
+                annotations: [],
+              },
+              type: 'text',
+            },
+          ],
+          created_at: new Date().getTime(),
+          file_ids: [],
+          object: 'thread.message',
+          run_id: uuid(),
+          thread_id: uuid(),
+          metadata: null,
+          role: 'user',
+        },
+      ];
+
+      const result =
+        helpersService.convertThreadMessagesToMessageArray(threadMessages);
+      expect(result[0].content).toBe('random Text');
+      expect(result[0].role).toBe('user');
+    });
+
+    it('should throw ImageNotTextException if the thread messages are in the wrong format', async () => {
+      threadMessages = [
+        {
+          id: uuid(),
+          assistant_id: uuid(),
+          content: [
+            {
+              image_file: {
+                file_id: uuid(),
+              },
+              type: 'image_file',
+            },
+          ],
+          created_at: new Date().getTime(),
+          file_ids: [],
+          object: 'thread.message',
+          run_id: uuid(),
+          thread_id: uuid(),
+          metadata: null,
+          role: 'user',
+        },
+      ];
+
+      expect(() => {
+        helpersService.convertThreadMessagesToMessageArray(threadMessages);
+      }).toThrow(ImageNotTextException);
+    });
+  });
+});
