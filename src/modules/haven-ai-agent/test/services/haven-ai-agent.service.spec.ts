@@ -4,9 +4,9 @@ import { AssistantsSummarizerService } from 'src/modules/assistants/services/sum
 import { assistantsSummarizerServiceMock } from 'src/modules/assistants/test/__mocks__/summarizer/assistants.summarizer.service.mock';
 import { AssistantsTerminatorService } from 'src/modules/assistants/services/terminator/assistants.terminator.service';
 import { assistantsTerminatorServiceMock } from 'src/modules/assistants/test/__mocks__/terminator/assistants.terminator.service.mock';
-import { GenerateFirstQuestionDto } from '../dto/generate-first-question.dto';
-import { generateFirstQuestionDtoStub } from './stubs/generate-first-question.dto.stub';
-import { HavenAiAgentService } from '../services/haven-ai-agent.service';
+import { GenerateFirstQuestionDto } from '../../dto/generate-first-question.dto';
+import { generateFirstQuestionDtoStub } from '../stubs/generate-first-question.dto.stub';
+import { HavenAiAgentService } from '../../services/haven-ai-agent.service';
 import { ImageNotTextException } from 'src/shared/exceptions/image-not-text.exception';
 import { messageContentImageFileStub } from 'src/modules/openai/test/stubs/openai.messageContentImageFile.stub';
 import { OpenaiMessagesService } from 'src/modules/openai/services/messages/openai.messages.service';
@@ -17,16 +17,16 @@ import { OpenaiThreadsService } from 'src/modules/openai/services/threads/openai
 import { openaiThreadsServiceMock } from 'src/modules/openai/test/__mocks__/threads/openai.threads.service.mock';
 import { PromptCreatorService } from 'src/modules/prompt-creator/services/prompt-creator.service';
 import { promptCreatorServiceMock } from 'src/modules/prompt-creator/test/__mocks__/prompt-creator.service.mock';
-import { ResponseObject } from '../interfaces/interfaces';
+import { ResponseObject } from '../../interfaces/interfaces';
 import { Test, TestingModule } from '@nestjs/testing';
 import { threadMessageStub } from 'src/modules/openai/test/stubs/openai.threadMessage.stub';
 import {
   MessageContentImageFile,
   ThreadMessage,
 } from 'openai/resources/beta/threads/messages/messages';
-import { GenerateFollowUpQuestionDto } from '../dto/generate-followup-question.dto';
-import { generateFollowupQuestionDtoStub } from './stubs/generate-followup-question.dto.stub';
-import { GenerateFollowUpQuestionException } from '../exceptions/generate-follow-up-question.exception';
+import { GenerateFollowUpQuestionDto } from '../../dto/generate-followup-question.dto';
+import { generateFollowupQuestionDtoStub } from '../stubs/generate-followup-question.dto.stub';
+import { GenerateFollowUpQuestionException } from '../../exceptions/generate-follow-up-question.exception';
 
 describe('HavenAiAgentService', () => {
   let havenAiAgentService: HavenAiAgentService;
