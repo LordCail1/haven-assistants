@@ -1,6 +1,7 @@
 import { GenerateFirstQuestionDto } from 'src/modules/haven-ai-agent/dto/generate-first-question.dto';
 import { PromptCreatorService } from '../../services/prompt-creator.service';
 import { Test, TestingModule } from '@nestjs/testing';
+import { generateFirstQuestionDtoStub } from 'src/modules/haven-ai-agent/test/stubs/generate-first-question.dto.stub';
 
 describe('PromptCreatorService', () => {
   let promptCreatorService: PromptCreatorService;
@@ -20,24 +21,7 @@ describe('PromptCreatorService', () => {
     let generateFirstQuestionDto: GenerateFirstQuestionDto;
 
     beforeEach(() => {
-      generateFirstQuestionDto = {
-        name: 'John',
-        familyName: 'Doe',
-        email: 'johndoe@example.com',
-        gender: 'Male',
-        highestEducation: 'Bachelor',
-        languages: ['English', 'Spanish'],
-        myStory: 'This is my story...',
-        CountryOfBirth: 'USA',
-        familyStructure: 'Single',
-        howManyPeopleInYourGroup: 1,
-        resettlementProvinceOrTerritory: 'Ontario',
-        stageOfResettlement: 'Initial',
-        resettlementCity: 'Toronto',
-        currentCity: 'New York',
-        currentCountry: 'USA',
-        currentProvinceOrTerritory: 'New York',
-      };
+      generateFirstQuestionDto = generateFirstQuestionDtoStub();
     });
 
     it('should return the correct prompt', async () => {
