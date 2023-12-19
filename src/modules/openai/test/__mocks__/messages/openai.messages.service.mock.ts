@@ -28,7 +28,6 @@ export const openaiMessagesServiceMock = {
 
     const threadMessage: ThreadMessage = threadMessageStub(messageContentText);
     threadMessage.thread_id = threadId;
-    // console.log(threadMessage);
 
     return Promise.resolve([threadMessage]);
   }),

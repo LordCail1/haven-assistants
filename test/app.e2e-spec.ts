@@ -78,11 +78,13 @@ describe('AppController (e2e)', () => {
     if (isStoryGoodEnough) {
       console.log('STORY FINISHED');
     } else {
-      console.log(responseObject.response);
+      console.log(`interview question:
+      ${responseObject.response}`);
       const refugeeResponse: string = await refugeeAnswering(
         responseObject.response,
       );
-      console.log(refugeeResponse);
+      console.log(`user response:
+      ${refugeeResponse}`);
 
       const generateFollowUpQuestionDto: GenerateFollowUpQuestionDto = {
         refugeeResponse,
