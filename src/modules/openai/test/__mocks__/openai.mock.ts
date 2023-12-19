@@ -1,11 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Run, RunCreateParams } from 'openai/resources/beta/threads/runs/runs';
+import { RunCreateParams } from 'openai/resources/beta/threads/runs/runs';
 import {
   Thread,
   ThreadCreateParams,
 } from 'openai/resources/beta/threads/threads';
-import { v4 as uuid } from 'uuid';
-import { Gpt_Models } from '../../enums/enums';
 import {
   MessageContentText,
   MessageCreateParams,
@@ -14,12 +12,13 @@ import {
 import {
   Assistant,
   AssistantCreateParams,
-  AssistantDeleted,
 } from 'openai/resources/beta/assistants/assistants';
 import { threadStub } from '../stubs/openai.thread.stub';
 import { runStub } from '../stubs/openai.run.stub';
 import { messageContentTextStub } from '../stubs/openai.messageContentText.stub';
 import { threadMessageStub } from '../stubs/openai.threadMessage.stub';
+import { assistantStub } from '../stubs/openai.assistant.stub';
+import { assistantDeletedStub } from '../stubs/openai.assistantDeleted.stub';
 
 /**
  * This mock is responsible for mocking the openAI API.
@@ -87,24 +86,9 @@ export const openaiMock = {
       },
     },
     assistants: {
-      list: jest
-        .fn()
-        .mockImplementation((assistantCreateParams: AssistantCreateParams) => {
-          const assistant: Assistant = {
-            created_at: new Date().getTime(),
-            description: 'random instructions',
-            file_ids: [],
-            id: uuid(),
-            instructions: '',
-            metadata: null,
-            model: Gpt_Models.GPT_4_TURBO_1106_PREVIEW,
-            name: 'random assistant',
-            object: 'assistant',
-            tools: [],
-          };
-
-          return Promise.resolve({ data: [assistant] });
-        }),
+      list: jest.fn().mockImplementation(() => {
+        return Promise.resolve({ data: [assistantStub()] });
+      }),
       create: jest
         .fn()
         .mockImplementation((assistantCreateParams: AssistantCreateParams) => {
@@ -117,30 +101,22 @@ export const openaiMock = {
             name,
             tools,
           } = assistantCreateParams;
-          const assistant: Assistant = {
-            created_at: new Date().getTime(),
-            description,
-            file_ids,
-            id: uuid(),
-            instructions,
-            metadata,
-            model,
-            name,
-            object: 'assistant',
-            tools,
-          };
+          const assistant: Assistant = assistantStub();
+          assistant.model = model;
+          assistant.description = description;
+          assistant.file_ids = file_ids;
+          assistant.instructions = instructions;
+          assistant.metadata = metadata;
+          assistant.name = name;
+          assistant.tools = tools;
 
           return Promise.resolve(assistant);
         }),
-      del: jest.fn().mockImplementation((assistantId: string) => {
-        const assistantDeleted: AssistantDeleted = {
-          deleted: false,
-          id: assistantId,
-          object: 'assistant.deleted',
-        };
-
-        return Promise.resolve(assistantDeleted);
-      }),
+      del: jest
+        .fn()
+        .mockImplementation((assistantId: string) =>
+          Promise.resolve(assistantDeletedStub()),
+        ),
     },
   },
 };

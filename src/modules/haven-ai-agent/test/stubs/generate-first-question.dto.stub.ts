@@ -1,5 +1,9 @@
 import { GenerateFirstQuestionDto } from '../../dto/generate-first-question.dto';
 
+/**
+ * This stub is responsible for generating a GenerateFirstQuestionDto.
+ * @returns A GenerateFirstQuestionDto stub.
+ */
 export const generateFirstQuestionDtoStub = (): GenerateFirstQuestionDto => {
   return {
     name: 'John',

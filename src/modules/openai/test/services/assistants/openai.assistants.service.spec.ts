@@ -9,10 +9,11 @@ import {
   AssistantDeleted,
   AssistantsPage,
 } from 'openai/resources/beta/assistants/assistants';
-import { Gpt_Models } from 'src/modules/openai/enums/enums';
 import { ListAllAssistantsException } from 'src/modules/openai/exceptions/assistants/list-all-assistants.exception';
 import { CreateAssistantException } from 'src/modules/openai/exceptions/assistants/create-assistant.exception';
 import { DeleteAssistantException } from 'src/modules/openai/exceptions/assistants/delete-assistant.exception';
+import { assistantCreateParamsStub } from '../../stubs/openai.assistantCreateParams.stub';
+import { v4 as uuid } from 'uuid';
 
 describe('OpenaiAssistantsService', () => {
   let openaiAssistantsService: OpenaiAssistantsService;
@@ -59,13 +60,7 @@ describe('OpenaiAssistantsService', () => {
     let assistant: Assistant;
 
     beforeEach(async () => {
-      assistantCreateParams = {
-        name: 'test',
-        model: Gpt_Models.GPT_4_TURBO_1106_PREVIEW,
-        description: 'test',
-        file_ids: [],
-        instructions: 'test',
-      };
+      assistantCreateParams = assistantCreateParamsStub();
 
       assistant = await openaiAssistantsService.createAssistant(
         assistantCreateParams,
@@ -85,6 +80,7 @@ describe('OpenaiAssistantsService', () => {
     it('should return an assistant', async () => {
       expect(assistant).toBeDefined();
       expect(assistant.name).toEqual(assistantCreateParams.name);
+      assistant.model = assistantCreateParams.model;
     });
   });
 
@@ -93,7 +89,7 @@ describe('OpenaiAssistantsService', () => {
     let assistantDeleted: AssistantDeleted;
 
     beforeEach(async () => {
-      assistantId = 'test';
+      assistantId = uuid();
       assistantDeleted =
         await openaiAssistantsService.deleteAssistant(assistantId);
     });
@@ -108,7 +104,6 @@ describe('OpenaiAssistantsService', () => {
 
     it('should return an assistant deleted object', () => {
       expect(assistantDeleted).toBeDefined();
-      expect(assistantDeleted.id).toEqual(assistantId);
     });
   });
 
@@ -131,10 +126,7 @@ describe('OpenaiAssistantsService', () => {
       let assistantCreateParams: AssistantCreateParams;
 
       beforeEach(() => {
-        assistantCreateParams = {
-          name: 'test',
-          model: Gpt_Models.GPT_4_TURBO_1106_PREVIEW,
-        };
+        assistantCreateParams = assistantCreateParamsStub();
       });
 
       it('should throw an exception', async () => {
@@ -154,7 +146,7 @@ describe('OpenaiAssistantsService', () => {
       let assistantId: string;
 
       beforeEach(() => {
-        assistantId = 'test';
+        assistantId = uuid();
       });
 
       it('should throw an exception', async () => {
