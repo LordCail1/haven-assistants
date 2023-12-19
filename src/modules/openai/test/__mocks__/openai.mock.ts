@@ -17,6 +17,9 @@ import {
   AssistantDeleted,
 } from 'openai/resources/beta/assistants/assistants';
 
+/**
+ * This mock is responsible for mocking the openAI API.
+ */
 export const openaiMock = {
   beta: {
     threads: {
