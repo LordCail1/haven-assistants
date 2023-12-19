@@ -12,7 +12,6 @@ import { v4 as uuid } from 'uuid';
  * @returns a thread message stub
  */
 export const threadMessageStub = (
-  role: 'user' | 'assistant',
   content: MessageContentImageFile | MessageContentText,
 ): ThreadMessage => {
   return {
@@ -23,7 +22,7 @@ export const threadMessageStub = (
     file_ids: ['first_id'],
     metadata: null,
     object: 'thread.message',
-    role,
+    role: 'user',
     run_id: uuid(),
     thread_id: uuid(),
   };

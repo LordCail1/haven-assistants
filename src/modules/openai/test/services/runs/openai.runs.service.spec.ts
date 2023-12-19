@@ -46,6 +46,8 @@ describe('OpenaiRunsService', () => {
 
     it('should return a run object', () => {
       expect(run).toBeDefined();
+      expect(run.thread_id).toEqual(threadId);
+      expect(run.assistant_id).toEqual(assistantId);
     });
   });
 

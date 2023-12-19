@@ -6,6 +6,7 @@ import { OpenaiThreadsService } from '../../../services/threads/openai.threads.s
 import { Test, TestingModule } from '@nestjs/testing';
 import { ThreadCreateParams } from 'openai/resources/beta/threads/threads';
 import OpenAI from 'openai';
+import { threadCreateParamsStub } from '../../stubs/openai.threadCreateParams.stub';
 
 describe('OpenaiThreadsService', () => {
   let openaiThreadsService: OpenaiThreadsService;
@@ -37,9 +38,7 @@ describe('OpenaiThreadsService', () => {
     let threadCreateParams: ThreadCreateParams;
 
     beforeEach(async () => {
-      threadCreateParams = {
-        messages: [{ content: 'Hello', role: 'user' }],
-      };
+      threadCreateParams = threadCreateParamsStub();
     });
 
     it('should call openai.beta.threads.create', async () => {
@@ -60,9 +59,7 @@ describe('OpenaiThreadsService', () => {
     let threadCreateParams: ThreadCreateParams;
 
     beforeEach(async () => {
-      threadCreateParams = {
-        messages: [{ content: 'Hello', role: 'user' }],
-      };
+      threadCreateParams = threadCreateParamsStub();
     });
 
     it('should throw an error', async () => {

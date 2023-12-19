@@ -16,6 +16,10 @@ import {
   AssistantCreateParams,
   AssistantDeleted,
 } from 'openai/resources/beta/assistants/assistants';
+import { threadStub } from '../stubs/openai.thread.stub';
+import { runStub } from '../stubs/openai.run.stub';
+import { messageContentTextStub } from '../stubs/openai.messageContentText.stub';
+import { threadMessageStub } from '../stubs/openai.threadMessage.stub';
 
 /**
  * This mock is responsible for mocking the openAI API.
@@ -26,12 +30,7 @@ export const openaiMock = {
       create: jest
         .fn()
         .mockImplementation((threadCreateParams: ThreadCreateParams) => {
-          const thread: Thread = {
-            id: uuid(),
-            created_at: new Date().getTime(),
-            metadata: null,
-            object: 'thread',
-          };
+          const thread: Thread = threadStub();
 
           return Promise.resolve(thread);
         }),
@@ -41,26 +40,11 @@ export const openaiMock = {
           .mockImplementation(
             (threadId: string, runCreateParams: RunCreateParams) => {
               const { assistant_id } = runCreateParams;
-              const run: Run = {
-                id: uuid(),
-                assistant_id,
-                cancelled_at: null,
-                completed_at: null,
-                created_at: new Date().getTime(),
-                expires_at: new Date().getTime(),
-                failed_at: null,
-                file_ids: [],
-                instructions: 'random instructions',
-                last_error: null,
-                metadata: null,
-                model: Gpt_Models.GPT_4_TURBO_1106_PREVIEW,
-                object: 'thread.run',
-                required_action: null,
-                started_at: null,
-                status: 'completed',
-                thread_id: threadId,
-                tools: [],
-              };
+
+              const run = runStub();
+              run.status = 'completed';
+              run.thread_id = threadId;
+              run.assistant_id = assistant_id;
 
               return Promise.resolve(run);
             },
@@ -68,26 +52,9 @@ export const openaiMock = {
         retrieve: jest
           .fn()
           .mockImplementation((threadId: string, runId: string) => {
-            const run: Run = {
-              id: uuid(),
-              assistant_id: uuid(),
-              cancelled_at: null,
-              completed_at: null,
-              created_at: new Date().getTime(),
-              expires_at: new Date().getTime(),
-              failed_at: null,
-              file_ids: [],
-              instructions: 'random instructions',
-              last_error: null,
-              metadata: null,
-              model: Gpt_Models.GPT_4_TURBO_1106_PREVIEW,
-              object: 'thread.run',
-              required_action: null,
-              started_at: null,
-              status: 'completed',
-              thread_id: threadId,
-              tools: [],
-            };
+            const run = runStub();
+            run.status = 'completed';
+            run.thread_id = threadId;
             return Promise.resolve(run);
           }),
       },
@@ -97,43 +64,23 @@ export const openaiMock = {
           .fn()
           .mockImplementation(
             (threadId: string, messageCreateParams: MessageCreateParams) => {
-              const { content, role, file_ids, metadata } = messageCreateParams;
-              const messageContent: MessageContentText = {
-                text: {
-                  value: 'random Text',
-                  annotations: [],
-                },
-                type: 'text',
-              };
-              const threadMessage: ThreadMessage = {
-                id: uuid(),
-                assistant_id: uuid(),
-                content: [messageContent],
-                created_at: new Date().getTime(),
-                file_ids,
-                metadata,
-                object: 'thread.message',
-                role,
-                run_id: uuid(),
-                thread_id: threadId,
-              };
+              const messageContentText: MessageContentText =
+                messageContentTextStub();
+              messageContentText.text.value = messageCreateParams.content;
+
+              const threadMessage: ThreadMessage =
+                threadMessageStub(messageContentText);
+
+              threadMessage.content = [messageContentText];
+              threadMessage.role = messageCreateParams.role;
+              threadMessage.thread_id = threadId;
 
               return Promise.resolve(threadMessage);
             },
           ),
         list: jest.fn().mockImplementation((threadId: string) => {
-          const threadMessage: ThreadMessage = {
-            id: uuid(),
-            assistant_id: uuid(),
-            content: [],
-            created_at: new Date().getTime(),
-            file_ids: [],
-            metadata: null,
-            object: 'thread.message',
-            role: 'user',
-            run_id: uuid(),
-            thread_id: threadId,
-          };
+          const threadMessage = threadMessageStub(messageContentTextStub());
+          threadMessage.thread_id = threadId;
 
           return Promise.resolve({ data: [threadMessage] });
         }),

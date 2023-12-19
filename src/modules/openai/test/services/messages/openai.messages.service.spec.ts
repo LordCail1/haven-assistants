@@ -65,6 +65,7 @@ describe('OpenaiMessagesService', () => {
       );
       expect(threadMessage).toBeDefined();
       expect(threadMessage.thread_id).toEqual(threadId);
+      expect(threadMessage.role).toEqual(userMessage.role);
     });
   });
 
@@ -88,6 +89,7 @@ describe('OpenaiMessagesService', () => {
     it('should return an array of thread messages', async () => {
       expect(threadMessages).toBeDefined();
       expect(threadMessages.length).toEqual(1);
+      expect(threadMessages[0].thread_id).toEqual(threadId);
     });
   });
 
