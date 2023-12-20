@@ -24,11 +24,20 @@ export const openaiMessagesServiceMock = {
       return Promise.resolve(threadMessage);
     }),
   listMessages: jest.fn().mockImplementation((threadId: string) => {
-    const messageContentText: MessageContentText = messageContentTextStub();
+    const firstMessageContentText: MessageContentText =
+      messageContentTextStub();
+    const firstThreadMessage: ThreadMessage = threadMessageStub(
+      firstMessageContentText,
+    );
+    firstThreadMessage.thread_id = threadId;
 
-    const threadMessage: ThreadMessage = threadMessageStub(messageContentText);
-    threadMessage.thread_id = threadId;
+    const secondMessageContentText: MessageContentText =
+      messageContentTextStub();
+    const secondThreadMessage: ThreadMessage = threadMessageStub(
+      secondMessageContentText,
+    );
+    secondThreadMessage.thread_id = threadId;
 
-    return Promise.resolve([threadMessage]);
+    return Promise.resolve([firstThreadMessage, secondThreadMessage]);
   }),
 };
