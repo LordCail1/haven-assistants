@@ -17,7 +17,7 @@ import { OpenaiThreadsService } from 'src/modules/openai/services/threads/openai
 import { openaiThreadsServiceMock } from 'src/modules/openai/test/__mocks__/threads/openai.threads.service.mock';
 import { PromptCreatorService } from 'src/modules/prompt-creator/services/prompt-creator.service';
 import { promptCreatorServiceMock } from 'src/modules/prompt-creator/test/__mocks__/prompt-creator.service.mock';
-import { ResponseObject } from '../../interfaces/interfaces';
+import { ResponseObject } from '../../dto/response-object.dto';
 import { Test, TestingModule } from '@nestjs/testing';
 import { threadMessageStub } from 'src/modules/openai/test/stubs/openai.threadMessage.stub';
 import {

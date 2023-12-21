@@ -16,6 +16,7 @@ import {
 export class GenerateFirstQuestionDto {
   /**
    * The name of the refugee
+   * @example Olena
    */
   @IsNotEmpty()
   @IsString()
@@ -25,6 +26,7 @@ export class GenerateFirstQuestionDto {
 
   /**
    * The family name of the refugee
+   * @example Kovalenko
    */
   @IsNotEmpty()
   @IsString()
@@ -34,6 +36,7 @@ export class GenerateFirstQuestionDto {
 
   /**
    * The email of the refugee
+   * @example olena.kovalenko@example.com
    */
   @IsEmail()
   @IsNotEmpty()
@@ -60,6 +63,7 @@ export class GenerateFirstQuestionDto {
 
   /**
    * All the languages the refugee speaks
+   * @example ['Ukrainian', 'Russian', 'English']
    */
   @ArrayMinSize(1)
   @IsArray()

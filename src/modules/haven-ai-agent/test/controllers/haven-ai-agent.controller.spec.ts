@@ -4,7 +4,7 @@ import { HavenAiAgentService } from '../../services/haven-ai-agent.service';
 import { havenAiAgentServiceMock } from '../__mocks__/haven-ai-agent.service.mock';
 import { GenerateFirstQuestionDto } from '../../dto/generate-first-question.dto';
 import { generateFirstQuestionDtoStub } from '../stubs/generate-first-question.dto.stub';
-import { ResponseObject } from '../../interfaces/interfaces';
+import { ResponseObject } from '../../dto/response-object.dto';
 import { GenerateFollowUpQuestionDto } from '../../dto/generate-followUp-question.dto';
 import { generateFollowupQuestionDtoStub } from '../stubs/generate-followup-question.dto.stub';
 import { v4 as uuid } from 'uuid';

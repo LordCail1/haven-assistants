@@ -2,7 +2,12 @@ import { Body, Controller, Post } from '@nestjs/common';
 import { GenerateFirstQuestionDto } from '../dto/generate-first-question.dto';
 import { GenerateFollowUpQuestionDto } from '../dto/generate-followUp-question.dto';
 import { HavenAiAgentService } from '../services/haven-ai-agent.service';
-import { ResponseObject } from '../interfaces/interfaces';
+import { ResponseObject } from '../dto/response-object.dto';
+import {
+  ApiBadRequestResponse,
+  ApiInternalServerErrorResponse,
+  ApiResponse,
+} from '@nestjs/swagger';
 
 /**
  * This controller is responsible for managing the Haven AI agent.
@@ -17,6 +22,9 @@ export class HavenAiAgentController {
    * @returns The first question in the correct format
    */
   @Post('generate-first-question')
+  @ApiBadRequestResponse({ description: 'Bad request' })
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
+  @ApiResponse({ status: 424, description: 'Failed dependency' })
   generateFirstQuestion(
     @Body() generateFirstQuestionDto: GenerateFirstQuestionDto,
   ): Promise<ResponseObject> {
@@ -31,6 +39,9 @@ export class HavenAiAgentController {
    * @returns The follow up question in the correct format
    */
   @Post('generate-follow-up-question')
+  @ApiBadRequestResponse({ description: 'Bad request' })
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
+  @ApiResponse({ status: 424, description: 'Failed dependency' })
   generateFollowUpQuestion(
     @Body() generateFollowUpQuestionDto: GenerateFollowUpQuestionDto,
   ) {

@@ -11,7 +11,7 @@ import { OpenaiMessagesService } from 'src/modules/openai/services/messages/open
 import { OpenaiRunsService } from 'src/modules/openai/services/runs/openai.runs.service';
 import { OpenaiThreadsService } from 'src/modules/openai/services/threads/openai.threads.service';
 import { PromptCreatorService } from 'src/modules/prompt-creator/services/prompt-creator.service';
-import { ResponseObject } from '../interfaces/interfaces';
+import { ResponseObject } from '../dto/response-object.dto';
 import { Run } from 'openai/resources/beta/threads/runs/runs';
 import { Thread } from 'openai/resources/beta/threads/threads';
 import { ThreadMessage } from 'openai/resources/beta/threads/messages/messages';

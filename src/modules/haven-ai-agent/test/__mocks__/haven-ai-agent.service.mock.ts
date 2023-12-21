@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { GenerateFirstQuestionDto } from '../../dto/generate-first-question.dto';
-import { ResponseObject } from '../../interfaces/interfaces';
+import { ResponseObject } from '../../dto/response-object.dto';
 import { v4 as uuid } from 'uuid';
 
 export const havenAiAgentServiceMock = {
