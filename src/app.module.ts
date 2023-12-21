@@ -1,13 +1,11 @@
 import { APP_PIPE } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
-import { DatabaseModule } from './modules/database/database.module';
 import { DevtoolsModule } from '@nestjs/devtools-integration';
 import { HavenAiAgentModule } from './modules/haven-ai-agent/haven-ai-agent.module';
 import { Module, ValidationPipe } from '@nestjs/common';
 
 @Module({
   imports: [
-    DatabaseModule,
     ConfigModule.forRoot({
       envFilePath: `.env.${process.env.NODE_ENV}`,
       isGlobal: true,
