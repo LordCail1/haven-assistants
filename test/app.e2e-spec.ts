@@ -3,7 +3,6 @@ import { AppModule } from './../src/app.module';
 import { AssistantsRefugeeService } from 'src/modules/assistants/services/refugee/assistants.refugee.service';
 import { Connection } from 'mongoose';
 import { DatabaseService } from 'src/modules/database/services/database.service';
-import { GenerateFollowUpQuestionDto } from 'src/modules/haven-ai-agent/dto/generate-followup-question.dto';
 import { ImageNotTextException } from 'src/shared/exceptions/image-not-text.exception';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { OpenaiMessagesService } from 'src/modules/openai/services/messages/openai.messages.service';
@@ -15,6 +14,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Thread } from 'openai/resources/beta/threads/threads';
 import { ukrain_Olena } from './__mocks__/refugees/ukrain/refugees.ukrain.mock';
 import * as request from 'supertest';
+import { GenerateFollowUpQuestionDto } from 'src/modules/haven-ai-agent/dto/generate-followUp-question.dto';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;

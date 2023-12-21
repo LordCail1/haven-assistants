@@ -24,7 +24,7 @@ import {
   MessageContentImageFile,
   ThreadMessage,
 } from 'openai/resources/beta/threads/messages/messages';
-import { GenerateFollowUpQuestionDto } from '../../dto/generate-followup-question.dto';
+import { GenerateFollowUpQuestionDto } from '../../dto/generate-followUp-question.dto';
 import { generateFollowupQuestionDtoStub } from '../stubs/generate-followup-question.dto.stub';
 import { GenerateFollowUpQuestionException } from '../../exceptions/generate-follow-up-question.exception';
 

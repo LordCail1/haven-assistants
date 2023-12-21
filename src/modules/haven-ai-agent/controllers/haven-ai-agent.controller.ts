@@ -1,6 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { GenerateFirstQuestionDto } from '../dto/generate-first-question.dto';
-import { GenerateFollowUpQuestionDto } from '../dto/generate-followup-question.dto';
+import { GenerateFollowUpQuestionDto } from '../dto/generate-followUp-question.dto';
 import { HavenAiAgentService } from '../services/haven-ai-agent.service';
 import { ResponseObject } from '../interfaces/interfaces';
 

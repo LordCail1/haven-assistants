@@ -1,4 +1,4 @@
-import { GenerateFollowUpQuestionDto } from '../../dto/generate-followup-question.dto';
+import { GenerateFollowUpQuestionDto } from '../../dto/generate-followUp-question.dto';
 import { v4 as uuid } from 'uuid';
 
 /**

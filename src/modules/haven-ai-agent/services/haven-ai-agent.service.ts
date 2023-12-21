@@ -3,7 +3,7 @@ import { AssistantsSummarizerService } from 'src/modules/assistants/services/sum
 import { AssistantsTerminatorService } from 'src/modules/assistants/services/terminator/assistants.terminator.service';
 import { GenerateFirstQuestionDto } from '../dto/generate-first-question.dto';
 import { GenerateFirstQuestionException } from '../exceptions/generate-first-question.exception';
-import { GenerateFollowUpQuestionDto } from '../dto/generate-followup-question.dto';
+import { GenerateFollowUpQuestionDto } from '../dto/generate-followUp-question.dto';
 import { GenerateFollowUpQuestionException } from '../exceptions/generate-follow-up-question.exception';
 import { HttpException, Injectable } from '@nestjs/common';
 import { ImageNotTextException } from 'src/shared/exceptions/image-not-text.exception';
