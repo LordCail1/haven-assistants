@@ -9,7 +9,7 @@ export const india_Priya: GenerateFirstQuestionDto = {
   languages: ['Hindi', 'English'],
   myStory:
     'मैं और मेरा परिवार कनाडा में नई जिंदगी की तलाश में हैं क्योंकि हमें भारत में कई सामाजिक चुनौतियों का सामना करना पड़ा है। मेरे पास शिक्षा के क्षेत्र में अनुभव है और मैं कनाडा के समाज में योगदान देने और काम करने की आशा रखती हूं।',
-  CountryOfBirth: 'India',
+  countryOfBirth: 'India',
   familyStructure: 'Family with children',
   howManyPeopleInYourGroup: 3,
   resettlementProvinceOrTerritory: 'British Columbia',

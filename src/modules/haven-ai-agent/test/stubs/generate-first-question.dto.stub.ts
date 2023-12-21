@@ -13,7 +13,7 @@ export const generateFirstQuestionDtoStub = (): GenerateFirstQuestionDto => {
     highestEducation: 'Bachelor',
     languages: ['English', 'Spanish'],
     myStory: 'This is my story...',
-    CountryOfBirth: 'USA',
+    countryOfBirth: 'USA',
     familyStructure: 'Single',
     howManyPeopleInYourGroup: 1,
     resettlementProvinceOrTerritory: 'Ontario',

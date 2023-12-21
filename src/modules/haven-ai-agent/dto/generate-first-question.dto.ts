@@ -1,4 +1,14 @@
-import { IsEmail, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import {
+  ArrayMinSize,
+  IsArray,
+  IsEmail,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  Length,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 
 /**
  * The data transfer object that is used when generating the first question.
@@ -9,6 +19,8 @@ export class GenerateFirstQuestionDto {
    */
   @IsNotEmpty()
   @IsString()
+  @MaxLength(500)
+  @MinLength(1)
   name: string;
 
   /**
@@ -16,6 +28,8 @@ export class GenerateFirstQuestionDto {
    */
   @IsNotEmpty()
   @IsString()
+  @MaxLength(500)
+  @MinLength(1)
   familyName: string;
 
   /**
@@ -23,6 +37,7 @@ export class GenerateFirstQuestionDto {
    */
   @IsEmail()
   @IsNotEmpty()
+  @MaxLength(500)
   email: string;
 
   /**
@@ -30,6 +45,8 @@ export class GenerateFirstQuestionDto {
    */
   @IsNotEmpty()
   @IsString()
+  @MaxLength(500)
+  @MinLength(1)
   gender: string;
 
   /**
@@ -37,13 +54,18 @@ export class GenerateFirstQuestionDto {
    */
   @IsNotEmpty()
   @IsString()
+  @MaxLength(500)
+  @MinLength(1)
   highestEducation: string;
 
   /**
    * All the languages the refugee speaks
    */
+  @ArrayMinSize(1)
+  @IsArray()
   @IsNotEmpty()
   @IsString({ each: true })
+  @Length(1, 200, { each: true })
   languages: string[];
 
   /**
@@ -51,6 +73,8 @@ export class GenerateFirstQuestionDto {
    */
   @IsNotEmpty()
   @IsString()
+  @MaxLength(5000)
+  @MinLength(1)
   myStory: string;
 
   /**
@@ -58,13 +82,17 @@ export class GenerateFirstQuestionDto {
    */
   @IsNotEmpty()
   @IsString()
-  CountryOfBirth: string;
+  @MaxLength(500)
+  @MinLength(1)
+  countryOfBirth: string;
 
   /**
    * The family structure of the refugee (couple, family with children, single)
    */
   @IsNotEmpty()
   @IsString()
+  @MaxLength(500)
+  @MinLength(1)
   familyStructure: string;
 
   /**
@@ -79,6 +107,8 @@ export class GenerateFirstQuestionDto {
    */
   @IsNotEmpty()
   @IsString()
+  @MaxLength(500)
+  @MinLength(1)
   resettlementProvinceOrTerritory: string;
 
   /**
@@ -86,6 +116,8 @@ export class GenerateFirstQuestionDto {
    */
   @IsNotEmpty()
   @IsString()
+  @MaxLength(500)
+  @MinLength(1)
   stageOfResettlement: string;
 
   /**
@@ -93,6 +125,8 @@ export class GenerateFirstQuestionDto {
    */
   @IsNotEmpty()
   @IsString()
+  @MaxLength(500)
+  @MinLength(1)
   resettlementCity: string;
 
   /**
@@ -100,6 +134,8 @@ export class GenerateFirstQuestionDto {
    */
   @IsNotEmpty()
   @IsString()
+  @MaxLength(500)
+  @MinLength(1)
   currentCity: string;
 
   /**
@@ -107,6 +143,8 @@ export class GenerateFirstQuestionDto {
    */
   @IsNotEmpty()
   @IsString()
+  @MaxLength(500)
+  @MinLength(1)
   currentCountry: string;
 
   /**
@@ -114,5 +152,7 @@ export class GenerateFirstQuestionDto {
    */
   @IsNotEmpty()
   @IsString()
+  @MaxLength(500)
+  @MinLength(1)
   currentProvinceOrTerritory: string;
 }

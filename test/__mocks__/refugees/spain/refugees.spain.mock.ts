@@ -9,7 +9,7 @@ export const spain_Carlos: GenerateFirstQuestionDto = {
   languages: ['Spanish', 'English'],
   myStory:
     'Estoy buscando una nueva vida en Canadá debido a los desafíos económicos y sociales en mi país. Tengo experiencia en el campo de la salud y espero encontrar oportunidades para trabajar y contribuir en la sociedad canadiense.',
-  CountryOfBirth: 'Colombia',
+  countryOfBirth: 'Colombia',
   familyStructure: 'Family with children',
   howManyPeopleInYourGroup: 4,
   resettlementProvinceOrTerritory: 'British Columbia',

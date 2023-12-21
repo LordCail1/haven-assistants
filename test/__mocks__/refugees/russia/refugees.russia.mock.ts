@@ -9,7 +9,7 @@ export const russia_Anastasia: GenerateFirstQuestionDto = {
   languages: ['Russian', 'English'],
   myStory:
     'Я ищу новую жизнь в Канаде из-за политических и социальных проблем в моей стране. У меня есть опыт в области образования, и я надеюсь найти возможности для работы и вклада в новое общество.',
-  CountryOfBirth: 'Russia',
+  countryOfBirth: 'Russia',
   familyStructure: 'Single',
   howManyPeopleInYourGroup: 1,
   resettlementProvinceOrTerritory: 'Quebec',

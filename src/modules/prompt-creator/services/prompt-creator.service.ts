@@ -16,7 +16,7 @@ export class PromptCreatorService {
     generateFirstQuestionDto: GenerateFirstQuestionDto,
   ): UserMessage {
     const {
-      CountryOfBirth,
+      countryOfBirth: CountryOfBirth,
       currentCity,
       currentCountry,
       currentProvinceOrTerritory,

@@ -9,7 +9,7 @@ export const turkey_Emre: GenerateFirstQuestionDto = {
   languages: ['Turkish', 'English'],
   myStory:
     "Ülkemdeki politik karışıklık nedeniyle Kanada'da yeni bir hayat arıyorum. Mühendislik alanında bir geçmişim var ve yeni topluluğuma katkıda bulunmak için fırsatlar arıyorum.",
-  CountryOfBirth: 'Turkey',
+  countryOfBirth: 'Turkey',
   familyStructure: 'Single',
   howManyPeopleInYourGroup: 1,
   resettlementProvinceOrTerritory: 'Ontario',

@@ -41,7 +41,7 @@ describe('PromptCreatorService', () => {
       expect(result.content).toContain(generateFirstQuestionDto.languages[0]);
       expect(result.content).toContain(generateFirstQuestionDto.languages[1]);
       expect(result.content).toContain(generateFirstQuestionDto.myStory);
-      expect(result.content).toContain(generateFirstQuestionDto.CountryOfBirth);
+      expect(result.content).toContain(generateFirstQuestionDto.countryOfBirth);
       expect(result.content).toContain(
         generateFirstQuestionDto.familyStructure,
       );
