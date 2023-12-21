@@ -3,7 +3,9 @@ import { ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { DatabaseService } from './services/database.service';
 import { mongo_uri } from 'src/shared/constants';
-
+/**
+ * This module is responsible for managing the database.
+ */
 @Module({
   imports: [
     MongooseModule.forRootAsync({

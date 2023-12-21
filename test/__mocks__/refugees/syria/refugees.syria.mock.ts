@@ -9,7 +9,7 @@ export const syria_ahmed: GenerateFirstQuestionDto = {
   languages: ['Arabic', 'English'],
   myStory:
     'أنا وعائلتي نبحث عن حياة جديدة في كندا بعد أن تعرضنا للكثير من التحديات في سوريا. لدي خبرة في مجال الهندسة وأأمل في إيجاد فرص للعمل والمساهمة في المجتمع الكندي.',
-  CountryOfBirth: 'Syria',
+  countryOfBirth: 'Syria',
   familyStructure: 'Family with children',
   howManyPeopleInYourGroup: 4,
   resettlementProvinceOrTerritory: 'Ontario',

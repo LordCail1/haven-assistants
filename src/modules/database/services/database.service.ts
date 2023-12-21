@@ -3,10 +3,13 @@ import { InjectConnection } from '@nestjs/mongoose';
 import { Connection } from 'mongoose';
 import { IDatabaseService } from '../interfaces/interfaces';
 
+/**
+ * This service is responsible for managing the database.
+ */
 @Injectable()
 export class DatabaseService implements IDatabaseService {
   /**
-   * @param connection - The database connection.
+   * @param connection The database connection.
    */
   constructor(@InjectConnection() private readonly connection: Connection) {}
   getDbHandle(): Connection {

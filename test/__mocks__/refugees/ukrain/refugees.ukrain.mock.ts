@@ -9,7 +9,7 @@ export const ukrain_Olena: GenerateFirstQuestionDto = {
   languages: ['Ukrainian', 'Russian', 'English'],
   myStory:
     'Я шукаю нове життя в Канаді через військовий конфлікт у моїй країні. У мене є досвід роботи в IT-сфері, і я хочу знайти можливості для внеску у нову громаду.',
-  CountryOfBirth: 'Ukraine',
+  countryOfBirth: 'Ukraine',
   familyStructure: 'Family',
   howManyPeopleInYourGroup: 3,
   resettlementProvinceOrTerritory: 'British Columbia',

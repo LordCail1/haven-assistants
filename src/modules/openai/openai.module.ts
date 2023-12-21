@@ -3,6 +3,9 @@ import { OpenaiAssistantsService } from './services/assistants/openai.assistants
 import { OpenaiThreadsService } from './services/threads/openai.threads.service';
 import { OpenaiMessagesService } from './services/messages/openai.messages.service';
 import { OpenaiRunsService } from './services/runs/openai.runs.service';
+import OpenAI from 'openai';
+import { ConfigService } from '@nestjs/config';
+import { openai_key } from 'src/shared/constants';
 
 /**
  * This module warps the OpenAI API
@@ -13,6 +16,15 @@ import { OpenaiRunsService } from './services/runs/openai.runs.service';
     OpenaiMessagesService,
     OpenaiRunsService,
     OpenaiThreadsService,
+    {
+      provide: OpenAI,
+      useFactory: (configService: ConfigService) => {
+        return new OpenAI({
+          apiKey: configService.get<string>(openai_key),
+        });
+      },
+      inject: [ConfigService],
+    },
   ],
   exports: [
     OpenaiAssistantsService,

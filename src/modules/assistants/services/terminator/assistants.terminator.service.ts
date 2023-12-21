@@ -1,8 +1,11 @@
 import { Assistant } from 'openai/resources/beta/assistants/assistants';
 import { AssistantName } from '../../enums/enums';
 import { AssistantsAbstractService } from '../assistants.abstract.service';
+import { DetermineStoryGoodEnoughException } from '../../exceptions/terminator/determine-story-good-enough.exception';
+import { GettingAssistantException } from '../../exceptions/geting-assistant.exception';
 import { Gpt_Models } from 'src/modules/openai/enums/enums';
 import { ImageNotTextException } from 'src/shared/exceptions/image-not-text.exception';
+import { InitializingAssistantException } from '../../exceptions/initializing-assistant.exception';
 import { Injectable } from '@nestjs/common';
 import { Run } from 'openai/resources/beta/threads/runs/runs';
 import { ThreadMessage } from 'openai/resources/beta/threads/messages/messages';
@@ -20,75 +23,90 @@ export class AssistantsTerminatorService extends AssistantsAbstractService {
   private assistant: Assistant;
 
   getAssistant(): Assistant {
-    return this.assistant;
+    if (this.assistant) {
+      return this.assistant;
+    } else {
+      throw new GettingAssistantException(AssistantName.TERMINATOR);
+    }
   }
 
   async initializeAssistant(): Promise<void> {
-    const assistant: Assistant | undefined =
-      await this.checkIfAssistantAlreadyExists(AssistantName.TERMINATOR);
-    if (assistant) {
-      await this.openaiAssistantsService.deleteAssistant(assistant.id);
-    }
+    try {
+      const assistant: Assistant | undefined =
+        await this.checkIfAssistantAlreadyExists(AssistantName.TERMINATOR);
+      if (assistant) {
+        await this.openaiAssistantsService.deleteAssistant(assistant.id);
+      }
 
-    const instructions = await this.loadInstructions(
-      __dirname,
-      'v2/instructions.txt',
-      AssistantName.TERMINATOR,
-    );
-
-    const description = await this.loadDescription(
-      __dirname,
-      'description.txt',
-      AssistantName.TERMINATOR,
-    );
-
-    this.assistant = await this.openaiAssistantsService.createAssistant({
-      name: AssistantName.TERMINATOR,
-      description,
-      instructions,
-      model: Gpt_Models.GPT_4_TURBO_1106_PREVIEW,
-    });
-  }
-
-  async determineIfStoryIsGoodEnough(threadId: string): Promise<boolean> {
-    const threadMessages: ThreadMessage[] =
-      await this.openaiMessagesService.listMessages(threadId);
-
-    threadMessages.pop();
-
-    const messages: ThreadCreateParams.Message[] =
-      await this.helpersService.convertThreadMessagesToMessageArray(
-        threadMessages,
+      const instructions = await this.loadInstructions(
+        __dirname,
+        'v2/instructions.txt',
+        AssistantName.TERMINATOR,
       );
 
-    const thread: Thread = await this.openaiThreadsService.createThread({
-      messages,
-    });
+      const description = await this.loadDescription(
+        __dirname,
+        'description.txt',
+        AssistantName.TERMINATOR,
+      );
 
-    const run: Run = await this.openaiRunsService.createRun(
-      thread.id,
-      this.assistant.id,
-    );
+      this.assistant = await this.openaiAssistantsService.createAssistant({
+        name: AssistantName.TERMINATOR,
+        description,
+        instructions,
+        model: Gpt_Models.GPT_4_TURBO_1106_PREVIEW,
+      });
+    } catch (error) {
+      throw new InitializingAssistantException(AssistantName.TERMINATOR, error);
+    }
+  }
 
-    await this.openaiRunsService.retrieveRun(thread.id, run.id);
+  /**
+   * This method is responsible for determining if the story is good enough.
+   * @param threadId Thread id that is used to identify the conversation between the refugee and the 'questioner'.
+   * @returns True if the story is good enough, false otherwise.
+   */
+  async determineIfStoryIsGoodEnough(threadId: string): Promise<boolean> {
+    try {
+      const threadMessages: ThreadMessage[] =
+        await this.openaiMessagesService.listMessages(threadId);
 
-    const terminatorThreadMessages: ThreadMessage[] =
-      await this.openaiMessagesService.listMessages(thread.id);
+      threadMessages.pop();
 
-    if ('text' in terminatorThreadMessages[0].content[0]) {
-      const terminatorResponseText: string =
-        terminatorThreadMessages[0].content[0].text.value;
+      const messages: ThreadCreateParams.Message[] =
+        this.helpersService.convertThreadMessagesToMessageArray(threadMessages);
 
-      const isStoryGoodEnough: boolean =
-        this.helpersService.parseLastResponseForJson(terminatorResponseText);
+      const thread: Thread = await this.openaiThreadsService.createThread({
+        messages,
+      });
 
-      if (isStoryGoodEnough) {
-        return true;
+      const run: Run = await this.openaiRunsService.createRun(
+        thread.id,
+        this.assistant.id,
+      );
+
+      await this.openaiRunsService.retrieveRun(thread.id, run.id);
+
+      const terminatorThreadMessages: ThreadMessage[] =
+        await this.openaiMessagesService.listMessages(thread.id);
+
+      if ('text' in terminatorThreadMessages[0].content[0]) {
+        const terminatorResponseText: string =
+          terminatorThreadMessages[0].content[0].text.value;
+
+        const isStoryGoodEnough: boolean =
+          this.helpersService.parseLastResponseForJson(terminatorResponseText);
+
+        if (isStoryGoodEnough) {
+          return true;
+        } else {
+          return false;
+        }
       } else {
-        return false;
+        throw new ImageNotTextException();
       }
-    } else {
-      throw new ImageNotTextException();
+    } catch (error) {
+      throw new DetermineStoryGoodEnoughException(error);
     }
   }
 }

@@ -9,7 +9,7 @@ export const polish_Katarzyna: GenerateFirstQuestionDto = {
   languages: ['Polish', 'English'],
   myStory:
     'Szukam nowego życia w Kanadzie z powodu ograniczeń społecznych i ekonomicznych w moim kraju. Mam doświadczenie w branży technologicznej i chciałabym znaleźć możliwości pracy i wkładu w społeczeństwo kanadyjskie.',
-  CountryOfBirth: 'Poland',
+  countryOfBirth: 'Poland',
   familyStructure: 'Single',
   howManyPeopleInYourGroup: 1,
   resettlementProvinceOrTerritory: 'Alberta',

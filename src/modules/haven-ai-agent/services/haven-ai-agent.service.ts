@@ -2,18 +2,21 @@ import { AssistantsQuestionerService } from 'src/modules/assistants/services/que
 import { AssistantsSummarizerService } from 'src/modules/assistants/services/summarizer/assistants.summarizer.service';
 import { AssistantsTerminatorService } from 'src/modules/assistants/services/terminator/assistants.terminator.service';
 import { GenerateFirstQuestionDto } from '../dto/generate-first-question.dto';
-import { GenerateFollowUpQuestionDto } from '../dto/generate-followup-question.dto';
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { GenerateFirstQuestionException } from '../exceptions/generate-first-question.exception';
+import { GenerateFollowUpQuestionDto } from '../dto/generate-followUp-question.dto';
+import { GenerateFollowUpQuestionException } from '../exceptions/generate-follow-up-question.exception';
+import { HttpException, Injectable } from '@nestjs/common';
 import { ImageNotTextException } from 'src/shared/exceptions/image-not-text.exception';
+import { OpenaiMessagesService } from 'src/modules/openai/services/messages/openai.messages.service';
+import { OpenaiRunsService } from 'src/modules/openai/services/runs/openai.runs.service';
+import { OpenaiThreadsService } from 'src/modules/openai/services/threads/openai.threads.service';
 import { PromptCreatorService } from 'src/modules/prompt-creator/services/prompt-creator.service';
-import { ResponseObject } from '../interfaces/interfaces';
+import { ResponseObject } from '../dto/response-object.dto';
 import { Run } from 'openai/resources/beta/threads/runs/runs';
 import { Thread } from 'openai/resources/beta/threads/threads';
 import { ThreadMessage } from 'openai/resources/beta/threads/messages/messages';
 import { UserMessage } from 'src/shared/interfaces/interfaces';
-import { OpenaiMessagesService } from 'src/modules/openai/services/messages/openai.messages.service';
-import { OpenaiRunsService } from 'src/modules/openai/services/runs/openai.runs.service';
-import { OpenaiThreadsService } from 'src/modules/openai/services/threads/openai.threads.service';
+
 /**
  * This service is responsible for managing the Haven AI agent.
  * It orchestrates the behavior of multiple assistants.
@@ -31,6 +34,11 @@ export class HavenAiAgentService {
     private readonly assistantsSummarizerService: AssistantsSummarizerService,
   ) {}
 
+  /**
+   * This method is responsible for generating the first question that will be sent to the AI assistant.
+   * @param generateFirstQuestionDto The DTO that contains the information that the refugee provided.
+   * @returns The first question in the correct format
+   */
   async generateFirstQuestion(
     generateFirstQuestionDto: GenerateFirstQuestionDto,
   ): Promise<ResponseObject> {
@@ -62,13 +70,19 @@ export class HavenAiAgentService {
         throw new ImageNotTextException();
       }
     } catch (error) {
-      throw new HttpException(
-        'Something went wrong during the first question being generated',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      if (error instanceof HttpException) {
+        throw error;
+      } else {
+        throw new GenerateFirstQuestionException(error);
+      }
     }
   }
 
+  /**
+   * This method is responsible for generating the follow up question that will be sent to the AI assistant.
+   * @param generateFollowUpQuestionDto The DTO that contains the answer tha the refugee provided.
+   * @returns The answer to the follow-up quesiton
+   */
   async generateFollowUpQuestion(
     generateFollowUpQuestionDto: GenerateFollowUpQuestionDto,
   ): Promise<ResponseObject> {
@@ -115,10 +129,11 @@ export class HavenAiAgentService {
         throw new ImageNotTextException();
       }
     } catch (error) {
-      throw new HttpException(
-        'Something went wrong during the follow up question being generated',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      if (error instanceof HttpException) {
+        throw error;
+      } else {
+        throw new GenerateFollowUpQuestionException(error);
+      }
     }
   }
 }

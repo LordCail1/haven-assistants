@@ -3,18 +3,18 @@ import { AppModule } from './../src/app.module';
 import { AssistantsRefugeeService } from 'src/modules/assistants/services/refugee/assistants.refugee.service';
 import { Connection } from 'mongoose';
 import { DatabaseService } from 'src/modules/database/services/database.service';
-import { GenerateFollowUpQuestionDto } from 'src/modules/haven-ai-agent/dto/generate-followup-question.dto';
 import { ImageNotTextException } from 'src/shared/exceptions/image-not-text.exception';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
-import { ResponseObject } from 'src/modules/haven-ai-agent/interfaces/interfaces';
-import { Run } from 'openai/resources/beta/threads/runs/runs';
-import { Test, TestingModule } from '@nestjs/testing';
-import { Thread } from 'openai/resources/beta/threads/threads';
-import * as request from 'supertest';
-import { spain_Carlos } from './__mocks__/refugees/spain/refugees.spain.mock';
 import { OpenaiMessagesService } from 'src/modules/openai/services/messages/openai.messages.service';
 import { OpenaiRunsService } from 'src/modules/openai/services/runs/openai.runs.service';
 import { OpenaiThreadsService } from 'src/modules/openai/services/threads/openai.threads.service';
+import { Run } from 'openai/resources/beta/threads/runs/runs';
+import { Test, TestingModule } from '@nestjs/testing';
+import { Thread } from 'openai/resources/beta/threads/threads';
+import { ukrain_Olena } from './__mocks__/refugees/ukrain/refugees.ukrain.mock';
+import * as request from 'supertest';
+import { GenerateFollowUpQuestionDto } from 'src/modules/haven-ai-agent/dto/generate-followUp-question.dto';
+import { ResponseObject } from 'src/modules/haven-ai-agent/dto/response-object.dto';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -66,7 +66,7 @@ describe('AppController (e2e)', () => {
     it('/api/v1/haven-ai-agent/generate-first-question (POST)', async () => {
       const response = await request(httpServer)
         .post('/api/v1/haven-ai-agent/generate-first-question')
-        .send(spain_Carlos);
+        .send(ukrain_Olena);
 
       await loopUntilStoryIsGoodEnough(response.body);
     }, 600000);
@@ -78,11 +78,13 @@ describe('AppController (e2e)', () => {
     if (isStoryGoodEnough) {
       console.log('STORY FINISHED');
     } else {
-      console.log(responseObject.response);
+      console.log(`interview question:
+      ${responseObject.response}`);
       const refugeeResponse: string = await refugeeAnswering(
         responseObject.response,
       );
-      console.log(refugeeResponse);
+      console.log(`user response:
+      ${refugeeResponse}`);
 
       const generateFollowUpQuestionDto: GenerateFollowUpQuestionDto = {
         refugeeResponse,

@@ -4,46 +4,57 @@ import {
   Assistant,
   AssistantDeleted,
 } from 'openai/resources/beta/assistants/assistants';
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { OpenaiAbstractService } from '../openai.abstract.service';
+import { CreateAssistantException } from '../../exceptions/assistants/create-assistant.exception';
+import { DeleteAssistantException } from '../../exceptions/assistants/delete-assistant.exception';
+import { Injectable } from '@nestjs/common';
+import { ListAllAssistantsException } from '../../exceptions/assistants/list-all-assistants.exception';
+import OpenAI from 'openai';
 
 /**
  * This service is responsible for interacting with the OpenAI assistants API
  * https://platform.openai.com/docs/api-reference/assistants
  */
 @Injectable()
-export class OpenaiAssistantsService extends OpenaiAbstractService {
+export class OpenaiAssistantsService {
+  constructor(private openai: OpenAI) {}
+
+  /**
+   * This method is responsible for listing all the assistants
+   * @returns An array of assistants
+   */
   async listAllAssistants(): Promise<AssistantsPage> {
     try {
-      return this.openai.beta.assistants.list();
+      return await this.openai.beta.assistants.list();
     } catch (error) {
-      throw new HttpException(
-        {
-          message: 'Something went wrong listing all the assistants',
-          error,
-        },
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw new ListAllAssistantsException(error);
     }
   }
 
+  /**
+   * This method is responsible for creating a new assistant
+   * @param assistantCreateParams The assistant create params
+   * @returns The assistant object
+   */
   async createAssistant(
     assistantCreateParams: AssistantCreateParams,
   ): Promise<Assistant> {
     try {
-      return this.openai.beta.assistants.create(assistantCreateParams);
+      return await this.openai.beta.assistants.create(assistantCreateParams);
     } catch (error) {
-      throw new HttpException(
-        {
-          message: `Something went wrong creating the assistant ${assistantCreateParams.name}`,
-          error,
-        },
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw new CreateAssistantException(error);
     }
   }
 
+  /**
+   * This method is responsible for deleting an assistant
+   * @param assistantId The assistant id
+   * @returns The assistant deleted object
+   */
   async deleteAssistant(assistantId: string): Promise<AssistantDeleted> {
-    return this.openai.beta.assistants.del(assistantId);
+    try {
+      return await this.openai.beta.assistants.del(assistantId);
+    } catch (error) {
+      throw new DeleteAssistantException(assistantId, error);
+    }
   }
 }
