@@ -1,8 +1,6 @@
 import { APP_PIPE } from '@nestjs/core';
 import { AppModule } from './../src/app.module';
 import { AssistantsRefugeeService } from 'src/modules/assistants/services/refugee/assistants.refugee.service';
-import { Connection } from 'mongoose';
-import { DatabaseService } from 'src/modules/database/services/database.service';
 import { ImageNotTextException } from 'src/shared/exceptions/image-not-text.exception';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { OpenaiMessagesService } from 'src/modules/openai/services/messages/openai.messages.service';
@@ -23,7 +21,6 @@ describe('AppController (e2e)', () => {
   let openaiMessagesService: OpenaiMessagesService;
   let openaiRunsService: OpenaiRunsService;
   let assistantsRefugeeService: AssistantsRefugeeService;
-  let dbConnection: Connection;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -40,11 +37,6 @@ describe('AppController (e2e)', () => {
     assistantsRefugeeService = moduleFixture.get<AssistantsRefugeeService>(
       AssistantsRefugeeService,
     );
-    dbConnection = moduleFixture
-      .get<DatabaseService>(DatabaseService)
-      .getDbHandle();
-
-    await dbConnection.close();
 
     app = moduleFixture.createNestApplication();
     httpServer = app.getHttpServer();
@@ -52,7 +44,6 @@ describe('AppController (e2e)', () => {
   });
 
   afterAll(async () => {
-    await dbConnection.close();
     await app.close();
   });
 
