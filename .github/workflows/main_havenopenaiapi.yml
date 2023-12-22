@@ -59,4 +59,4 @@ jobs:
           app-name: 'HavenOpenaiApi'
           slot-name: 'Production'
           package: .
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_CDA073C6C97C433EBF95B6594B32C951 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_8F181F36F089474E9B4AD06C7B542C49 }}
