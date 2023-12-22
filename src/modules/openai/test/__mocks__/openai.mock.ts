@@ -3,6 +3,7 @@ import { RunCreateParams } from 'openai/resources/beta/threads/runs/runs';
 import {
   Thread,
   ThreadCreateParams,
+  ThreadDeleted,
 } from 'openai/resources/beta/threads/threads';
 import {
   MessageContentText,
@@ -19,6 +20,7 @@ import { messageContentTextStub } from '../stubs/openai.messageContentText.stub'
 import { threadMessageStub } from '../stubs/openai.threadMessage.stub';
 import { assistantStub } from '../stubs/openai.assistant.stub';
 import { assistantDeletedStub } from '../stubs/openai.assistantDeleted.stub';
+import { threadDeletedStub } from '../stubs/openai.threadDeleted.stub';
 
 /**
  * This mock is responsible for mocking the openAI API.
@@ -84,6 +86,10 @@ export const openaiMock = {
           return Promise.resolve({ data: [threadMessage] });
         }),
       },
+      del: jest.fn().mockImplementation((threadId: string) => {
+        const threadDeleted: ThreadDeleted = threadDeletedStub();
+        return Promise.resolve(threadDeleted);
+      }),
     },
     assistants: {
       list: jest.fn().mockImplementation(() => {

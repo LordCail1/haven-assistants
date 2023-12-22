@@ -244,6 +244,7 @@ describe('HavenAiAgentService', () => {
         expect(assistantsSummarizerService.createSummary).toHaveBeenCalledTimes(
           1,
         );
+        expect(openaiThreadsService.deleteThread).toHaveBeenCalledTimes(1);
         expect(openaiRunsService.createRun).not.toHaveBeenCalled();
         expect(openaiRunsService.retrieveRun).not.toHaveBeenCalled();
         expect(openaiMessagesService.listMessages).not.toHaveBeenCalled();
