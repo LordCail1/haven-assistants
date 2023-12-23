@@ -7,6 +7,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ThreadCreateParams } from 'openai/resources/beta/threads/threads';
 import OpenAI from 'openai';
 import { threadCreateParamsStub } from '../../stubs/openai.threadCreateParams.stub';
+import { v4 as uuid } from 'uuid';
 
 describe('OpenaiThreadsService', () => {
   let openaiThreadsService: OpenaiThreadsService;
@@ -51,6 +52,24 @@ describe('OpenaiThreadsService', () => {
     it('should return a thread', async () => {
       const result =
         await openaiThreadsService.createThread(threadCreateParams);
+      expect(result).toBeDefined();
+    });
+  });
+
+  describe('deleteThread', () => {
+    let threadId: string;
+
+    beforeEach(async () => {
+      threadId = uuid();
+    });
+
+    it('should call openai.beta.threads.del', async () => {
+      await openaiThreadsService.deleteThread(threadId);
+      expect(openai.beta.threads.del).toHaveBeenCalledWith(threadId);
+    });
+
+    it('should return a thread', async () => {
+      const result = await openaiThreadsService.deleteThread(threadId);
       expect(result).toBeDefined();
     });
   });

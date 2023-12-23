@@ -1,5 +1,7 @@
-import { Thread } from 'openai/resources/beta/threads/threads';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { Thread, ThreadDeleted } from 'openai/resources/beta/threads/threads';
 import { threadStub } from '../../stubs/openai.thread.stub';
+import { threadDeletedStub } from '../../stubs/openai.threadDeleted.stub';
 
 /**
  * mocking the openaiThreadsService
@@ -9,4 +11,5 @@ export const openaiThreadsServiceMock = {
     const thread: Thread = threadStub();
     return thread;
   }),
+  deleteThread: jest.fn(),
 };
