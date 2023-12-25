@@ -5,7 +5,7 @@ import { OpenaiMessagesService } from './services/messages/openai.messages.servi
 import { OpenaiRunsService } from './services/runs/openai.runs.service';
 import OpenAI from 'openai';
 import { ConfigService } from '@nestjs/config';
-import { openai_key } from 'src/shared/constants';
+import { openai_key, organization_id } from 'src/shared/constants';
 
 /**
  * This module warps the OpenAI API
@@ -21,6 +21,10 @@ import { openai_key } from 'src/shared/constants';
       useFactory: (configService: ConfigService) => {
         return new OpenAI({
           apiKey: configService.get<string>(openai_key),
+          organization:
+            process.env.NODE_ENV === 'production'
+              ? configService.get<string>(organization_id)
+              : undefined,
         });
       },
       inject: [ConfigService],
