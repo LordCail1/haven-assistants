@@ -60,14 +60,9 @@ My name is ${name} ${familyName}. I'd like to share some information about mysel
 15. **Current Country:** My current country at the moment is: ${currentCountry}.
 16. **Current Province/Territory:** the current province/territory I am currently in is: ${currentProvinceOrTerritory}.
 
-I hope this information helps you create questions that are relevant to my journey and aspirations.
-Please jump right in to asking me a question and do not present yourself, say hi to me or anything like this. 
-Just start asking a question. I will send you my responses.
-Please note that, even though this message is written in english, this message is actually a template that
-'Haven' wrote to inject the information I provided into the template! This means that I might not actually speak
-english. The language that I actually speak will be the language that is used in the 'My Story' section.
-Please analyze what language is written in 'My Story', and answer me in that language so that I can understand when you
-generate the questions for me.
+Please note that this is just a template. Once you formulate your first question, all answers will come from this refugee himself. The language that this refugee actually speaks will be the language that is used in the 'My Story' property. This is extremely important. Please take note of this.
+Please analyze what language is written in the #7 line: 'My Story', and form your questions using that language. It does not matter what are the 'languages' that they speak in the '#6': Languages property. You must only rely on what language is used in the 'My Story' property.
+What is written in 'My Story' is really what the refugee in question has wrote himself. 
       `,
     };
   }
