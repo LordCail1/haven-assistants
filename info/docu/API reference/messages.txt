@@ -1,0 +1,547 @@
+MessagesBeta
+Create messages within threads
+
+Related guide: Assistants
+
+Create messageBeta
+POST
+ 
+https://api.openai.com/v1/threads/{thread_id}/messages
+
+Create a message.
+
+Path parameters
+thread_id
+string
+Required
+The ID of the thread to create a message for.
+
+Request body
+role
+string
+Required
+The role of the entity that is creating the message. Currently only user is supported.
+
+content
+string
+Required
+The content of the message.
+
+file_ids
+array
+Optional
+Defaults to []
+A list of File IDs that the message should use. There can be a maximum of 10 files attached to a message. Useful for tools like retrieval and code_interpreter that can access and use files.
+
+metadata
+map
+Optional
+Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long.
+
+Returns
+A message object.
+
+Example request
+node.js
+
+node.js
+import OpenAI from "openai";
+
+const openai = new OpenAI();
+
+async function main() {
+  const threadMessages = await openai.beta.threads.messages.create(
+    "thread_abc123",
+    { role: "user", content: "How does AI work? Explain it in simple terms." }
+  );
+
+  console.log(threadMessages);
+}
+
+main();
+Response
+{
+  "id": "msg_abc123",
+  "object": "thread.message",
+  "created_at": 1699017614,
+  "thread_id": "thread_abc123",
+  "role": "user",
+  "content": [
+    {
+      "type": "text",
+      "text": {
+        "value": "How does AI work? Explain it in simple terms.",
+        "annotations": []
+      }
+    }
+  ],
+  "file_ids": [],
+  "assistant_id": null,
+  "run_id": null,
+  "metadata": {}
+}
+List messagesBeta
+GET
+ 
+https://api.openai.com/v1/threads/{thread_id}/messages
+
+Returns a list of messages for a given thread.
+
+Path parameters
+thread_id
+string
+Required
+The ID of the thread the messages belong to.
+
+Query parameters
+limit
+integer
+Optional
+Defaults to 20
+A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20.
+
+order
+string
+Optional
+Defaults to desc
+Sort order by the created_at timestamp of the objects. asc for ascending order and desc for descending order.
+
+after
+string
+Optional
+A cursor for use in pagination. after is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
+
+before
+string
+Optional
+A cursor for use in pagination. before is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include before=obj_foo in order to fetch the previous page of the list.
+
+Returns
+A list of message objects.
+
+Example request
+node.js
+
+node.js
+import OpenAI from "openai";
+
+const openai = new OpenAI();
+
+async function main() {
+  const threadMessages = await openai.beta.threads.messages.list(
+    "thread_abc123"
+  );
+
+  console.log(threadMessages.data);
+}
+
+main();
+Response
+{
+  "object": "list",
+  "data": [
+    {
+      "id": "msg_abc123",
+      "object": "thread.message",
+      "created_at": 1699016383,
+      "thread_id": "thread_abc123",
+      "role": "user",
+      "content": [
+        {
+          "type": "text",
+          "text": {
+            "value": "How does AI work? Explain it in simple terms.",
+            "annotations": []
+          }
+        }
+      ],
+      "file_ids": [],
+      "assistant_id": null,
+      "run_id": null,
+      "metadata": {}
+    },
+    {
+      "id": "msg_abc456",
+      "object": "thread.message",
+      "created_at": 1699016383,
+      "thread_id": "thread_abc123",
+      "role": "user",
+      "content": [
+        {
+          "type": "text",
+          "text": {
+            "value": "Hello, what is AI?",
+            "annotations": []
+          }
+        }
+      ],
+      "file_ids": [
+        "file-abc123"
+      ],
+      "assistant_id": null,
+      "run_id": null,
+      "metadata": {}
+    }
+  ],
+  "first_id": "msg_abc123",
+  "last_id": "msg_abc456",
+  "has_more": false
+}
+List message filesBeta
+GET
+ 
+https://api.openai.com/v1/threads/{thread_id}/messages/{message_id}/files
+
+Returns a list of message files.
+
+Path parameters
+thread_id
+string
+Required
+The ID of the thread that the message and files belong to.
+
+message_id
+string
+Required
+The ID of the message that the files belongs to.
+
+Query parameters
+limit
+integer
+Optional
+Defaults to 20
+A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20.
+
+order
+string
+Optional
+Defaults to desc
+Sort order by the created_at timestamp of the objects. asc for ascending order and desc for descending order.
+
+after
+string
+Optional
+A cursor for use in pagination. after is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
+
+before
+string
+Optional
+A cursor for use in pagination. before is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include before=obj_foo in order to fetch the previous page of the list.
+
+Returns
+A list of message file objects.
+
+Example request
+node.js
+
+node.js
+import OpenAI from "openai";
+const openai = new OpenAI();
+
+async function main() {
+  const messageFiles = await openai.beta.threads.messages.files.list(
+    "thread_abc123",
+    "msg_abc123"
+  );
+  console.log(messageFiles);
+}
+
+main();
+Response
+{
+  "object": "list",
+  "data": [
+    {
+      "id": "file-abc123",
+      "object": "thread.message.file",
+      "created_at": 1699061776,
+      "message_id": "msg_abc123"
+    },
+    {
+      "id": "file-abc123",
+      "object": "thread.message.file",
+      "created_at": 1699061776,
+      "message_id": "msg_abc123"
+    }
+  ],
+  "first_id": "file-abc123",
+  "last_id": "file-abc123",
+  "has_more": false
+}
+Retrieve messageBeta
+GET
+ 
+https://api.openai.com/v1/threads/{thread_id}/messages/{message_id}
+
+Retrieve a message.
+
+Path parameters
+thread_id
+string
+Required
+The ID of the thread to which this message belongs.
+
+message_id
+string
+Required
+The ID of the message to retrieve.
+
+Returns
+The message object matching the specified ID.
+
+Example request
+node.js
+
+node.js
+import OpenAI from "openai";
+
+const openai = new OpenAI();
+
+async function main() {
+  const message = await openai.beta.threads.messages.retrieve(
+    "thread_abc123",
+    "msg_abc123"
+  );
+
+  console.log(message);
+}
+
+main();
+Response
+{
+  "id": "msg_abc123",
+  "object": "thread.message",
+  "created_at": 1699017614,
+  "thread_id": "thread_abc123",
+  "role": "user",
+  "content": [
+    {
+      "type": "text",
+      "text": {
+        "value": "How does AI work? Explain it in simple terms.",
+        "annotations": []
+      }
+    }
+  ],
+  "file_ids": [],
+  "assistant_id": null,
+  "run_id": null,
+  "metadata": {}
+}
+Retrieve message fileBeta
+GET
+ 
+https://api.openai.com/v1/threads/{thread_id}/messages/{message_id}/files/{file_id}
+
+Retrieves a message file.
+
+Path parameters
+thread_id
+string
+Required
+The ID of the thread to which the message and File belong.
+
+message_id
+string
+Required
+The ID of the message the file belongs to.
+
+file_id
+string
+Required
+The ID of the file being retrieved.
+
+Returns
+The message file object.
+
+Example request
+node.js
+
+node.js
+import OpenAI from "openai";
+const openai = new OpenAI();
+
+async function main() {
+  const messageFile = await openai.beta.threads.messages.files.retrieve(
+    "thread_abc123",
+    "msg_abc123",
+    "file-abc123"
+  );
+  console.log(messageFile);
+}
+
+main();
+Response
+{
+  "id": "file-abc123",
+  "object": "thread.message.file",
+  "created_at": 1699061776,
+  "message_id": "msg_abc123"
+}
+Modify messageBeta
+POST
+ 
+https://api.openai.com/v1/threads/{thread_id}/messages/{message_id}
+
+Modifies a message.
+
+Path parameters
+thread_id
+string
+Required
+The ID of the thread to which this message belongs.
+
+message_id
+string
+Required
+The ID of the message to modify.
+
+Request body
+metadata
+map
+Optional
+Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long.
+
+Returns
+The modified message object.
+
+Example request
+node.js
+
+node.js
+import OpenAI from "openai";
+
+const openai = new OpenAI();
+
+async function main() {
+  const message = await openai.beta.threads.messages.update(
+    "thread_abc123",
+    "msg_abc123",
+    {
+      metadata: {
+        modified: "true",
+        user: "abc123",
+      },
+    }
+  }'
+Response
+{
+  "id": "msg_abc123",
+  "object": "thread.message",
+  "created_at": 1699017614,
+  "thread_id": "thread_abc123",
+  "role": "user",
+  "content": [
+    {
+      "type": "text",
+      "text": {
+        "value": "How does AI work? Explain it in simple terms.",
+        "annotations": []
+      }
+    }
+  ],
+  "file_ids": [],
+  "assistant_id": null,
+  "run_id": null,
+  "metadata": {
+    "modified": "true",
+    "user": "abc123"
+  }
+}
+The message objectBeta
+Represents a message within a thread.
+
+id
+string
+The identifier, which can be referenced in API endpoints.
+
+object
+string
+The object type, which is always thread.message.
+
+created_at
+integer
+The Unix timestamp (in seconds) for when the message was created.
+
+thread_id
+string
+The thread ID that this message belongs to.
+
+role
+string
+The entity that produced the message. One of user or assistant.
+
+content
+array
+The content of the message in array of text and/or images.
+
+
+Show possible types
+assistant_id
+string or null
+If applicable, the ID of the assistant that authored this message.
+
+run_id
+string or null
+If applicable, the ID of the run associated with the authoring of this message.
+
+file_ids
+array
+A list of file IDs that the assistant should use. Useful for tools like retrieval and code_interpreter that can access files. A maximum of 10 files can be attached to a message.
+
+metadata
+map
+Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long.
+
+The message object
+{
+  "id": "msg_abc123",
+  "object": "thread.message",
+  "created_at": 1698983503,
+  "thread_id": "thread_abc123",
+  "role": "assistant",
+  "content": [
+    {
+      "type": "text",
+      "text": {
+        "value": "Hi! How can I help you today?",
+        "annotations": []
+      }
+    }
+  ],
+  "file_ids": [],
+  "assistant_id": "asst_abc123",
+  "run_id": "run_abc123",
+  "metadata": {}
+}
+The message file objectBeta
+A list of files attached to a message.
+
+id
+string
+The identifier, which can be referenced in API endpoints.
+
+object
+string
+The object type, which is always thread.message.file.
+
+created_at
+integer
+The Unix timestamp (in seconds) for when the message file was created.
+
+message_id
+string
+The ID of the message that the File is attached to.
+
+The message file object
+{
+  "id": "file-abc123",
+  "object": "thread.message.file",
+  "created_at": 1698107661,
+  "message_id": "message_QLoItBbqwyAJEzlTy4y9kOMM",
+  "file_id": "file-abc123"
+}
+RunsBeta
+Represents an execution run on a thread.
+
+Related guide: Assistants
