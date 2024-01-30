@@ -1,0 +1,208 @@
+ThreadsBeta
+Create threads that assistants can interact with.
+
+Related guide: Assistants
+
+Create threadBeta
+POST
+ 
+https://api.openai.com/v1/threads
+
+Create a thread.
+
+Request body
+messages
+array
+Optional
+A list of messages to start the thread with.
+
+
+Show properties
+metadata
+map
+Optional
+Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long.
+
+Returns
+A thread object.
+
+Example request
+node.js
+
+node.js
+import OpenAI from "openai";
+
+const openai = new OpenAI();
+
+async function main() {
+  const emptyThread = await openai.beta.threads.create();
+
+  console.log(emptyThread);
+}
+
+main();
+Response
+{
+  "id": "thread_abc123",
+  "object": "thread",
+  "created_at": 1699012949,
+  "metadata": {}
+}
+Retrieve threadBeta
+GET
+ 
+https://api.openai.com/v1/threads/{thread_id}
+
+Retrieves a thread.
+
+Path parameters
+thread_id
+string
+Required
+The ID of the thread to retrieve.
+
+Returns
+The thread object matching the specified ID.
+
+Example request
+node.js
+
+node.js
+import OpenAI from "openai";
+
+const openai = new OpenAI();
+
+async function main() {
+  const myThread = await openai.beta.threads.retrieve(
+    "thread_abc123"
+  );
+
+  console.log(myThread);
+}
+
+main();
+Response
+{
+  "id": "thread_abc123",
+  "object": "thread",
+  "created_at": 1699014083,
+  "metadata": {}
+}
+Modify threadBeta
+POST
+ 
+https://api.openai.com/v1/threads/{thread_id}
+
+Modifies a thread.
+
+Path parameters
+thread_id
+string
+Required
+The ID of the thread to modify. Only the metadata can be modified.
+
+Request body
+metadata
+map
+Optional
+Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long.
+
+Returns
+The modified thread object matching the specified ID.
+
+Example request
+node.js
+
+node.js
+import OpenAI from "openai";
+
+const openai = new OpenAI();
+
+async function main() {
+  const updatedThread = await openai.beta.threads.update(
+    "thread_abc123",
+    {
+      metadata: { modified: "true", user: "abc123" },
+    }
+  );
+
+  console.log(updatedThread);
+}
+
+main();
+Response
+{
+  "id": "thread_abc123",
+  "object": "thread",
+  "created_at": 1699014083,
+  "metadata": {
+    "modified": "true",
+    "user": "abc123"
+  }
+}
+Delete threadBeta
+DELETE
+ 
+https://api.openai.com/v1/threads/{thread_id}
+
+Delete a thread.
+
+Path parameters
+thread_id
+string
+Required
+The ID of the thread to delete.
+
+Returns
+Deletion status
+
+Example request
+node.js
+
+node.js
+import OpenAI from "openai";
+
+const openai = new OpenAI();
+
+async function main() {
+  const response = await openai.beta.threads.del("thread_abc123");
+
+  console.log(response);
+}
+main();
+Response
+{
+  "id": "thread_abc123",
+  "object": "thread.deleted",
+  "deleted": true
+}
+The thread objectBeta
+Represents a thread that contains messages.
+
+id
+string
+The identifier, which can be referenced in API endpoints.
+
+object
+string
+The object type, which is always thread.
+
+created_at
+integer
+The Unix timestamp (in seconds) for when the thread was created.
+
+metadata
+map
+Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long.
+
+The thread object
+{
+  "id": "thread_abc123",
+  "object": "thread",
+  "created_at": 1698107661,
+  "metadata": {}
+}
+MessagesBeta
+Create messages within threads
+
+Related guide: Assistants
