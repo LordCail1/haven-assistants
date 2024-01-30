@@ -50,10 +50,6 @@ Tasked with processing information from the interviewed refugees, the `prompt-cr
 
 ---
 
-Certainly, here's a revised version of the Deployment section, including the information that the environment variables are already set:
-
----
-
 ## Deployment
 
 The HavenOpenaiApi is currently deployed as a Web App, with essential configurations already in place:
@@ -103,10 +99,6 @@ For production-related tasks, the following commands are available:
 
 - `npm run build`: Compiles the project and creates a `dist` folder. This is a necessary step before running the application in production.
 - `npm run start:prod`: Starts the server in production mode. This command sets `NODE_ENV` to production and runs the compiled application from the `dist` directory.
-
----
-
-I've reviewed the latest version of your README.md file and will reorganize the "Modification Guidelines" section into the three suggested subsections. The content from the "Recommended Reading for NestJS" will be incorporated into the first subsection. The structure for the other two subsections will be created, awaiting your detailed instructions on how to modify the behavior of the assistants and the tests. Here's the updated structure:
 
 ---
 
