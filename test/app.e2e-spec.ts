@@ -1,20 +1,20 @@
 import { APP_PIPE } from '@nestjs/core';
 import { AppModule } from './../src/app.module';
 import { AssistantsRefugeeService } from 'src/modules/assistants/services/refugee/assistants.refugee.service';
+import { bearer_token } from 'src/shared/constants';
+import { ConfigService } from '@nestjs/config';
+import { GenerateFollowUpQuestionDto } from 'src/modules/haven-ai-agent/dto/generate-followUp-question.dto';
 import { ImageNotTextException } from 'src/shared/exceptions/image-not-text.exception';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { OpenaiMessagesService } from 'src/modules/openai/services/messages/openai.messages.service';
 import { OpenaiRunsService } from 'src/modules/openai/services/runs/openai.runs.service';
 import { OpenaiThreadsService } from 'src/modules/openai/services/threads/openai.threads.service';
+import { ResponseObject } from 'src/modules/haven-ai-agent/dto/response-object.dto';
 import { Run } from 'openai/resources/beta/threads/runs/runs';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Thread } from 'openai/resources/beta/threads/threads';
 import { ukrain_Olena } from './__mocks__/refugees/ukrain/refugees.ukrain.mock';
 import * as request from 'supertest';
-import { GenerateFollowUpQuestionDto } from 'src/modules/haven-ai-agent/dto/generate-followUp-question.dto';
-import { ResponseObject } from 'src/modules/haven-ai-agent/dto/response-object.dto';
-import { ConfigService } from '@nestjs/config';
-import { bearer_token } from 'src/shared/constants';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
