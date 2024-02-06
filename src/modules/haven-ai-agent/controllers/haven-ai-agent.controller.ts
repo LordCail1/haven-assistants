@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { GenerateFirstQuestionDto } from '../dto/generate-first-question.dto';
 import { GenerateFollowUpQuestionDto } from '../dto/generate-followUp-question.dto';
 import { HavenAiAgentService } from '../services/haven-ai-agent.service';
@@ -8,12 +8,14 @@ import {
   ApiInternalServerErrorResponse,
   ApiResponse,
 } from '@nestjs/swagger';
+import { BearerTokenGuard } from 'src/guards/bearerToken.guard';
 
 /**
  * This controller is responsible for managing the Haven AI agent.
  * It orchestrates the behavior of multiple assistants.
  */
 @Controller('api/v1/haven-ai-agent')
+@UseGuards(BearerTokenGuard)
 export class HavenAiAgentController {
   constructor(private readonly havenAiAgentService: HavenAiAgentService) {}
   /**

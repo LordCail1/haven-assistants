@@ -8,6 +8,7 @@ import { ResponseObject } from '../../dto/response-object.dto';
 import { GenerateFollowUpQuestionDto } from '../../dto/generate-followUp-question.dto';
 import { generateFollowupQuestionDtoStub } from '../stubs/generate-followup-question.dto.stub';
 import { v4 as uuid } from 'uuid';
+import { ConfigService } from '@nestjs/config';
 
 describe('HavenAiAgentController', () => {
   let havenAiAgentController: HavenAiAgentController;
@@ -18,6 +19,7 @@ describe('HavenAiAgentController', () => {
       providers: [
         HavenAiAgentController,
         { provide: HavenAiAgentService, useValue: havenAiAgentServiceMock },
+        { provide: ConfigService, useValue: { get: jest.fn() } },
       ],
     }).compile();
     havenAiAgentController = module.get<HavenAiAgentController>(

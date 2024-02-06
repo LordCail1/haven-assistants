@@ -101,9 +101,8 @@ export class HavenAiAgentService {
       if (isStoryGoodEnough) {
         const summarizedStory =
           await this.assistantsSummarizerService.createSummary(threadId);
-        const deletedThread =
-          await this.openaiThreadsService.deleteThread(threadId);
-        console.log(deletedThread);
+
+        await this.openaiThreadsService.deleteThread(threadId);
         console.log(summarizedStory);
         return {
           isStoryGoodEnough: true,
