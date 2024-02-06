@@ -65,7 +65,7 @@ describe('AppController (e2e)', () => {
         .set('Authorization', `Bearer ${secretToken}`)
         .send(ukrain_Olena);
 
-      await loopUntilStoryIsGoodEnough(response.body);
+      await loopUntilStoryIsGoodEnough(response.body, secretToken);
     }, 600000);
   });
 
@@ -89,7 +89,10 @@ describe('AppController (e2e)', () => {
     });
   });
 
-  async function loopUntilStoryIsGoodEnough(responseObject: ResponseObject) {
+  async function loopUntilStoryIsGoodEnough(
+    responseObject: ResponseObject,
+    secretToken: string,
+  ) {
     const { threadId, isStoryGoodEnough } = responseObject;
 
     if (isStoryGoodEnough) {
@@ -110,9 +113,10 @@ describe('AppController (e2e)', () => {
 
       const nextResponse = await request(httpServer)
         .post('/api/v1/haven-ai-agent/generate-follow-up-question')
+        .set('Authorization', `Bearer ${secretToken}`)
         .send(generateFollowUpQuestionDto);
 
-      await loopUntilStoryIsGoodEnough(nextResponse.body);
+      await loopUntilStoryIsGoodEnough(nextResponse.body, secretToken);
     }
   }
 
