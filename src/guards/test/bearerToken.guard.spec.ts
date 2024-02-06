@@ -1,5 +1,5 @@
 import { ConfigService } from '@nestjs/config';
-import { BearerTokenGuard } from './bearerToken.guard';
+import { BearerTokenGuard } from '../bearerToken.guard';
 
 describe('GuardsGuard', () => {
   it('should be defined', () => {
