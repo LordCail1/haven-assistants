@@ -5,6 +5,7 @@ import { HavenAiAgentService } from '../services/haven-ai-agent.service';
 import { ResponseObject } from '../dto/response-object.dto';
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiInternalServerErrorResponse,
   ApiResponse,
 } from '@nestjs/swagger';
@@ -14,8 +15,9 @@ import { BearerTokenGuard } from 'src/guards/bearerToken.guard';
  * This controller is responsible for managing the Haven AI agent.
  * It orchestrates the behavior of multiple assistants.
  */
-@Controller('api/v1/haven-ai-agent')
 @UseGuards(BearerTokenGuard)
+@ApiBearerAuth()
+@Controller('api/v1/haven-ai-agent')
 export class HavenAiAgentController {
   constructor(private readonly havenAiAgentService: HavenAiAgentService) {}
   /**
