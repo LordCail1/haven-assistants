@@ -9,6 +9,7 @@ async function bootstrap() {
     .setTitle('Haven AI API')
     .setDescription('AI integration for Haven')
     .setVersion('1.0')
+    .addBearerAuth()
     .addTag('haven')
     .build();
   const document = SwaggerModule.createDocument(app, config);
