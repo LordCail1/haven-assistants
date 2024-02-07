@@ -60,7 +60,8 @@ The HavenOpenaiApi is currently deployed as a Web App, with essential configurat
 
 3. **Environment Configuration**:
    - **OPENAI_KEY**: The API key from OpenAI.
-   - **ORGANIZATION_ID**: This identifies the organization linked to the OpenAI API key.
+   - **ORGANIZATION_ID**: Identifies the organization linked to the OpenAI API key.
+   - **BEARER_TOKEN**: A security token required for authenticating API requests. This token has been set up in Azure to secure access to the API endpoints.
 
 These environment variables are currently configured in the Web App's settings. If modifications are required, the above information will be useful.
 
@@ -78,13 +79,25 @@ Our project follows the NestJS structure, with each API feature encapsulated in 
 
 ### Environment Setup for Local Development
 
+Before running the project locally, ensure that the environment variables are set up correctly. You should have three `.env` files corresponding to different environments (`development`, `production`, `test`). Each file should include the `OPENAI_KEY`, `ORGANIZATION_ID`, and `BEARER_TOKEN`. The `BEARER_TOKEN` is essential for authenticating requests to the API locally, mirroring the setup in the Azure deployment.
+
+
 Before running the project locally, ensure that the environment variables are set up correctly. NestJS manages environment variables through `.env` files. You should have three `.env` files:
 
 - `.env.development`
 - `.env.production`
 - `.env.test`
 
-Each file should include `OPENAI_KEY` and `ORGANIZATION_ID`. You have the flexibility to use different OpenAI API keys for different environments, such as testing, development, and production. The appropriate `.env` file is automatically loaded based on the `NODE_ENV` value, which is determined by the start-up command used from `package.json`.
+Each file should include:
+- `OPENAI_KEY`
+- `ORGANIZATION_ID` 
+- `BEARER_TOKEN`
+
+The `BEARER_TOKEN` is essential for authenticating requests to the API locally, mirroring the setup in the Azure deployment. You have the flexibility to use different OpenAI API keys for different environments, such as testing, development, and production. The appropriate `.env` file is automatically loaded based on the `NODE_ENV` value, which is determined by the start-up command used from `package.json`.
+
+### Authenticating API Requests
+
+To access the API endpoints, make sure to include the `BEARER_TOKEN` in the request header.
 
 ### Starting the Project
 
@@ -114,8 +127,6 @@ For foundational knowledge necessary to work effectively with NestJS, spending 3
 4. [Modules in NestJS](https://docs.nestjs.com/modules): Structuring the application using modules.
 
 These resources provide a starting point for anyone new to NestJS. Alternatively, observing and mimicking how existing modules are wired up can offer practical insights.
-
-Thank you for the clarification. With the provided example in mind, here's the revised explanation for updating the behavior of the assistants:
 
 ### 2. Making Changes to the Behavior of the Assistants
 
