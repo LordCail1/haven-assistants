@@ -24,6 +24,7 @@ import {
 import { ImageNotTextException } from 'src/shared/exceptions/image-not-text.exception';
 import { messageContentImageFileStub } from 'src/modules/openai/test/stubs/openai.messageContentImageFile.stub';
 import { threadMessageStub } from 'src/modules/openai/test/stubs/openai.threadMessage.stub';
+import { messageContentTextStub } from 'src/modules/openai/test/stubs/openai.messageContentText.stub';
 
 describe('AssistantsAbstractService', () => {
   let assistantsTerminatorService: AssistantsTerminatorService;
@@ -156,6 +157,33 @@ describe('AssistantsAbstractService', () => {
     });
 
     describe('should return', () => {
+      it('true if the conversation length is bigger than a certain value (7 questions)', async () => {
+        jest
+          .spyOn(openaiMessagesService, 'listMessages')
+          .mockResolvedValueOnce([
+            threadMessageStub(messageContentTextStub()),
+            threadMessageStub(messageContentTextStub()),
+            threadMessageStub(messageContentTextStub()),
+            threadMessageStub(messageContentTextStub()),
+            threadMessageStub(messageContentTextStub()),
+            threadMessageStub(messageContentTextStub()),
+            threadMessageStub(messageContentTextStub()),
+            threadMessageStub(messageContentTextStub()),
+            threadMessageStub(messageContentTextStub()),
+            threadMessageStub(messageContentTextStub()),
+            threadMessageStub(messageContentTextStub()),
+            threadMessageStub(messageContentTextStub()),
+            threadMessageStub(messageContentTextStub()),
+            threadMessageStub(messageContentTextStub()),
+            threadMessageStub(messageContentTextStub()),
+          ]);
+        isStoryGoodEnough =
+          await assistantsTerminatorService.determineIfStoryIsGoodEnough(
+            uuid(),
+          );
+        expect(isStoryGoodEnough).toEqual(true);
+      });
+
       it('true if the story is good enough', async () => {
         jest
           .spyOn(helpersService, 'parseLastResponseForJson')
