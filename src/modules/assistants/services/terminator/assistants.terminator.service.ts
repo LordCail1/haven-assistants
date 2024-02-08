@@ -40,7 +40,7 @@ export class AssistantsTerminatorService extends AssistantsAbstractService {
 
       const instructions = await this.loadInstructions(
         __dirname,
-        'v2/instructions.txt',
+        'v3/instructions.txt',
         AssistantName.TERMINATOR,
       );
 
@@ -70,6 +70,10 @@ export class AssistantsTerminatorService extends AssistantsAbstractService {
     try {
       const threadMessages: ThreadMessage[] =
         await this.openaiMessagesService.listMessages(threadId);
+
+      if (threadMessages.length >= 15) {
+        return true;
+      }
 
       threadMessages.pop();
 
