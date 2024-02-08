@@ -15,6 +15,12 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Thread } from 'openai/resources/beta/threads/threads';
 import { ukrain_Olena } from './__mocks__/refugees/ukrain/refugees.ukrain.mock';
 import * as request from 'supertest';
+import { GenerateFollowUpQuestionDto } from 'src/modules/haven-ai-agent/dto/generate-followUp-question.dto';
+import { ResponseObject } from 'src/modules/haven-ai-agent/dto/response-object.dto';
+import { ConfigService } from '@nestjs/config';
+import { bearer_token } from 'src/shared/constants';
+import { syria_ahmed } from './__mocks__/refugees/syria/refugees.syria.mock';
+
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -57,18 +63,6 @@ describe('AppController (e2e)', () => {
     expect(openaiRunsService).toBeDefined();
   });
 
-  describe('first question', () => {
-    it('/api/v1/haven-ai-agent/generate-first-question (POST)', async () => {
-      const secretToken = configService.get<string>(bearer_token);
-      const response = await request(httpServer)
-        .post('/api/v1/haven-ai-agent/generate-first-question')
-        .set('Authorization', `Bearer ${secretToken}`)
-        .send(ukrain_Olena);
-
-      await loopUntilStoryIsGoodEnough(response.body, secretToken);
-    }, 600000);
-  });
-
   describe('BearerTokenGuard', () => {
     it('should grant access with a valid bearer token', async () => {
       const secretToken = configService.get<string>(bearer_token); // Replace YOUR_VALID_TOKEN with the actual token
@@ -78,7 +72,7 @@ describe('AppController (e2e)', () => {
         .send(ukrain_Olena);
 
       expect(response.statusCode).not.toBe(401); // Assuming a successful request does not return 401
-    });
+    }, 600000);
 
     it('should deny access without a bearer token', async () => {
       const response = await request(httpServer)
@@ -86,7 +80,19 @@ describe('AppController (e2e)', () => {
         .send(ukrain_Olena);
 
       expect(response.statusCode).toBe(401); // Expecting a 401 Unauthorized response
-    });
+    }, 600000);
+  });
+
+  describe('first question', () => {
+    it('/api/v1/haven-ai-agent/generate-first-question (POST)', async () => {
+      const secretToken = configService.get<string>(bearer_token);
+      const response = await request(httpServer)
+        .post('/api/v1/haven-ai-agent/generate-first-question')
+        .set('Authorization', `Bearer ${secretToken}`)
+        .send(syria_ahmed);
+
+      await loopUntilStoryIsGoodEnough(response.body, secretToken);
+    }, 600000);
   });
 
   async function loopUntilStoryIsGoodEnough(
