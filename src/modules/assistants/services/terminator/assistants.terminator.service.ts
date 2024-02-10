@@ -71,10 +71,6 @@ export class AssistantsTerminatorService extends AssistantsAbstractService {
       const threadMessages: ThreadMessage[] =
         await this.openaiMessagesService.listMessages(threadId);
 
-      if (threadMessages.length >= 15) {
-        return true;
-      }
-
       threadMessages.pop();
 
       const messages: ThreadCreateParams.Message[] =

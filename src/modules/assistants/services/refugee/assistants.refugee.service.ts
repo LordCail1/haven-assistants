@@ -33,7 +33,7 @@ export class AssistantsRefugeeService extends AssistantsAbstractService {
 
       const instructions = await this.loadInstructions(
         __dirname,
-        'syria/Ahmed/v1/instructions.txt',
+        'ukrain/Olena/v1/instructions.txt',
         AssistantName.REFUGEE,
       );
 

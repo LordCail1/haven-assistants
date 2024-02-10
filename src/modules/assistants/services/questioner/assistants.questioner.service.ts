@@ -32,7 +32,7 @@ export class AssistantsQuestionerService extends AssistantsAbstractService {
 
       const instructions = await this.loadInstructions(
         __dirname,
-        'v3/instructions.txt',
+        'v4/instructions.txt',
         AssistantName.QUESTIONER,
       );
 
