@@ -21,30 +21,30 @@ describe('HelpersService', () => {
     expect(helpersService).toBeDefined();
   });
 
-  describe('parseLastResponseForJson', () => {
+  describe('parseTerminatorResponseForJson', () => {
     it('should return true if the response is true', () => {
       const response: string = '{"isStoryGoodEnough": true}';
-      const result = helpersService.parseLastResponseForJson(response);
+      const result = helpersService.parseTerminatorResponseForJson(response);
       expect(result).toBe(true);
     });
 
     it('should return false if the response is false', () => {
       const response: string = '{"isStoryGoodEnough": false}';
-      const result = helpersService.parseLastResponseForJson(response);
+      const result = helpersService.parseTerminatorResponseForJson(response);
       expect(result).toBe(false);
     });
 
     it('should throw IsNotBooleanException if the response is not a boolean', () => {
       const response: string = '{"isStoryGoodEnough": "true"}';
       expect(() => {
-        helpersService.parseLastResponseForJson(response);
+        helpersService.parseTerminatorResponseForJson(response);
       }).toThrow(IsNotBooleanException);
     });
 
     it('should throw ParseLastResponseForJsonException if the response is not a valid JSON', () => {
       const response: string = 'This is not a valid JSON';
       expect(() => {
-        helpersService.parseLastResponseForJson(response);
+        helpersService.parseTerminatorResponseForJson(response);
       }).toThrow(ParseLastResponseForJsonException);
     });
   });

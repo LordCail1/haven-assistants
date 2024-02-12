@@ -17,7 +17,7 @@ describe('PromptCreatorService', () => {
     expect(promptCreatorService).toBeDefined();
   });
 
-  describe('createFirstPrompt', () => {
+  describe('createFirstPromptForQuestioner', () => {
     let generateFirstQuestionDto: GenerateFirstQuestionDto;
 
     beforeEach(() => {
@@ -26,8 +26,9 @@ describe('PromptCreatorService', () => {
 
     it('should return the correct prompt', async () => {
       // Act
-      const result = promptCreatorService.createFirstPrompt(
+      const result = promptCreatorService.createFirstPromptForQuestioner(
         generateFirstQuestionDto,
+        'hey',
       );
 
       // Assert

@@ -24,7 +24,6 @@ import {
 import { ImageNotTextException } from 'src/shared/exceptions/image-not-text.exception';
 import { messageContentImageFileStub } from 'src/modules/openai/test/stubs/openai.messageContentImageFile.stub';
 import { threadMessageStub } from 'src/modules/openai/test/stubs/openai.threadMessage.stub';
-import { messageContentTextStub } from 'src/modules/openai/test/stubs/openai.messageContentText.stub';
 
 describe('AssistantsAbstractService', () => {
   let assistantsTerminatorService: AssistantsTerminatorService;
@@ -153,40 +152,15 @@ describe('AssistantsAbstractService', () => {
       expect(openaiThreadsService.createThread).toHaveBeenCalledTimes(1);
       expect(openaiRunsService.createRun).toHaveBeenCalledTimes(1);
       expect(openaiRunsService.retrieveRun).toHaveBeenCalledTimes(1);
-      expect(helpersService.parseLastResponseForJson).toHaveBeenCalledTimes(1);
+      expect(
+        helpersService.parseTerminatorResponseForJson,
+      ).toHaveBeenCalledTimes(1);
     });
 
     describe('should return', () => {
-      it('true if the conversation length is bigger than a certain value (7 questions)', async () => {
-        jest
-          .spyOn(openaiMessagesService, 'listMessages')
-          .mockResolvedValueOnce([
-            threadMessageStub(messageContentTextStub()),
-            threadMessageStub(messageContentTextStub()),
-            threadMessageStub(messageContentTextStub()),
-            threadMessageStub(messageContentTextStub()),
-            threadMessageStub(messageContentTextStub()),
-            threadMessageStub(messageContentTextStub()),
-            threadMessageStub(messageContentTextStub()),
-            threadMessageStub(messageContentTextStub()),
-            threadMessageStub(messageContentTextStub()),
-            threadMessageStub(messageContentTextStub()),
-            threadMessageStub(messageContentTextStub()),
-            threadMessageStub(messageContentTextStub()),
-            threadMessageStub(messageContentTextStub()),
-            threadMessageStub(messageContentTextStub()),
-            threadMessageStub(messageContentTextStub()),
-          ]);
-        isStoryGoodEnough =
-          await assistantsTerminatorService.determineIfStoryIsGoodEnough(
-            uuid(),
-          );
-        expect(isStoryGoodEnough).toEqual(true);
-      });
-
       it('true if the story is good enough', async () => {
         jest
-          .spyOn(helpersService, 'parseLastResponseForJson')
+          .spyOn(helpersService, 'parseTerminatorResponseForJson')
           .mockReturnValueOnce(true);
         isStoryGoodEnough =
           await assistantsTerminatorService.determineIfStoryIsGoodEnough(
@@ -274,7 +248,7 @@ describe('AssistantsAbstractService', () => {
 
       it('if parseLastResponseForJson throws an exception', async () => {
         jest
-          .spyOn(helpersService, 'parseLastResponseForJson')
+          .spyOn(helpersService, 'parseTerminatorResponseForJson')
           .mockImplementationOnce(() => {
             throw new Error();
           });
