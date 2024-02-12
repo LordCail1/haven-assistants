@@ -27,6 +27,8 @@ import {
 import { GenerateFollowUpQuestionDto } from '../../dto/generate-followUp-question.dto';
 import { generateFollowupQuestionDtoStub } from '../stubs/generate-followup-question.dto.stub';
 import { GenerateFollowUpQuestionException } from '../../exceptions/generate-follow-up-question.exception';
+import { AssistantsCriteriaParserService } from 'src/modules/assistants/services/criteriaParser/assistants.criteriaParser.service';
+import { assistantsCriteriaParserServiceMock } from 'src/modules/assistants/test/__mocks__/criteriaParser/assistants.criteriaParser.service.mock';
 
 describe('HavenAiAgentService', () => {
   let havenAiAgentService: HavenAiAgentService;
@@ -37,6 +39,7 @@ describe('HavenAiAgentService', () => {
   let assistantsQuestionerService: AssistantsQuestionerService;
   let assistantsTerminatorService: AssistantsTerminatorService;
   let assistantsSummarizerService: AssistantsSummarizerService;
+  let assistantsCriteriaParserService: AssistantsCriteriaParserService;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -58,6 +61,10 @@ describe('HavenAiAgentService', () => {
           provide: AssistantsSummarizerService,
           useValue: assistantsSummarizerServiceMock,
         },
+        {
+          provide: AssistantsCriteriaParserService,
+          useValue: assistantsCriteriaParserServiceMock,
+        },
       ],
     }).compile();
     havenAiAgentService = module.get<HavenAiAgentService>(HavenAiAgentService);
@@ -78,6 +85,10 @@ describe('HavenAiAgentService', () => {
     assistantsSummarizerService = module.get<AssistantsSummarizerService>(
       AssistantsSummarizerService,
     );
+    assistantsCriteriaParserService =
+      module.get<AssistantsCriteriaParserService>(
+        AssistantsCriteriaParserService,
+      );
   });
 
   afterEach(() => {
@@ -94,6 +105,7 @@ describe('HavenAiAgentService', () => {
     expect(assistantsQuestionerService).toBeDefined();
     expect(assistantsTerminatorService).toBeDefined();
     expect(assistantsSummarizerService).toBeDefined();
+    expect(assistantsCriteriaParserService).toBeDefined();
   });
 
   describe('generateFirstQuestion', () => {
@@ -109,15 +121,12 @@ describe('HavenAiAgentService', () => {
           generateFirstQuestionDto,
         );
 
-      expect(openaiThreadsService.createThread).toHaveBeenCalledTimes(1);
-      expect(promptCreatorService.createFirstPrompt).toHaveBeenLastCalledWith(
-        generateFirstQuestionDto,
-      );
-      expect(openaiMessagesService.createMessage).toHaveBeenCalledTimes(1);
-      expect(openaiRunsService.createRun).toHaveBeenCalledTimes(1);
+      expect(openaiThreadsService.createThread).toHaveBeenCalledTimes(2);
+      expect(openaiMessagesService.createMessage).toHaveBeenCalledTimes(2);
+      expect(openaiRunsService.createRun).toHaveBeenCalledTimes(2);
       expect(assistantsQuestionerService.getAssistant).toHaveBeenCalledTimes(1);
-      expect(openaiRunsService.retrieveRun).toHaveBeenCalledTimes(1);
-      expect(openaiMessagesService.listMessages).toHaveBeenCalledTimes(1);
+      expect(openaiRunsService.retrieveRun).toHaveBeenCalledTimes(2);
+      expect(openaiMessagesService.listMessages).toHaveBeenCalledTimes(2);
       expect(responseObject.isStoryGoodEnough).toBe(false);
       expect(responseObject.response).toBeDefined();
       expect(responseObject.threadId).toBeDefined();

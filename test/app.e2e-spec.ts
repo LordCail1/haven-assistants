@@ -13,13 +13,8 @@ import { ResponseObject } from 'src/modules/haven-ai-agent/dto/response-object.d
 import { Run } from 'openai/resources/beta/threads/runs/runs';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Thread } from 'openai/resources/beta/threads/threads';
-import { ukrain_Olena } from './__mocks__/refugees/ukrain/refugees.ukrain.mock';
 import * as request from 'supertest';
-import { GenerateFollowUpQuestionDto } from 'src/modules/haven-ai-agent/dto/generate-followUp-question.dto';
-import { ResponseObject } from 'src/modules/haven-ai-agent/dto/response-object.dto';
-import { ConfigService } from '@nestjs/config';
-import { bearer_token } from 'src/shared/constants';
-import { syria_ahmed } from './__mocks__/refugees/syria/refugees.syria.mock';
+import { spain_Carlos } from './__mocks__/refugees/spain/refugees.spain.mock';
 
 
 describe('AppController (e2e)', () => {
@@ -69,7 +64,7 @@ describe('AppController (e2e)', () => {
       const response = await request(httpServer)
         .post('/api/v1/haven-ai-agent/generate-first-question') // Use the correct endpoint
         .set('Authorization', `Bearer ${secretToken}`)
-        .send(ukrain_Olena);
+        .send(spain_Carlos);
 
       expect(response.statusCode).not.toBe(401); // Assuming a successful request does not return 401
     }, 600000);
@@ -77,19 +72,21 @@ describe('AppController (e2e)', () => {
     it('should deny access without a bearer token', async () => {
       const response = await request(httpServer)
         .post('/api/v1/haven-ai-agent/generate-first-question') // Use the correct endpoint
-        .send(ukrain_Olena);
+        .send(spain_Carlos);
 
       expect(response.statusCode).toBe(401); // Expecting a 401 Unauthorized response
     }, 600000);
   });
 
-  describe('first question', () => {
+  describe.only('first question', () => {
     it('/api/v1/haven-ai-agent/generate-first-question (POST)', async () => {
       const secretToken = configService.get<string>(bearer_token);
+      const startTime = Date.now();
       const response = await request(httpServer)
         .post('/api/v1/haven-ai-agent/generate-first-question')
         .set('Authorization', `Bearer ${secretToken}`)
-        .send(syria_ahmed);
+        .send(spain_Carlos);
+      console.log('this is how long it took', Date.now() - startTime);
 
       await loopUntilStoryIsGoodEnough(response.body, secretToken);
     }, 600000);

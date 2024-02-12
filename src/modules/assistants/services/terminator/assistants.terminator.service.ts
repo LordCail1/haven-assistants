@@ -40,7 +40,7 @@ export class AssistantsTerminatorService extends AssistantsAbstractService {
 
       const instructions = await this.loadInstructions(
         __dirname,
-        'v3/instructions.txt',
+        'v4/instructions.txt',
         AssistantName.TERMINATOR,
       );
 
@@ -71,12 +71,6 @@ export class AssistantsTerminatorService extends AssistantsAbstractService {
       const threadMessages: ThreadMessage[] =
         await this.openaiMessagesService.listMessages(threadId);
 
-      if (threadMessages.length >= 15) {
-        return true;
-      }
-
-      threadMessages.pop();
-
       const messages: ThreadCreateParams.Message[] =
         this.helpersService.convertThreadMessagesToMessageArray(threadMessages);
 
@@ -97,9 +91,12 @@ export class AssistantsTerminatorService extends AssistantsAbstractService {
       if ('text' in terminatorThreadMessages[0].content[0]) {
         const terminatorResponseText: string =
           terminatorThreadMessages[0].content[0].text.value;
+        console.log(terminatorResponseText);
 
         const isStoryGoodEnough: boolean =
-          this.helpersService.parseLastResponseForJson(terminatorResponseText);
+          this.helpersService.parseTerminatorResponseForJson(
+            terminatorResponseText,
+          );
 
         if (isStoryGoodEnough) {
           return true;

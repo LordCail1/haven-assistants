@@ -16,6 +16,7 @@ import { Run } from 'openai/resources/beta/threads/runs/runs';
 import { Thread } from 'openai/resources/beta/threads/threads';
 import { ThreadMessage } from 'openai/resources/beta/threads/messages/messages';
 import { UserMessage } from 'src/shared/interfaces/interfaces';
+import { AssistantsCriteriaParserService } from 'src/modules/assistants/services/criteriaParser/assistants.criteriaParser.service';
 
 /**
  * This service is responsible for managing the Haven AI agent.
@@ -32,6 +33,7 @@ export class HavenAiAgentService {
     private readonly assistantsQuestionerService: AssistantsQuestionerService,
     private readonly assistantsTerminatorService: AssistantsTerminatorService,
     private readonly assistantsSummarizerService: AssistantsSummarizerService,
+    private readonly assistantsCriteriaParserService: AssistantsCriteriaParserService,
   ) {}
 
   /**
@@ -43,12 +45,62 @@ export class HavenAiAgentService {
     generateFirstQuestionDto: GenerateFirstQuestionDto,
   ): Promise<ResponseObject> {
     try {
+      //creating the thread for criteriaParser
+      const criteriaParserThread: Thread =
+        await this.openaiThreadsService.createThread();
+
+      //creating the first prompt for criteriaParser
+      const firstPromptForCriteriaParser: UserMessage =
+        this.promptCreatorService.createPromptForCriteriaParser(
+          generateFirstQuestionDto,
+        );
+
+      //creating the first message for criteriaParser
+      await this.openaiMessagesService.createMessage(
+        criteriaParserThread.id,
+        firstPromptForCriteriaParser,
+      );
+
+      //creating the run for criteriaParser
+      const criteriaParserRun: Run = await this.openaiRunsService.createRun(
+        criteriaParserThread.id,
+        this.assistantsCriteriaParserService.getAssistant().id,
+      );
+
+      //retrieving the run for criteriaParser
+      await this.openaiRunsService.retrieveRun(
+        criteriaParserThread.id,
+        criteriaParserRun.id,
+      );
+
+      //retrieving the messages for criteriaParser
+      const criteriaParserThreadMessages: ThreadMessage[] =
+        await this.openaiMessagesService.listMessages(criteriaParserThread.id);
+
+      let criteriaParserResponse: string;
+
+      if ('text' in criteriaParserThreadMessages[0].content[0]) {
+        criteriaParserResponse =
+          criteriaParserThreadMessages[0].content[0].text.value;
+        console.log(criteriaParserResponse);
+      } else {
+        throw new ImageNotTextException();
+      }
+
+      //-------
+
       const thread: Thread = await this.openaiThreadsService.createThread();
 
-      const firstPrompt: UserMessage =
-        this.promptCreatorService.createFirstPrompt(generateFirstQuestionDto);
+      const firstPromptForQuestioner: UserMessage =
+        this.promptCreatorService.createFirstPromptForQuestioner(
+          generateFirstQuestionDto,
+          criteriaParserResponse,
+        );
 
-      await this.openaiMessagesService.createMessage(thread.id, firstPrompt);
+      await this.openaiMessagesService.createMessage(
+        thread.id,
+        firstPromptForQuestioner,
+      );
 
       const run: Run = await this.openaiRunsService.createRun(
         thread.id,
