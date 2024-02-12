@@ -13,8 +13,8 @@ import { ResponseObject } from 'src/modules/haven-ai-agent/dto/response-object.d
 import { Run } from 'openai/resources/beta/threads/runs/runs';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Thread } from 'openai/resources/beta/threads/threads';
-import { ukrain_Olena } from './__mocks__/refugees/ukrain/refugees.ukrain.mock';
 import * as request from 'supertest';
+import { spain_Carlos } from './__mocks__/refugees/spain/refugees.spain.mock';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -63,7 +63,7 @@ describe('AppController (e2e)', () => {
       const response = await request(httpServer)
         .post('/api/v1/haven-ai-agent/generate-first-question') // Use the correct endpoint
         .set('Authorization', `Bearer ${secretToken}`)
-        .send(ukrain_Olena);
+        .send(spain_Carlos);
 
       expect(response.statusCode).not.toBe(401); // Assuming a successful request does not return 401
     }, 600000);
@@ -71,7 +71,7 @@ describe('AppController (e2e)', () => {
     it('should deny access without a bearer token', async () => {
       const response = await request(httpServer)
         .post('/api/v1/haven-ai-agent/generate-first-question') // Use the correct endpoint
-        .send(ukrain_Olena);
+        .send(spain_Carlos);
 
       expect(response.statusCode).toBe(401); // Expecting a 401 Unauthorized response
     }, 600000);
@@ -84,11 +84,9 @@ describe('AppController (e2e)', () => {
       const response = await request(httpServer)
         .post('/api/v1/haven-ai-agent/generate-first-question')
         .set('Authorization', `Bearer ${secretToken}`)
-        .send(ukrain_Olena);
+        .send(spain_Carlos);
       console.log('this is how long it took', Date.now() - startTime);
 
-      console.log('response', response.body);
-      console.log('secretToken', secretToken);
       await loopUntilStoryIsGoodEnough(response.body, secretToken);
     }, 600000);
   });

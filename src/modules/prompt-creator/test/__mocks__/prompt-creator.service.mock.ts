@@ -6,7 +6,7 @@ import { UserMessage } from 'src/shared/interfaces/interfaces';
  * Mocks the PromptCreatorService
  */
 export const promptCreatorServiceMock = {
-  createFirstPrompt: jest
+  createFirstPromptForQuestioner: jest
     .fn()
     .mockImplementation(
       (generateFirstQuestionDto: GenerateFirstQuestionDto) => {
@@ -28,4 +28,12 @@ export const promptCreatorServiceMock = {
 
       return userMessage;
     }),
+  createPromptForCriteriaParser: jest.fn().mockImplementation(() => {
+    const userMessage: UserMessage = {
+      content: 'Hello, I am a refugee from Syria. I am looking for a job.',
+      role: 'user',
+    };
+
+    return userMessage;
+  }),
 };

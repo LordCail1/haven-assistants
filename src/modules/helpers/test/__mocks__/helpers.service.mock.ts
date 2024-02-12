@@ -7,7 +7,7 @@ import { threadCreateParamsMessageStub } from 'src/modules/openai/test/stubs/ope
  * Mocked helpers service
  */
 export const helpersServiceMock = {
-  parseLastResponseForJson: jest.fn().mockReturnValue(false),
+  parseTerminatorResponseForJson: jest.fn().mockReturnValue(false),
   convertThreadMessagesToMessageArray: jest
     .fn()
     .mockImplementation(

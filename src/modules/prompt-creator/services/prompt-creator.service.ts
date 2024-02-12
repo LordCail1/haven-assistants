@@ -7,13 +7,29 @@ import { UserMessage } from 'src/shared/interfaces/interfaces';
  */
 @Injectable()
 export class PromptCreatorService {
+  createPromptForCriteriaParser(
+    generateFirstQuestionDto: GenerateFirstQuestionDto,
+  ): UserMessage {
+    const { myStory } = generateFirstQuestionDto;
+
+    return {
+      role: 'user',
+      content: `
+      Here is the story of the refugee you must analyze and figure out what criterias have not been talked about:
+      ${myStory}
+      `,
+    };
+  }
+
   /**
    * This method is responsible for creating the first prompt that will be sent to the AI assistant.
    * @param generateFirstQuestionDto The DTO that contains the information that the refugee provided.
+   * @param criteriaParserResponse The response that the criteria parser provided.
    * @returns The first prompt in the correct format
    */
-  createFirstPrompt(
+  createFirstPromptForQuestioner(
     generateFirstQuestionDto: GenerateFirstQuestionDto,
+    criteriaParserResponse: string,
   ): UserMessage {
     const {
       countryOfBirth: CountryOfBirth,
@@ -55,6 +71,7 @@ export class PromptCreatorService {
 14. **Current City:** ${currentCity}.
 15. **Current Country:** ${currentCountry}.
 16. **Current Province/Territory:** ${currentProvinceOrTerritory}.
+17.Things you need to ask about =>  ${criteriaParserResponse}
       `,
     };
   }

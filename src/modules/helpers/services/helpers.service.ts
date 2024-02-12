@@ -17,8 +17,7 @@ export class HelpersService {
    * @param response The response from the AI
    * @returns A boolean that indicates whether the story is good enough
    */
-  parseLastResponseForJson(response: string): boolean {
-    console.log(response);
+  parseTerminatorResponseForJson(response: string): boolean {
     try {
       const parsedJson = JSON.parse(response);
       const isStoryGoodEnough = parsedJson.isStoryGoodEnough;
