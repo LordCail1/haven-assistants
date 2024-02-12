@@ -8,16 +8,18 @@ import { AssistantsRefugeeService } from './services/refugee/assistants.refugee.
 import { AssistantsSummarizerService } from './services/summarizer/assistants.summarizer.service';
 import { AssistantsTerminatorService } from './services/terminator/assistants.terminator.service';
 import { Module } from '@nestjs/common';
+import { AssistantsCriteriaParserService } from './services/criteriaParser/assistants.criteriaParser.service';
 /**
  * This module is responsible for managing the assistants that are created in OpenAI.
  */
 @Module({
   imports: [HelpersModule, OpenaiModule],
   providers: [
+    AssistantsCriteriaParserService,
     AssistantsQuestionerService,
-    AssistantsTerminatorService,
-    AssistantsSummarizerService,
     AssistantsRefugeeService,
+    AssistantsSummarizerService,
+    AssistantsTerminatorService,
     {
       provide: OpenAI,
       useFactory: (configService: ConfigService) => {
@@ -36,24 +38,28 @@ import { Module } from '@nestjs/common';
     AssistantsQuestionerService,
     AssistantsTerminatorService,
     AssistantsSummarizerService,
+    AssistantsCriteriaParserService,
     AssistantsRefugeeService,
   ],
 })
 export class AssistantsModule {
   constructor(
+    private readonly assistantsCriteriaParserService: AssistantsCriteriaParserService,
     private readonly assistantsQuestionerService: AssistantsQuestionerService,
-    private readonly assistantsTerminatorService: AssistantsTerminatorService,
-    private readonly assistantsSummarizerService: AssistantsSummarizerService,
     private readonly assistantsRefugeeService: AssistantsRefugeeService,
+    private readonly assistantsSummarizerService: AssistantsSummarizerService,
+    private readonly assistantsTerminatorService: AssistantsTerminatorService,
   ) {}
   async onModuleInit() {
+    await this.assistantsCriteriaParserService.initializeAssistant();
+    console.log('Criteria Parser assistant initialized');
     await this.assistantsQuestionerService.initializeAssistant();
     console.log('Questioner assistant initialized');
-    await this.assistantsTerminatorService.initializeAssistant();
-    console.log('Terminator assistant initialized');
-    await this.assistantsSummarizerService.initializeAssistant();
-    console.log('Summarizer assistant initialized');
     await this.assistantsRefugeeService.initializeAssistant();
     console.log('Refugee assistant initialized');
+    await this.assistantsSummarizerService.initializeAssistant();
+    console.log('Summarizer assistant initialized');
+    await this.assistantsTerminatorService.initializeAssistant();
+    console.log('Terminator assistant initialized');
   }
 }

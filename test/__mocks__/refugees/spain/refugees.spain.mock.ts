@@ -7,8 +7,7 @@ export const spain_Carlos: GenerateFirstQuestionDto = {
   gender: 'Male',
   highestEducation: "Bachelor's Degree",
   languages: ['Spanish', 'English'],
-  myStory:
-    'Estoy buscando una nueva vida en Canadá debido a los desafíos económicos y sociales en mi país. Tengo experiencia en el campo de la salud y espero encontrar oportunidades para trabajar y contribuir en la sociedad canadiense.',
+  myStory: `Mi nombre es Carlos García, soy de Bogotá, Colombia. Trabajaba en el campo de la salud cuando tuve la oportunidad de salvar la vida de alguien en un accidente. Fue un momento impactante. Ahora, mi familia y yo buscamos una nueva vida en Canadá debido a desafíos económicos y sociales en Colombia. Esperamos encontrar oportunidades en Vancouver.`,
   countryOfBirth: 'Colombia',
   familyStructure: 'Family with children',
   howManyPeopleInYourGroup: 4,

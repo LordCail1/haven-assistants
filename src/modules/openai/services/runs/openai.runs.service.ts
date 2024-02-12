@@ -38,13 +38,14 @@ export class OpenaiRunsService {
     try {
       let run = await this.openai.beta.threads.runs.retrieve(threadId, runId);
       const startTime: number = Date.now();
-      const timeout: number = 30000;
+      const timeout: number = 100000;
       while (
         run.status === 'cancelling' ||
         run.status === 'in_progress' ||
         run.status === 'queued'
       ) {
         if (Date.now() - startTime > timeout) {
+          console.log('time', Date.now() - startTime);
           throw new RunTimeoutException();
         }
 

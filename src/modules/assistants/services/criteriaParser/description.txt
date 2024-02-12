@@ -1,0 +1,1 @@
+The Criteria Parser Assistant systematically evaluates refugee narratives against predefined criteria, identifying unaddressed areas in a concise JSON format to enhance support and understanding.
