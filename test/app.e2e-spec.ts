@@ -17,8 +17,6 @@ import * as request from 'supertest';
 import { MyLogger } from 'src/modules/logger/services/logger.service';
 import { ali_complete } from './__mocks__/refugees/second_generation/Ali/complete/refugees.ali.complete.mock';
 
-
-
 describe('AppController (e2e)', () => {
   let app: INestApplication;
   let httpServer: any;
@@ -64,7 +62,6 @@ describe('AppController (e2e)', () => {
     expect(configService).toBeDefined();
 
     expect(myLogger).toBeDefined();
-
   });
 
   describe('BearerTokenGuard', () => {
@@ -95,13 +92,8 @@ describe('AppController (e2e)', () => {
         .post('/api/v1/haven-ai-agent/generate-first-question')
         .set('Authorization', `Bearer ${secretToken}`)
 
-   
-      
-
         .send(ali_complete);
       myLogger.test('this is how long it took', Date.now() - startTime);
-
-
 
       await loopUntilStoryIsGoodEnough(response.body, secretToken);
     }, 600000);
