@@ -24,6 +24,8 @@ import {
   ThreadMessage,
 } from 'openai/resources/beta/threads/messages/messages';
 import OpenAI from 'openai';
+import { MyLogger } from 'src/modules/logger/services/logger.service';
+import { MyLoggerMock } from 'src/modules/logger/test/__mocks__/logger.service.mock';
 
 describe('AssistantsSummarizerService', () => {
   let assistantsSummarizerService: AssistantsSummarizerService;
@@ -33,6 +35,7 @@ describe('AssistantsSummarizerService', () => {
   let openaiMessagesService: OpenaiMessagesService;
   let openaiRunsService: OpenaiRunsService;
   let openaiThreadsService: OpenaiThreadsService;
+  let myLogger: MyLogger;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -47,6 +50,7 @@ describe('AssistantsSummarizerService', () => {
         { provide: OpenaiMessagesService, useValue: openaiMessagesServiceMock },
         { provide: OpenaiRunsService, useValue: openaiRunsServiceMock },
         { provide: OpenaiThreadsService, useValue: openaiThreadsServiceMock },
+        { provide: MyLogger, useValue: MyLoggerMock },
       ],
     }).compile();
 
@@ -64,6 +68,7 @@ describe('AssistantsSummarizerService', () => {
     openaiRunsService = module.get<OpenaiRunsService>(OpenaiRunsService);
     openaiThreadsService =
       module.get<OpenaiThreadsService>(OpenaiThreadsService);
+    myLogger = module.get<MyLogger>(MyLogger);
   });
 
   afterEach(() => {
@@ -79,6 +84,7 @@ describe('AssistantsSummarizerService', () => {
     expect(openaiMessagesService).toBeDefined();
     expect(openaiRunsService).toBeDefined();
     expect(openaiThreadsService).toBeDefined();
+    expect(myLogger).toBeDefined();
   });
 
   describe('getAssistant', () => {

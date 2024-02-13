@@ -24,6 +24,8 @@ import {
 import { ImageNotTextException } from 'src/shared/exceptions/image-not-text.exception';
 import { messageContentImageFileStub } from 'src/modules/openai/test/stubs/openai.messageContentImageFile.stub';
 import { threadMessageStub } from 'src/modules/openai/test/stubs/openai.threadMessage.stub';
+import { MyLogger } from 'src/modules/logger/services/logger.service';
+import { MyLoggerMock } from 'src/modules/logger/test/__mocks__/logger.service.mock';
 
 describe('AssistantsAbstractService', () => {
   let assistantsTerminatorService: AssistantsTerminatorService;
@@ -33,6 +35,7 @@ describe('AssistantsAbstractService', () => {
   let openaiMessagesService: OpenaiMessagesService;
   let openaiRunsService: OpenaiRunsService;
   let openaiThreadsService: OpenaiThreadsService;
+  let myLogger: MyLogger;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -47,6 +50,7 @@ describe('AssistantsAbstractService', () => {
         { provide: OpenaiMessagesService, useValue: openaiMessagesServiceMock },
         { provide: OpenaiRunsService, useValue: openaiRunsServiceMock },
         { provide: OpenaiThreadsService, useValue: openaiThreadsServiceMock },
+        { provide: MyLogger, useValue: MyLoggerMock },
       ],
     }).compile();
 
@@ -64,6 +68,7 @@ describe('AssistantsAbstractService', () => {
     openaiRunsService = module.get<OpenaiRunsService>(OpenaiRunsService);
     openaiThreadsService =
       module.get<OpenaiThreadsService>(OpenaiThreadsService);
+    myLogger = module.get<MyLogger>(MyLogger);
   });
 
   afterEach(() => {
@@ -79,6 +84,7 @@ describe('AssistantsAbstractService', () => {
     expect(openaiMessagesService).toBeDefined();
     expect(openaiRunsService).toBeDefined();
     expect(openaiThreadsService).toBeDefined();
+    expect(myLogger).toBeDefined();
   });
 
   describe('getAssistant', () => {
