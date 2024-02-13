@@ -14,7 +14,7 @@ import { Run } from 'openai/resources/beta/threads/runs/runs';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Thread } from 'openai/resources/beta/threads/threads';
 import * as request from 'supertest';
-import { spain_Carlos } from './__mocks__/refugees/spain/refugees.spain.mock';
+import { ali_complete } from './__mocks__/refugees/second_generation/Ali/complete/refugees.ali.complete.mock';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -55,6 +55,8 @@ describe('AppController (e2e)', () => {
     expect(openaiThreadsService).toBeDefined();
     expect(openaiMessagesService).toBeDefined();
     expect(openaiRunsService).toBeDefined();
+    expect(assistantsRefugeeService).toBeDefined();
+    expect(configService).toBeDefined();
   });
 
   describe('BearerTokenGuard', () => {
@@ -63,7 +65,7 @@ describe('AppController (e2e)', () => {
       const response = await request(httpServer)
         .post('/api/v1/haven-ai-agent/generate-first-question') // Use the correct endpoint
         .set('Authorization', `Bearer ${secretToken}`)
-        .send(spain_Carlos);
+        .send(ali_complete);
 
       expect(response.statusCode).not.toBe(401); // Assuming a successful request does not return 401
     }, 600000);
@@ -71,7 +73,7 @@ describe('AppController (e2e)', () => {
     it('should deny access without a bearer token', async () => {
       const response = await request(httpServer)
         .post('/api/v1/haven-ai-agent/generate-first-question') // Use the correct endpoint
-        .send(spain_Carlos);
+        .send(ali_complete);
 
       expect(response.statusCode).toBe(401); // Expecting a 401 Unauthorized response
     }, 600000);
@@ -84,7 +86,7 @@ describe('AppController (e2e)', () => {
       const response = await request(httpServer)
         .post('/api/v1/haven-ai-agent/generate-first-question')
         .set('Authorization', `Bearer ${secretToken}`)
-        .send(spain_Carlos);
+        .send(ali_complete);
       console.log('this is how long it took', Date.now() - startTime);
 
       await loopUntilStoryIsGoodEnough(response.body, secretToken);
