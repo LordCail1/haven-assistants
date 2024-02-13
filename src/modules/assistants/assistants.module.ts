@@ -9,11 +9,13 @@ import { AssistantsSummarizerService } from './services/summarizer/assistants.su
 import { AssistantsTerminatorService } from './services/terminator/assistants.terminator.service';
 import { Module } from '@nestjs/common';
 import { AssistantsCriteriaParserService } from './services/criteriaParser/assistants.criteriaParser.service';
+import { MyLogger } from '../logger/services/logger.service';
+import { LoggerModule } from '../logger/logger.module';
 /**
  * This module is responsible for managing the assistants that are created in OpenAI.
  */
 @Module({
-  imports: [HelpersModule, OpenaiModule],
+  imports: [HelpersModule, OpenaiModule, LoggerModule],
   providers: [
     AssistantsCriteriaParserService,
     AssistantsQuestionerService,
@@ -49,17 +51,18 @@ export class AssistantsModule {
     private readonly assistantsRefugeeService: AssistantsRefugeeService,
     private readonly assistantsSummarizerService: AssistantsSummarizerService,
     private readonly assistantsTerminatorService: AssistantsTerminatorService,
+    private readonly myLoger: MyLogger,
   ) {}
   async onModuleInit() {
     await this.assistantsCriteriaParserService.initializeAssistant();
-    console.log('Criteria Parser assistant initialized');
+    this.myLoger.log(`Criteria parser assistant initialized`);
     await this.assistantsQuestionerService.initializeAssistant();
-    console.log('Questioner assistant initialized');
+    this.myLoger.log('Questioner assistant initialized');
     await this.assistantsRefugeeService.initializeAssistant();
-    console.log('Refugee assistant initialized');
+    this.myLoger.log('Refugee assistant initialized');
     await this.assistantsSummarizerService.initializeAssistant();
-    console.log('Summarizer assistant initialized');
+    this.myLoger.log('Summarizer assistant initialized');
     await this.assistantsTerminatorService.initializeAssistant();
-    console.log('Terminator assistant initialized');
+    this.myLoger.log('Terminator assistant initialized');
   }
 }

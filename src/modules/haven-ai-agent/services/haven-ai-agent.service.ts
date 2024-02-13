@@ -17,6 +17,7 @@ import { Thread } from 'openai/resources/beta/threads/threads';
 import { ThreadMessage } from 'openai/resources/beta/threads/messages/messages';
 import { UserMessage } from 'src/shared/interfaces/interfaces';
 import { AssistantsCriteriaParserService } from 'src/modules/assistants/services/criteriaParser/assistants.criteriaParser.service';
+import { MyLogger } from 'src/modules/logger/services/logger.service';
 
 /**
  * This service is responsible for managing the Haven AI agent.
@@ -34,6 +35,7 @@ export class HavenAiAgentService {
     private readonly assistantsTerminatorService: AssistantsTerminatorService,
     private readonly assistantsSummarizerService: AssistantsSummarizerService,
     private readonly assistantsCriteriaParserService: AssistantsCriteriaParserService,
+    private readonly myLogger: MyLogger,
   ) {}
 
   /**
@@ -48,41 +50,56 @@ export class HavenAiAgentService {
       //creating the thread for criteriaParser
       const criteriaParserThread: Thread =
         await this.openaiThreadsService.createThread();
+      this.myLogger.debug(
+        'criteriaParser thread created',
+        criteriaParserThread,
+      );
 
       //creating the first prompt for criteriaParser
       const firstPromptForCriteriaParser: UserMessage =
         this.promptCreatorService.createPromptForCriteriaParser(
           generateFirstQuestionDto,
         );
+      this.myLogger.debug(
+        'first prompt for criteriaParser created',
+        firstPromptForCriteriaParser,
+      );
 
       //creating the first message for criteriaParser
       await this.openaiMessagesService.createMessage(
         criteriaParserThread.id,
         firstPromptForCriteriaParser,
       );
+      this.myLogger.debug('first message for criteriaParser created');
 
       //creating the run for criteriaParser
       const criteriaParserRun: Run = await this.openaiRunsService.createRun(
         criteriaParserThread.id,
         this.assistantsCriteriaParserService.getAssistant().id,
       );
+      this.myLogger.debug('criteriaParser run created', criteriaParserRun);
 
       //retrieving the run for criteriaParser
       await this.openaiRunsService.retrieveRun(
         criteriaParserThread.id,
         criteriaParserRun.id,
       );
+      this.myLogger.debug('criteriaParser run retrieved', criteriaParserRun);
 
       //retrieving the messages for criteriaParser
       const criteriaParserThreadMessages: ThreadMessage[] =
         await this.openaiMessagesService.listMessages(criteriaParserThread.id);
+      this.myLogger.debug(
+        'criteriaParser thread messages retrieved',
+        criteriaParserThreadMessages,
+      );
 
       let criteriaParserResponse: string;
 
       if ('text' in criteriaParserThreadMessages[0].content[0]) {
         criteriaParserResponse =
           criteriaParserThreadMessages[0].content[0].text.value;
-        console.log(criteriaParserResponse);
+        this.myLogger.debug(criteriaParserResponse);
       } else {
         throw new ImageNotTextException();
       }
@@ -90,27 +107,39 @@ export class HavenAiAgentService {
       //-------
 
       const thread: Thread = await this.openaiThreadsService.createThread();
+      this.myLogger.debug('Questioner thread created', thread);
 
       const firstPromptForQuestioner: UserMessage =
         this.promptCreatorService.createFirstPromptForQuestioner(
           generateFirstQuestionDto,
           criteriaParserResponse,
         );
+      this.myLogger.debug(
+        'first prompt for questioner created',
+        firstPromptForQuestioner,
+      );
 
       await this.openaiMessagesService.createMessage(
         thread.id,
         firstPromptForQuestioner,
       );
+      this.myLogger.debug('first message for questioner created');
 
       const run: Run = await this.openaiRunsService.createRun(
         thread.id,
         this.assistantsQuestionerService.getAssistant().id,
       );
+      this.myLogger.debug('Questioner run created', run);
 
       await this.openaiRunsService.retrieveRun(thread.id, run.id);
+      this.myLogger.debug('Questioner run retrieved', run);
 
       const threadMessages: ThreadMessage[] =
         await this.openaiMessagesService.listMessages(thread.id);
+      this.myLogger.debug(
+        'Questioner thread messages retrieved',
+        threadMessages,
+      );
 
       if ('text' in threadMessages[0].content[0]) {
         return {
@@ -143,19 +172,25 @@ export class HavenAiAgentService {
 
       const followUpPrompt: UserMessage =
         this.promptCreatorService.createFollowUpPrompt(refugeeResponse);
+      this.myLogger.debug('follow up prompt created', followUpPrompt);
 
       await this.openaiMessagesService.createMessage(threadId, followUpPrompt);
+      this.myLogger.debug('follow up message created');
 
       const isStoryGoodEnough: boolean =
         await this.assistantsTerminatorService.determineIfStoryIsGoodEnough(
           threadId,
         );
+      this.myLogger.debug('is story good enough', isStoryGoodEnough);
+
       if (isStoryGoodEnough) {
         const summarizedStory =
           await this.assistantsSummarizerService.createSummary(threadId);
+        this.myLogger.debug('summarized story', summarizedStory);
 
         await this.openaiThreadsService.deleteThread(threadId);
-        console.log(summarizedStory);
+        this.myLogger.log('thread deleted', threadId);
+
         return {
           isStoryGoodEnough: true,
           summarizedStory,
@@ -167,11 +202,17 @@ export class HavenAiAgentService {
         threadId,
         this.assistantsQuestionerService.getAssistant().id,
       );
+      this.myLogger.debug('Questioner run created', run);
 
       await this.openaiRunsService.retrieveRun(threadId, run.id);
+      this.myLogger.debug('Questioner run retrieved', run);
 
       const threadMessages: ThreadMessage[] =
         await this.openaiMessagesService.listMessages(threadId);
+      this.myLogger.debug(
+        'Questioner thread messages retrieved',
+        threadMessages,
+      );
 
       if ('text' in threadMessages[0].content[0]) {
         return {

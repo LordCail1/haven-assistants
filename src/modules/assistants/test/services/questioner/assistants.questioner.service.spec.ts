@@ -6,6 +6,8 @@ import { InitializingAssistantException } from 'src/modules/assistants/exception
 import { AssistantsQuestionerService } from 'src/modules/assistants/services/questioner/assistants.questioner.service';
 import { HelpersService } from 'src/modules/helpers/services/helpers.service';
 import { helpersServiceMock } from 'src/modules/helpers/test/__mocks__/helpers.service.mock';
+import { MyLogger } from 'src/modules/logger/services/logger.service';
+import { MyLoggerMock } from 'src/modules/logger/test/__mocks__/logger.service.mock';
 import { OpenaiAssistantsService } from 'src/modules/openai/services/assistants/openai.assistants.service';
 import { OpenaiMessagesService } from 'src/modules/openai/services/messages/openai.messages.service';
 import { OpenaiRunsService } from 'src/modules/openai/services/runs/openai.runs.service';
@@ -24,6 +26,7 @@ describe('AssistantsQuestionerService', () => {
   let openaiMessagesService: OpenaiMessagesService;
   let openaiRunsService: OpenaiRunsService;
   let openaiThreadsService: OpenaiThreadsService;
+  let myLogger: MyLogger;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -38,6 +41,7 @@ describe('AssistantsQuestionerService', () => {
         { provide: OpenaiMessagesService, useValue: openaiMessagesServiceMock },
         { provide: OpenaiRunsService, useValue: openaiRunsServiceMock },
         { provide: OpenaiThreadsService, useValue: openaiThreadsServiceMock },
+        { provide: MyLogger, useValue: MyLoggerMock },
       ],
     }).compile();
 
@@ -55,6 +59,7 @@ describe('AssistantsQuestionerService', () => {
     openaiRunsService = module.get<OpenaiRunsService>(OpenaiRunsService);
     openaiThreadsService =
       module.get<OpenaiThreadsService>(OpenaiThreadsService);
+    myLogger = module.get<MyLogger>(MyLogger);
   });
 
   afterEach(() => {
@@ -70,6 +75,7 @@ describe('AssistantsQuestionerService', () => {
     expect(openaiMessagesService).toBeDefined();
     expect(openaiRunsService).toBeDefined();
     expect(openaiThreadsService).toBeDefined();
+    expect(myLogger).toBeDefined();
   });
 
   describe('getAssistant', () => {

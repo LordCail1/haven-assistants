@@ -15,6 +15,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Thread } from 'openai/resources/beta/threads/threads';
 import * as request from 'supertest';
 import { spain_Carlos } from './__mocks__/refugees/spain/refugees.spain.mock';
+import { MyLogger } from 'src/modules/logger/services/logger.service';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -24,6 +25,7 @@ describe('AppController (e2e)', () => {
   let openaiRunsService: OpenaiRunsService;
   let assistantsRefugeeService: AssistantsRefugeeService;
   let configService: ConfigService;
+  let myLogger: MyLogger;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -41,11 +43,12 @@ describe('AppController (e2e)', () => {
       AssistantsRefugeeService,
     );
     configService = moduleFixture.get<ConfigService>(ConfigService);
+    myLogger = moduleFixture.get<MyLogger>(MyLogger);
 
     app = moduleFixture.createNestApplication();
     httpServer = app.getHttpServer();
     await app.init();
-  });
+  }, 600000);
 
   afterAll(async () => {
     await app.close();
@@ -55,6 +58,9 @@ describe('AppController (e2e)', () => {
     expect(openaiThreadsService).toBeDefined();
     expect(openaiMessagesService).toBeDefined();
     expect(openaiRunsService).toBeDefined();
+    expect(assistantsRefugeeService).toBeDefined();
+    expect(configService).toBeDefined();
+    expect(myLogger).toBeDefined();
   });
 
   describe('BearerTokenGuard', () => {
@@ -85,7 +91,7 @@ describe('AppController (e2e)', () => {
         .post('/api/v1/haven-ai-agent/generate-first-question')
         .set('Authorization', `Bearer ${secretToken}`)
         .send(spain_Carlos);
-      console.log('this is how long it took', Date.now() - startTime);
+      myLogger.test('this is how long it took', Date.now() - startTime);
 
       await loopUntilStoryIsGoodEnough(response.body, secretToken);
     }, 600000);
@@ -98,14 +104,14 @@ describe('AppController (e2e)', () => {
     const { threadId, isStoryGoodEnough } = responseObject;
 
     if (isStoryGoodEnough) {
-      console.log('STORY FINISHED');
+      myLogger.test('STORY FINISHED');
     } else {
-      console.log(`interview question:
+      myLogger.test(`interview question:
       ${responseObject.response}`);
       const refugeeResponse: string = await refugeeAnswering(
         responseObject.response,
       );
-      console.log(`user response:
+      myLogger.test(`user response:
       ${refugeeResponse}`);
 
       const generateFollowUpQuestionDto: GenerateFollowUpQuestionDto = {
