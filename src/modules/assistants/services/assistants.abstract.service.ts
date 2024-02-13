@@ -9,6 +9,7 @@ import { OpenaiRunsService } from 'src/modules/openai/services/runs/openai.runs.
 import { OpenaiThreadsService } from 'src/modules/openai/services/threads/openai.threads.service';
 import { promises as fs } from 'fs';
 import OpenAI from 'openai';
+import { MyLogger } from 'src/modules/logger/services/logger.service';
 /**
  * This is an abstract service that all the assistants will extend.
  * It contains all the common functionality that all the assistants will use.
@@ -22,6 +23,7 @@ export abstract class AssistantsAbstractService {
     protected readonly openaiMessagesService: OpenaiMessagesService,
     protected readonly openaiRunsService: OpenaiRunsService,
     protected readonly openaiThreadsService: OpenaiThreadsService,
+    protected readonly myLogger: MyLogger,
   ) {}
 
   /**
@@ -45,7 +47,6 @@ export abstract class AssistantsAbstractService {
   ): Promise<Assistant | undefined> {
     const { data: assistants } =
       await this.openaiAssistantsService.listAllAssistants();
-
     return assistants.find((assistant) => assistant.name === assistantName);
   }
 

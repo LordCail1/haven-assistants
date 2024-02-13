@@ -29,6 +29,8 @@ import { generateFollowupQuestionDtoStub } from '../stubs/generate-followup-ques
 import { GenerateFollowUpQuestionException } from '../../exceptions/generate-follow-up-question.exception';
 import { AssistantsCriteriaParserService } from 'src/modules/assistants/services/criteriaParser/assistants.criteriaParser.service';
 import { assistantsCriteriaParserServiceMock } from 'src/modules/assistants/test/__mocks__/criteriaParser/assistants.criteriaParser.service.mock';
+import { MyLogger } from 'src/modules/logger/services/logger.service';
+import { MyLoggerMock } from 'src/modules/logger/test/__mocks__/logger.service.mock';
 
 describe('HavenAiAgentService', () => {
   let havenAiAgentService: HavenAiAgentService;
@@ -40,6 +42,7 @@ describe('HavenAiAgentService', () => {
   let assistantsTerminatorService: AssistantsTerminatorService;
   let assistantsSummarizerService: AssistantsSummarizerService;
   let assistantsCriteriaParserService: AssistantsCriteriaParserService;
+  let myLogger: MyLogger;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -65,6 +68,7 @@ describe('HavenAiAgentService', () => {
           provide: AssistantsCriteriaParserService,
           useValue: assistantsCriteriaParserServiceMock,
         },
+        { provide: MyLogger, useValue: MyLoggerMock },
       ],
     }).compile();
     havenAiAgentService = module.get<HavenAiAgentService>(HavenAiAgentService);
@@ -89,6 +93,7 @@ describe('HavenAiAgentService', () => {
       module.get<AssistantsCriteriaParserService>(
         AssistantsCriteriaParserService,
       );
+    myLogger = module.get<MyLogger>(MyLogger);
   });
 
   afterEach(() => {
@@ -106,6 +111,7 @@ describe('HavenAiAgentService', () => {
     expect(assistantsTerminatorService).toBeDefined();
     expect(assistantsSummarizerService).toBeDefined();
     expect(assistantsCriteriaParserService).toBeDefined();
+    expect(myLogger).toBeDefined();
   });
 
   describe('generateFirstQuestion', () => {

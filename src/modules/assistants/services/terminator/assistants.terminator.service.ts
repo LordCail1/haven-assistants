@@ -91,7 +91,7 @@ export class AssistantsTerminatorService extends AssistantsAbstractService {
       if ('text' in terminatorThreadMessages[0].content[0]) {
         const terminatorResponseText: string =
           terminatorThreadMessages[0].content[0].text.value;
-        console.log(terminatorResponseText);
+        this.myLogger.log(terminatorResponseText);
 
         const isStoryGoodEnough: boolean =
           this.helpersService.parseTerminatorResponseForJson(
