@@ -1,9 +1,11 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { MyLogger } from './modules/logger/services/logger.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { snapshot: true });
+  app.useLogger(app.get(MyLogger));
 
   const config = new DocumentBuilder()
     .setTitle('Haven AI API')

@@ -45,7 +45,6 @@ export class OpenaiRunsService {
         run.status === 'queued'
       ) {
         if (Date.now() - startTime > timeout) {
-          console.log('time', Date.now() - startTime);
           throw new RunTimeoutException();
         }
 

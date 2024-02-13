@@ -56,6 +56,4 @@ export class AssistantsCriteriaParserService extends AssistantsAbstractService {
       );
     }
   }
-
-  async getCriteriaArray() {}
 }
