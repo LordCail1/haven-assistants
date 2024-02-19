@@ -22,6 +22,19 @@ describe('HelpersService', () => {
   });
 
   describe('parseTerminatorResponseForJson', () => {
+    describe('it should work with weird variations', () => {
+      it('should work with the second typical version of JSON returned', () => {
+        const response: string = '```json{"isStoryGoodEnough": true}```';
+        const result = helpersService.parseTerminatorResponseForJson(response);
+        expect(result).toBe(true);
+      });
+      it('should work with other weird variations v1', () => {
+        const response: string = '``wef`json{"isStoryGoodEnough": true}`````';
+        const result = helpersService.parseTerminatorResponseForJson(response);
+        expect(result).toBe(true);
+      });
+    });
+
     it('should return true if the response is true', () => {
       const response: string = '{"isStoryGoodEnough": true}';
       const result = helpersService.parseTerminatorResponseForJson(response);
