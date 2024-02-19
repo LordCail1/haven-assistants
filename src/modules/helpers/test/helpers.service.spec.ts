@@ -29,7 +29,7 @@ describe('HelpersService', () => {
         expect(result).toBe(true);
       });
       it('should work with other weird variations v1', () => {
-        const response: string = '```json{"isStoryGoodEnough": true}```';
+        const response: string = '``wef`json{"isStoryGoodEnough": true}`````';
         const result = helpersService.parseTerminatorResponseForJson(response);
         expect(result).toBe(true);
       });

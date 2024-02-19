@@ -19,8 +19,13 @@ export class HelpersService {
    */
   parseTerminatorResponseForJson(response: string): boolean {
     try {
-      const cleanResponse = response.replace(/```json|```/g, ''); // Remove triple backticks and 'json' language identifier
-      console.log(cleanResponse);
+      // Regex to extract JSON content from the response
+      const jsonMatch = response.match(/\{.*?\}/s);
+      if (!jsonMatch) {
+        throw new Error('No JSON found in response');
+      }
+      const cleanResponse = jsonMatch[0];
+
       const parsedJson = JSON.parse(cleanResponse);
       const isStoryGoodEnough = parsedJson.isStoryGoodEnough;
       if (typeof isStoryGoodEnough !== 'boolean') {
