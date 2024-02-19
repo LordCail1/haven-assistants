@@ -4,6 +4,9 @@ import { RetrieveRunException } from '../../exceptions/runs/retrieve-run.excepti
 import { Run } from 'openai/resources/beta/threads/runs/runs';
 import { RunTimeoutException } from '../../exceptions/runs/run-timeout.exception';
 import OpenAI from 'openai';
+import { ConfigService } from '@nestjs/config';
+import { run_timeout } from 'src/shared/constants';
+import { MyLogger } from 'src/modules/logger/services/logger.service';
 
 /**
  * This service is responsible for interacting with the OpenAI runs API
@@ -11,7 +14,12 @@ import OpenAI from 'openai';
  */
 @Injectable()
 export class OpenaiRunsService {
-  constructor(private openai: OpenAI) {}
+  constructor(
+    private openai: OpenAI,
+    private readonly configService: ConfigService,
+    private readonly myLogger: MyLogger,
+  ) {}
+
   /**
    * Creates a run for a specific thread
    * @param threadId The thread id associated with the run
@@ -38,7 +46,15 @@ export class OpenaiRunsService {
     try {
       let run = await this.openai.beta.threads.runs.retrieve(threadId, runId);
       const startTime: number = Date.now();
-      const timeout: number = 100000;
+      let timeout: number;
+      timeout = this.configService.get<number>(run_timeout);
+      if (!timeout) {
+        this.myLogger.warn(
+          'Run timeout is not set. Default timeout of 30 seconds used',
+        );
+        timeout = 30000;
+      }
+
       while (
         run.status === 'cancelling' ||
         run.status === 'in_progress' ||
