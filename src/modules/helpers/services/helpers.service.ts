@@ -19,7 +19,9 @@ export class HelpersService {
    */
   parseTerminatorResponseForJson(response: string): boolean {
     try {
-      const parsedJson = JSON.parse(response);
+      const cleanResponse = response.replace(/```json|```/g, ''); // Remove triple backticks and 'json' language identifier
+      console.log(cleanResponse);
+      const parsedJson = JSON.parse(cleanResponse);
       const isStoryGoodEnough = parsedJson.isStoryGoodEnough;
       if (typeof isStoryGoodEnough !== 'boolean') {
         throw new IsNotBooleanException('isStoryGoodEnough');
