@@ -6,18 +6,30 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { v4 as uuid } from 'uuid';
 import OpenAI from 'openai';
 import { RetrieveRunException } from 'src/modules/openai/exceptions/runs/retrieve-run.exception';
+import { MyLogger } from 'src/modules/logger/services/logger.service';
+import { MyLoggerMock } from 'src/modules/logger/test/__mocks__/logger.service.mock';
+import { ConfigService } from '@nestjs/config';
 
 describe('OpenaiRunsService', () => {
   let openaiRunsService: OpenaiRunsService;
   let openai: OpenAI;
+  let myLogger: MyLogger;
+  let configService: ConfigService;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [OpenaiRunsService, { provide: OpenAI, useValue: openaiMock }],
+      providers: [
+        OpenaiRunsService,
+        { provide: OpenAI, useValue: openaiMock },
+        { provide: MyLogger, useValue: MyLoggerMock },
+        { provide: ConfigService, useValue: { get: jest.fn() } },
+      ],
     }).compile();
 
     openaiRunsService = module.get<OpenaiRunsService>(OpenaiRunsService);
     openai = module.get<OpenAI>(OpenAI);
+    myLogger = module.get<MyLogger>(MyLogger);
+    configService = module.get<ConfigService>(ConfigService);
   });
 
   afterEach(() => {
@@ -27,6 +39,8 @@ describe('OpenaiRunsService', () => {
   it('should be defined', () => {
     expect(openaiRunsService).toBeDefined();
     expect(openai).toBeDefined();
+    expect(myLogger).toBeDefined();
+    expect(configService).toBeDefined();
   });
 
   describe('createRun', () => {
