@@ -6,11 +6,13 @@ import { OpenaiRunsService } from './services/runs/openai.runs.service';
 import OpenAI from 'openai';
 import { ConfigService } from '@nestjs/config';
 import { openai_key, organization_id } from 'src/shared/constants';
+import { LoggerModule } from '../logger/logger.module';
 
 /**
  * This module warps the OpenAI API
  */
 @Module({
+  imports: [LoggerModule],
   providers: [
     OpenaiAssistantsService,
     OpenaiMessagesService,
