@@ -19,7 +19,14 @@ export class HelpersService {
    */
   parseTerminatorResponseForJson(response: string): boolean {
     try {
-      const parsedJson = JSON.parse(response);
+      // Regex to extract JSON content from the response
+      const jsonMatch = response.match(/\{.*?\}/s);
+      if (!jsonMatch) {
+        throw new Error('No JSON found in response');
+      }
+      const cleanResponse = jsonMatch[0];
+
+      const parsedJson = JSON.parse(cleanResponse);
       const isStoryGoodEnough = parsedJson.isStoryGoodEnough;
       if (typeof isStoryGoodEnough !== 'boolean') {
         throw new IsNotBooleanException('isStoryGoodEnough');

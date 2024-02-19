@@ -70,23 +70,43 @@ export class AssistantsTerminatorService extends AssistantsAbstractService {
     try {
       const threadMessages: ThreadMessage[] =
         await this.openaiMessagesService.listMessages(threadId);
+      this.myLogger.debug(
+        'determineIfStoryIsGoodEnough - Questioner thread messages retrieved',
+        threadMessages,
+      );
 
       const messages: ThreadCreateParams.Message[] =
         this.helpersService.convertThreadMessagesToMessageArray(threadMessages);
+      this.myLogger.debug('determineIfStoryIsGoodEnough - messages', messages);
 
       const thread: Thread = await this.openaiThreadsService.createThread({
         messages,
       });
+      this.myLogger.debug(
+        'determineIfStoryIsGoodEnough - thread created',
+        thread,
+      );
 
       const run: Run = await this.openaiRunsService.createRun(
         thread.id,
         this.assistant.id,
       );
+      this.myLogger.debug(
+        'determineIfStoryIsGoodEnough - Terminator run created',
+        run,
+      );
 
       await this.openaiRunsService.retrieveRun(thread.id, run.id);
+      this.myLogger.debug(
+        'determineIfStoryIsGoodEnough - Terminator run retrieved',
+      );
 
       const terminatorThreadMessages: ThreadMessage[] =
         await this.openaiMessagesService.listMessages(thread.id);
+      this.myLogger.debug(
+        'determineIfStoryIsGoodEnough - Terminator thread messages retrieved',
+        terminatorThreadMessages,
+      );
 
       if ('text' in terminatorThreadMessages[0].content[0]) {
         const terminatorResponseText: string =
@@ -97,6 +117,10 @@ export class AssistantsTerminatorService extends AssistantsAbstractService {
           this.helpersService.parseTerminatorResponseForJson(
             terminatorResponseText,
           );
+        this.myLogger.debug(
+          'determineIfStoryIsGoodEnough - isStoryGoodEnough',
+          isStoryGoodEnough,
+        );
 
         if (isStoryGoodEnough) {
           return true;
