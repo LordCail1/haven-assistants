@@ -8,7 +8,7 @@ import { Gpt_Models } from '../../enums/enums';
 export const assistantCreateParamsStub = (): AssistantCreateParams => {
   return {
     name: 'test',
-    model: Gpt_Models.GPT_4_TURBO_1106_PREVIEW,
+    model: Gpt_Models.GPT_VERSION,
     description: 'test',
     file_ids: [],
     instructions: 'test',

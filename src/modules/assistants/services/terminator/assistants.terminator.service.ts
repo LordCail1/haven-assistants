@@ -54,7 +54,7 @@ export class AssistantsTerminatorService extends AssistantsAbstractService {
         name: AssistantName.TERMINATOR,
         description,
         instructions,
-        model: Gpt_Models.GPT_4_TURBO_1106_PREVIEW,
+        model: Gpt_Models.GPT_VERSION,
       });
     } catch (error) {
       throw new InitializingAssistantException(AssistantName.TERMINATOR, error);

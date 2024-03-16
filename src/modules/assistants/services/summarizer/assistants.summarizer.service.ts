@@ -50,7 +50,7 @@ export class AssistantsSummarizerService extends AssistantsAbstractService {
         name: AssistantName.SUMMARIZER,
         description,
         instructions,
-        model: Gpt_Models.GPT_4_TURBO_1106_PREVIEW,
+        model: Gpt_Models.GPT_VERSION,
       });
     } catch (error) {
       throw new InitializingAssistantException(AssistantName.SUMMARIZER, error);
