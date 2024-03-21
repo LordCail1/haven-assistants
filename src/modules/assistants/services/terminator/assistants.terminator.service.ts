@@ -40,7 +40,7 @@ export class AssistantsTerminatorService extends AssistantsAbstractService {
 
       const instructions = await this.loadInstructions(
         __dirname,
-        'v4/instructions.txt',
+        'v5/instructions.txt',
         AssistantName.TERMINATOR,
       );
 
