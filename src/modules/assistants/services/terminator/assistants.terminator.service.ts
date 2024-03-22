@@ -75,7 +75,7 @@ export class AssistantsTerminatorService extends AssistantsAbstractService {
         threadMessages,
       );
 
-      if (threadMessages.length >= 8) {
+      if (threadMessages.length >= 17) {
         return true;
       }
 
