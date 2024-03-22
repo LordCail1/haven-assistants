@@ -113,10 +113,18 @@ export class AssistantsTerminatorService extends AssistantsAbstractService {
           terminatorThreadMessages[0].content[0].text.value;
         this.myLogger.log(terminatorResponseText);
 
-        const isStoryGoodEnough: boolean =
-          this.helpersService.parseTerminatorResponseForJson(
-            terminatorResponseText,
+        let isStoryGoodEnough: boolean = false;
+        try {
+          isStoryGoodEnough =
+            this.helpersService.parseTerminatorResponseForJson(
+              terminatorResponseText,
+            );
+        } catch (error) {
+          this.myLogger.error(
+            'Error parsing terminator response. Skipping.',
+            error,
           );
+        }
         this.myLogger.debug(
           'determineIfStoryIsGoodEnough - isStoryGoodEnough',
           isStoryGoodEnough,
@@ -131,7 +139,6 @@ export class AssistantsTerminatorService extends AssistantsAbstractService {
         throw new ImageNotTextException();
       }
     } catch (error) {
-      // debug here locally. catch parsing errors.
       throw new DetermineStoryGoodEnoughException(error);
     }
   }
