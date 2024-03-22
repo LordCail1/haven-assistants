@@ -131,6 +131,7 @@ export class AssistantsTerminatorService extends AssistantsAbstractService {
         throw new ImageNotTextException();
       }
     } catch (error) {
+      // debug here locally. catch parsing errors.
       throw new DetermineStoryGoodEnoughException(error);
     }
   }
