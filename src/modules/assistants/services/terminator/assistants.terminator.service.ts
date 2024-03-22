@@ -75,6 +75,10 @@ export class AssistantsTerminatorService extends AssistantsAbstractService {
         threadMessages,
       );
 
+      if (threadMessages.length >= 8) {
+        return true;
+      }
+
       const messages: ThreadCreateParams.Message[] =
         this.helpersService.convertThreadMessagesToMessageArray(threadMessages);
       this.myLogger.debug('determineIfStoryIsGoodEnough - messages', messages);
