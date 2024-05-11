@@ -38,7 +38,7 @@ export class AssistantsLanguageSimplifierService extends AssistantsAbstractServi
 
       const instructions = await this.loadInstructions(
         __dirname,
-        'v3/instructions.txt',
+        'v1/instructions.txt',
         AssistantName.LANGUAGE_SIMPLIFIER,
       );
 

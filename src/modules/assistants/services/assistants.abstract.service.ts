@@ -64,6 +64,7 @@ export abstract class AssistantsAbstractService {
   ): Promise<string> {
     try {
       const filePath = join(dirname, fileLocation);
+
       return fs.readFile(filePath, 'utf-8');
     } catch (error) {
       throw new HttpException(
