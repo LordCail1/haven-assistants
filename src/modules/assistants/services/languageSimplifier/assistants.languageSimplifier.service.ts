@@ -22,14 +22,16 @@ export class AssistantsLanguageSimplifierService extends AssistantsAbstractServi
     if (this.assistant) {
       return this.assistant;
     } else {
-      throw new GettingAssistantException(AssistantName.SUMMARIZER);
+      throw new GettingAssistantException(AssistantName.LANGUAGE_SIMPLIFIER);
     }
   }
 
   async initializeAssistant(): Promise<void> {
     try {
       const assistant: Assistant | undefined =
-        await this.checkIfAssistantAlreadyExists(AssistantName.SUMMARIZER);
+        await this.checkIfAssistantAlreadyExists(
+          AssistantName.LANGUAGE_SIMPLIFIER,
+        );
       if (assistant) {
         await this.openaiAssistantsService.deleteAssistant(assistant.id);
       }
@@ -37,32 +39,35 @@ export class AssistantsLanguageSimplifierService extends AssistantsAbstractServi
       const instructions = await this.loadInstructions(
         __dirname,
         'v3/instructions.txt',
-        AssistantName.SUMMARIZER,
+        AssistantName.LANGUAGE_SIMPLIFIER,
       );
 
       const description = await this.loadDescription(
         __dirname,
         'description.txt',
-        AssistantName.SUMMARIZER,
+        AssistantName.LANGUAGE_SIMPLIFIER,
       );
 
       this.assistant = await this.openaiAssistantsService.createAssistant({
-        name: AssistantName.SUMMARIZER,
+        name: AssistantName.LANGUAGE_SIMPLIFIER,
         description,
         instructions,
         model: Gpt_Models.GPT_VERSION,
       });
     } catch (error) {
-      throw new InitializingAssistantException(AssistantName.SUMMARIZER, error);
+      throw new InitializingAssistantException(
+        AssistantName.LANGUAGE_SIMPLIFIER,
+        error,
+      );
     }
   }
 
   /**
-   * This method is responsible for summarizing the entire story
+   * This method is responsible for simplifying the story that comes from the 'summarizer'.
    * @param threadId The thread id that is used to identify the conversation between the refugee and the 'questioner'.
    * @returns The summary of the story.
    */
-  async createSummary(threadId: string): Promise<string> {
+  async simplifyLanguage(threadId: string): Promise<string> {
     try {
       const threadMessagesOfEntireConvo: ThreadMessage[] =
         await this.openaiMessagesService.listMessages(threadId);
