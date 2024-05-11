@@ -8,7 +8,7 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { ThreadCreateParams } from 'openai/resources/beta/threads/threads';
 import { ThreadMessage } from 'openai/resources/beta/threads/messages/messages';
 import { InitializingAssistantException } from '../../exceptions/initializing-assistant.exception';
-import { CreateSummaryException } from '../../exceptions/summarizer/create-summary.exception';
+import { SimplifyLanguageException } from '../../exceptions/languageSimplifier/simplify-language.exception';
 
 /**
  * This service is responsible for the 'languageSimplifier' assistant.
@@ -100,7 +100,7 @@ export class AssistantsLanguageSimplifierService extends AssistantsAbstractServi
       if (error instanceof HttpException) {
         throw error;
       } else {
-        throw new CreateSummaryException(error);
+        throw new SimplifyLanguageException(error);
       }
     }
   }
