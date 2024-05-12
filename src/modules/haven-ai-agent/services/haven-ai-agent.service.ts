@@ -18,6 +18,7 @@ import { ThreadMessage } from 'openai/resources/beta/threads/messages/messages';
 import { UserMessage } from 'src/shared/interfaces/interfaces';
 import { AssistantsCriteriaParserService } from 'src/modules/assistants/services/criteriaParser/assistants.criteriaParser.service';
 import { MyLogger } from 'src/modules/logger/services/logger.service';
+import { AssistantsLanguageSimplifierService } from 'src/modules/assistants/services/languageSimplifier/assistants.languageSimplifier.service';
 
 /**
  * This service is responsible for managing the Haven AI agent.
@@ -27,14 +28,15 @@ import { MyLogger } from 'src/modules/logger/services/logger.service';
 @Injectable()
 export class HavenAiAgentService {
   constructor(
-    private readonly promptCreatorService: PromptCreatorService,
-    private readonly openaiThreadsService: OpenaiThreadsService,
+    private readonly assistantsCriteriaParserService: AssistantsCriteriaParserService,
+    private readonly assistantsLanguageSimplifierService: AssistantsLanguageSimplifierService,
+    private readonly assistantsQuestionerService: AssistantsQuestionerService,
+    private readonly assistantsSummarizerService: AssistantsSummarizerService,
+    private readonly assistantsTerminatorService: AssistantsTerminatorService,
     private readonly openaiMessagesService: OpenaiMessagesService,
     private readonly openaiRunsService: OpenaiRunsService,
-    private readonly assistantsQuestionerService: AssistantsQuestionerService,
-    private readonly assistantsTerminatorService: AssistantsTerminatorService,
-    private readonly assistantsSummarizerService: AssistantsSummarizerService,
-    private readonly assistantsCriteriaParserService: AssistantsCriteriaParserService,
+    private readonly openaiThreadsService: OpenaiThreadsService,
+    private readonly promptCreatorService: PromptCreatorService,
     private readonly myLogger: MyLogger,
   ) {}
 
@@ -188,12 +190,17 @@ export class HavenAiAgentService {
           await this.assistantsSummarizerService.createSummary(threadId);
         this.myLogger.debug('summarized story', summarizedStory);
 
+        const simplifiedStory =
+          await this.assistantsLanguageSimplifierService.simplifyLanguage(
+            threadId,
+          );
+
         await this.openaiThreadsService.deleteThread(threadId);
         this.myLogger.log('thread deleted', threadId);
 
         return {
           isStoryGoodEnough: true,
-          summarizedStory,
+          simplifiedStory,
           threadId,
         };
       }

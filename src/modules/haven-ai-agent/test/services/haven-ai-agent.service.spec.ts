@@ -204,7 +204,7 @@ describe('HavenAiAgentService', () => {
         expect(responseObject.threadId).toEqual(
           generateFollowUpQuestionDto.threadId,
         );
-        expect(responseObject.summarizedStory).toBeUndefined();
+        expect(responseObject.simplifiedStory).toBeUndefined();
       });
 
       it('it should throw an error if the AI tries to send an image', async () => {
@@ -270,7 +270,7 @@ describe('HavenAiAgentService', () => {
           await havenAiAgentService.generateFollowUpQuestion(
             generateFollowUpQuestionDto,
           );
-        expect(responseObject.summarizedStory).toBeDefined();
+        expect(responseObject.simplifiedStory).toBeDefined();
         expect(responseObject.isStoryGoodEnough).toBe(true);
         expect(responseObject.threadId).toBeDefined();
         expect(responseObject.response).toBeUndefined();
