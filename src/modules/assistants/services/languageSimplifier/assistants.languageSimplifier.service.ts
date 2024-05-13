@@ -3,12 +3,11 @@ import { AssistantName } from '../../enums/enums';
 import { AssistantsAbstractService } from '../assistants.abstract.service';
 import { GettingAssistantException } from '../../exceptions/geting-assistant.exception';
 import { Gpt_Models } from 'src/modules/openai/enums/enums';
-import { ImageNotTextException } from 'src/shared/exceptions/image-not-text.exception';
 import { HttpException, Injectable } from '@nestjs/common';
-import { ThreadCreateParams } from 'openai/resources/beta/threads/threads';
-import { ThreadMessage } from 'openai/resources/beta/threads/messages/messages';
+import { ImageNotTextException } from 'src/shared/exceptions/image-not-text.exception';
 import { InitializingAssistantException } from '../../exceptions/initializing-assistant.exception';
 import { SimplifyLanguageException } from '../../exceptions/languageSimplifier/simplify-language.exception';
+import { ThreadMessage } from 'openai/resources/beta/threads/messages/messages';
 
 /**
  * This service is responsible for the 'languageSimplifier' assistant.
@@ -67,31 +66,32 @@ export class AssistantsLanguageSimplifierService extends AssistantsAbstractServi
    * @param threadId The thread id that is used to identify the conversation between the refugee and the 'questioner'.
    * @returns The summary of the story.
    */
-  async simplifyLanguage(threadId: string): Promise<string> {
+  async simplifyLanguage(summarizedText: string): Promise<string> {
     try {
-      const threadMessagesOfEntireConvo: ThreadMessage[] =
-        await this.openaiMessagesService.listMessages(threadId);
+      //create the thread for the language simplifier
+      const thread = await this.openaiThreadsService.createThread();
 
-      const transformedMessages: ThreadCreateParams.Message[] =
-        this.helpersService.convertThreadMessagesToMessageArray(
-          threadMessagesOfEntireConvo,
-        );
-
-      const thread = await this.openaiThreadsService.createThread({
-        messages: transformedMessages,
-      });
+      this.myLogger.debug('language simplifier thread created', thread);
 
       const run = await this.openaiRunsService.createRun(
         thread.id,
         this.assistant.id,
       );
 
+      this.myLogger.debug('run', run);
+
       await this.openaiRunsService.retrieveRun(thread.id, run.id);
 
       const messages: ThreadMessage[] =
         await this.openaiMessagesService.listMessages(thread.id);
 
+      this.myLogger.debug('messages', messages);
+
       if ('text' in messages[0].content[0]) {
+        this.myLogger.debug(
+          'text in messages[0].content[0]',
+          messages[0].content[0].text.value,
+        );
         return messages[0].content[0].text.value;
       } else {
         throw new ImageNotTextException();
