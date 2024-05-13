@@ -12,6 +12,7 @@ import { AssistantsCriteriaParserService } from './services/criteriaParser/assis
 import { MyLogger } from '../logger/services/logger.service';
 import { LoggerModule } from '../logger/logger.module';
 import { AssistantsLanguageSimplifierService } from './services/languageSimplifier/assistants.languageSimplifier.service';
+import { PromptCreatorService } from '../prompt-creator/services/prompt-creator.service';
 /**
  * This module is responsible for managing the assistants that are created in OpenAI.
  */
@@ -24,6 +25,7 @@ import { AssistantsLanguageSimplifierService } from './services/languageSimplifi
     AssistantsRefugeeService,
     AssistantsSummarizerService,
     AssistantsTerminatorService,
+    PromptCreatorService,
     {
       provide: OpenAI,
       useFactory: (configService: ConfigService) => {

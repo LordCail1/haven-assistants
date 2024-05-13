@@ -3,11 +3,12 @@ import { AssistantName } from '../../enums/enums';
 import { AssistantsAbstractService } from '../assistants.abstract.service';
 import { GettingAssistantException } from '../../exceptions/geting-assistant.exception';
 import { Gpt_Models } from 'src/modules/openai/enums/enums';
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, Inject, Injectable } from '@nestjs/common';
 import { ImageNotTextException } from 'src/shared/exceptions/image-not-text.exception';
 import { InitializingAssistantException } from '../../exceptions/initializing-assistant.exception';
 import { SimplifyLanguageException } from '../../exceptions/languageSimplifier/simplify-language.exception';
 import { ThreadMessage } from 'openai/resources/beta/threads/messages/messages';
+import { PromptCreatorService } from 'src/modules/prompt-creator/services/prompt-creator.service';
 
 /**
  * This service is responsible for the 'languageSimplifier' assistant.
@@ -16,6 +17,9 @@ import { ThreadMessage } from 'openai/resources/beta/threads/messages/messages';
 @Injectable()
 export class AssistantsLanguageSimplifierService extends AssistantsAbstractService {
   private assistant: Assistant;
+
+  @Inject()
+  private promptCreatorService: PromptCreatorService;
 
   getAssistant(): Assistant {
     if (this.assistant) {
@@ -72,6 +76,10 @@ export class AssistantsLanguageSimplifierService extends AssistantsAbstractServi
       const thread = await this.openaiThreadsService.createThread();
 
       this.myLogger.debug('language simplifier thread created', thread);
+
+      this.promptCreatorService.createPromptForLanguageSimplifier(
+        summarizedText,
+      );
 
       const run = await this.openaiRunsService.createRun(
         thread.id,
