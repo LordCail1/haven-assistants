@@ -9,6 +9,8 @@ import { InitializingAssistantException } from '../../exceptions/initializing-as
 import { SimplifyLanguageException } from '../../exceptions/languageSimplifier/simplify-language.exception';
 import { ThreadMessage } from 'openai/resources/beta/threads/messages/messages';
 import { PromptCreatorService } from 'src/modules/prompt-creator/services/prompt-creator.service';
+import { UserMessage } from 'src/shared/interfaces/interfaces';
+import { Run } from 'openai/resources/beta/threads/runs/runs';
 
 /**
  * This service is responsible for the 'languageSimplifier' assistant.
@@ -71,36 +73,66 @@ export class AssistantsLanguageSimplifierService extends AssistantsAbstractServi
    * @returns The summary of the story.
    */
   async simplifyLanguage(summarizedText: string): Promise<string> {
+    console.log('summarizedText', summarizedText);
     try {
       //create the thread for the language simplifier
-      const thread = await this.openaiThreadsService.createThread();
-
-      this.myLogger.debug('language simplifier thread created', thread);
-
-      this.promptCreatorService.createPromptForLanguageSimplifier(
-        summarizedText,
+      const languageSimplifierThread =
+        await this.openaiThreadsService.createThread();
+      this.myLogger.debug(
+        'language simplifier thread created',
+        languageSimplifierThread,
       );
 
-      const run = await this.openaiRunsService.createRun(
-        thread.id,
+      //created the prompt for the language simplifier
+      const languageSimplifierPrompt: UserMessage =
+        this.promptCreatorService.createPromptForLanguageSimplifier(
+          summarizedText,
+        );
+      this.myLogger.debug('prompt for language simplifier created');
+
+      //creating the message for the language simplifier
+      await this.openaiMessagesService.createMessage(
+        languageSimplifierThread.id,
+        languageSimplifierPrompt,
+      );
+      this.myLogger.debug('message for language simplifier created');
+
+      //creating the run for the language simplifier
+      const languageSimplifierRun: Run = await this.openaiRunsService.createRun(
+        languageSimplifierThread.id,
         this.assistant.id,
       );
+      this.myLogger.debug(
+        'run for language simplifier created',
+        languageSimplifierRun,
+      );
 
-      this.myLogger.debug('run', run);
+      //retrieving the run for the language simplifier
+      await this.openaiRunsService.retrieveRun(
+        languageSimplifierThread.id,
+        languageSimplifierRun.id,
+      );
+      this.myLogger.debug(
+        'run for language simplifier retrieved',
+        languageSimplifierRun,
+      );
 
-      await this.openaiRunsService.retrieveRun(thread.id, run.id);
+      //retrieving the messages for the language simplifier
+      const languageSimplifierThreadMessages: ThreadMessage[] =
+        await this.openaiMessagesService.listMessages(
+          languageSimplifierThread.id,
+        );
+      this.myLogger.debug(
+        'thread messages for language simplifier retrieved',
+        languageSimplifierThreadMessages,
+      );
 
-      const messages: ThreadMessage[] =
-        await this.openaiMessagesService.listMessages(thread.id);
-
-      this.myLogger.debug('messages', messages);
-
-      if ('text' in messages[0].content[0]) {
+      if ('text' in languageSimplifierThreadMessages[0].content[0]) {
         this.myLogger.debug(
           'text in messages[0].content[0]',
-          messages[0].content[0].text.value,
+          languageSimplifierThreadMessages[0].content[0].text.value,
         );
-        return messages[0].content[0].text.value;
+        return languageSimplifierThreadMessages[0].content[0].text.value;
       } else {
         throw new ImageNotTextException();
       }
