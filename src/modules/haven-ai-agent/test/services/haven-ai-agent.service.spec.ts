@@ -31,46 +31,54 @@ import { AssistantsCriteriaParserService } from 'src/modules/assistants/services
 import { assistantsCriteriaParserServiceMock } from 'src/modules/assistants/test/__mocks__/criteriaParser/assistants.criteriaParser.service.mock';
 import { MyLogger } from 'src/modules/logger/services/logger.service';
 import { MyLoggerMock } from 'src/modules/logger/test/__mocks__/logger.service.mock';
+import { assistantsLanguageSimplifierServiceMock } from 'src/modules/assistants/test/__mocks__/languageSimplifier/assistants.languageSimplifier.service.mock';
+import { AssistantsLanguageSimplifierService } from 'src/modules/assistants/services/languageSimplifier/assistants.languageSimplifier.service';
 
 describe('HavenAiAgentService', () => {
+  let assistantsCriteriaParserService: AssistantsCriteriaParserService;
+  let assistantsLanguageSimplifierService: AssistantsLanguageSimplifierService;
+  let assistantsQuestionerService: AssistantsQuestionerService;
+  let assistantsSummarizerService: AssistantsSummarizerService;
+  let assistantsTerminatorService: AssistantsTerminatorService;
   let havenAiAgentService: HavenAiAgentService;
-  let promptCreatorService: PromptCreatorService;
-  let openaiThreadsService: OpenaiThreadsService;
+  let myLogger: MyLogger;
   let openaiMessagesService: OpenaiMessagesService;
   let openaiRunsService: OpenaiRunsService;
-  let assistantsQuestionerService: AssistantsQuestionerService;
-  let assistantsTerminatorService: AssistantsTerminatorService;
-  let assistantsSummarizerService: AssistantsSummarizerService;
-  let assistantsCriteriaParserService: AssistantsCriteriaParserService;
-  let myLogger: MyLogger;
+  let openaiThreadsService: OpenaiThreadsService;
+  let promptCreatorService: PromptCreatorService;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        HavenAiAgentService,
-        { provide: PromptCreatorService, useValue: promptCreatorServiceMock },
-        { provide: OpenaiThreadsService, useValue: openaiThreadsServiceMock },
-        { provide: OpenaiMessagesService, useValue: openaiMessagesServiceMock },
-        { provide: OpenaiRunsService, useValue: openaiRunsServiceMock },
         {
           provide: AssistantsQuestionerService,
           useValue: assistantsQuestionerServiceMock,
-        },
-        {
-          provide: AssistantsTerminatorService,
-          useValue: assistantsTerminatorServiceMock,
         },
         {
           provide: AssistantsSummarizerService,
           useValue: assistantsSummarizerServiceMock,
         },
         {
+          provide: AssistantsTerminatorService,
+          useValue: assistantsTerminatorServiceMock,
+        },
+        {
           provide: AssistantsCriteriaParserService,
           useValue: assistantsCriteriaParserServiceMock,
         },
+        {
+          provide: AssistantsLanguageSimplifierService,
+          useValue: assistantsLanguageSimplifierServiceMock,
+        },
         { provide: MyLogger, useValue: MyLoggerMock },
+        { provide: OpenaiMessagesService, useValue: openaiMessagesServiceMock },
+        { provide: OpenaiRunsService, useValue: openaiRunsServiceMock },
+        { provide: OpenaiThreadsService, useValue: openaiThreadsServiceMock },
+        { provide: PromptCreatorService, useValue: promptCreatorServiceMock },
+        HavenAiAgentService,
       ],
     }).compile();
+
     havenAiAgentService = module.get<HavenAiAgentService>(HavenAiAgentService);
     promptCreatorService =
       module.get<PromptCreatorService>(PromptCreatorService);
@@ -89,6 +97,10 @@ describe('HavenAiAgentService', () => {
     assistantsSummarizerService = module.get<AssistantsSummarizerService>(
       AssistantsSummarizerService,
     );
+    assistantsLanguageSimplifierService =
+      module.get<AssistantsLanguageSimplifierService>(
+        AssistantsLanguageSimplifierService,
+      );
     assistantsCriteriaParserService =
       module.get<AssistantsCriteriaParserService>(
         AssistantsCriteriaParserService,
@@ -111,6 +123,7 @@ describe('HavenAiAgentService', () => {
     expect(assistantsTerminatorService).toBeDefined();
     expect(assistantsSummarizerService).toBeDefined();
     expect(assistantsCriteriaParserService).toBeDefined();
+    expect(assistantsLanguageSimplifierService).toBeDefined();
     expect(myLogger).toBeDefined();
   });
 

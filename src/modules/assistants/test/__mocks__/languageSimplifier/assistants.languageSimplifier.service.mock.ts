@@ -8,4 +8,9 @@ export const assistantsLanguageSimplifierServiceMock = {
     const assistantId: string = uuid();
     return assistantId;
   }),
+  // Mock implementation of the simplifyLanguage method
+  simplifyLanguage: jest.fn().mockImplementation((summarizedText: string) => {
+    // Simulate a simplification process
+    return Promise.resolve(`Simplified: ${summarizedText}`);
+  }),
 };
