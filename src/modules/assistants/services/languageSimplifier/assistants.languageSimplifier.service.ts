@@ -73,7 +73,7 @@ export class AssistantsLanguageSimplifierService extends AssistantsAbstractServi
    * @returns The summary of the story.
    */
   async simplifyLanguage(summarizedText: string): Promise<string> {
-    console.log('summarizedText', summarizedText);
+    this.myLogger.test('summarizedText', summarizedText);
     try {
       //create the thread for the language simplifier
       const languageSimplifierThread =

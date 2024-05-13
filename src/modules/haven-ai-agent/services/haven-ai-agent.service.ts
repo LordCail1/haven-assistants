@@ -188,13 +188,13 @@ export class HavenAiAgentService {
       if (isStoryGoodEnough) {
         const summarizedStory =
           await this.assistantsSummarizerService.createSummary(threadId);
-        this.myLogger.debug('summarized story', summarizedStory);
+        this.myLogger.test('summarized story', summarizedStory);
 
         const simplifiedStory =
           await this.assistantsLanguageSimplifierService.simplifyLanguage(
-            threadId,
+            summarizedStory,
           );
-        this.myLogger.debug('simplified story', simplifiedStory);
+        this.myLogger.test('simplified story', simplifiedStory);
 
         await this.openaiThreadsService.deleteThread(threadId);
         this.myLogger.log('thread deleted', threadId);
