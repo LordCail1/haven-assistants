@@ -194,6 +194,7 @@ export class HavenAiAgentService {
           await this.assistantsLanguageSimplifierService.simplifyLanguage(
             threadId,
           );
+        this.myLogger.debug('simplified story', simplifiedStory);
 
         await this.openaiThreadsService.deleteThread(threadId);
         this.myLogger.log('thread deleted', threadId);
