@@ -78,15 +78,15 @@ export class PromptCreatorService {
 
   /**
    * This method is responsible for creating the prompt that will be sent to the AI assistant when the refugee responds to a question.
-   * @param summary The summary that comes from the 'summarizer' assistant.
+   * @param summarizedText The summary that comes from the 'summarizer' assistant.
    * @returns The prompt in the correct format
    */
-  createPromptForLanguageSimplifier(summary: string): UserMessage {
+  createPromptForLanguageSimplifier(summarizedText: string): UserMessage {
     return {
       role: 'user',
       content: `
       Here is the summary that comes from the 'summarizer' assistant. This is the summary you must work with
-      ${summary}
+      ${summarizedText}
       `,
     };
   }
