@@ -1,14 +1,14 @@
-import {
-  AssistantsPage,
-  AssistantCreateParams,
-  Assistant,
-  AssistantDeleted,
-} from 'openai/resources/beta/assistants/assistants';
 import { CreateAssistantException } from '../../exceptions/assistants/create-assistant.exception';
 import { DeleteAssistantException } from '../../exceptions/assistants/delete-assistant.exception';
 import { Injectable } from '@nestjs/common';
 import { ListAllAssistantsException } from '../../exceptions/assistants/list-all-assistants.exception';
 import OpenAI from 'openai';
+import {
+  Assistant,
+  AssistantCreateParams,
+  AssistantDeleted,
+  AssistantsPage,
+} from 'openai/resources/beta/assistants';
 
 /**
  * This service is responsible for interacting with the OpenAI assistants API

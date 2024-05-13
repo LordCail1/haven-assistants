@@ -1,4 +1,3 @@
-import { Assistant } from 'openai/resources/beta/assistants/assistants';
 import { AssistantName } from '../../enums/enums';
 import { AssistantsAbstractService } from '../assistants.abstract.service';
 import { GettingAssistantException } from '../../exceptions/geting-assistant.exception';
@@ -7,10 +6,11 @@ import { HttpException, Inject, Injectable } from '@nestjs/common';
 import { ImageNotTextException } from 'src/shared/exceptions/image-not-text.exception';
 import { InitializingAssistantException } from '../../exceptions/initializing-assistant.exception';
 import { SimplifyLanguageException } from '../../exceptions/languageSimplifier/simplify-language.exception';
-import { ThreadMessage } from 'openai/resources/beta/threads/messages/messages';
 import { PromptCreatorService } from 'src/modules/prompt-creator/services/prompt-creator.service';
 import { UserMessage } from 'src/shared/interfaces/interfaces';
 import { Run } from 'openai/resources/beta/threads/runs/runs';
+import OpenAI from 'openai';
+import { Assistant } from 'openai/resources/beta/assistants';
 
 /**
  * This service is responsible for the 'languageSimplifier' assistant.
@@ -118,7 +118,7 @@ export class AssistantsLanguageSimplifierService extends AssistantsAbstractServi
       );
 
       //retrieving the messages for the language simplifier
-      const languageSimplifierThreadMessages: ThreadMessage[] =
+      const languageSimplifierThreadMessages: OpenAI.Beta.Threads.Messages.Message[] =
         await this.openaiMessagesService.listMessages(
           languageSimplifierThread.id,
         );

@@ -1,4 +1,3 @@
-import { Assistant } from 'openai/resources/beta/assistants/assistants';
 import { AssistantName } from '../../enums/enums';
 import { AssistantsAbstractService } from '../assistants.abstract.service';
 import { GettingAssistantException } from '../../exceptions/geting-assistant.exception';
@@ -6,9 +5,10 @@ import { Gpt_Models } from 'src/modules/openai/enums/enums';
 import { ImageNotTextException } from 'src/shared/exceptions/image-not-text.exception';
 import { HttpException, Injectable } from '@nestjs/common';
 import { ThreadCreateParams } from 'openai/resources/beta/threads/threads';
-import { ThreadMessage } from 'openai/resources/beta/threads/messages/messages';
 import { InitializingAssistantException } from '../../exceptions/initializing-assistant.exception';
 import { CreateSummaryException } from '../../exceptions/summarizer/create-summary.exception';
+import { Assistant } from 'openai/resources/beta/assistants';
+import OpenAI from 'openai';
 
 /**
  * This service is responsible for the 'Summarizer' assistant.
@@ -64,7 +64,7 @@ export class AssistantsSummarizerService extends AssistantsAbstractService {
    */
   async createSummary(threadId: string): Promise<string> {
     try {
-      const threadMessagesOfEntireConvo: ThreadMessage[] =
+      const threadMessagesOfEntireConvo: OpenAI.Beta.Threads.Messages.Message[] =
         await this.openaiMessagesService.listMessages(threadId);
 
       const transformedMessages: ThreadCreateParams.Message[] =
@@ -83,7 +83,7 @@ export class AssistantsSummarizerService extends AssistantsAbstractService {
 
       await this.openaiRunsService.retrieveRun(thread.id, run.id);
 
-      const messages: ThreadMessage[] =
+      const messages: OpenAI.Beta.Threads.Messages.Message[] =
         await this.openaiMessagesService.listMessages(thread.id);
 
       if ('text' in messages[0].content[0]) {

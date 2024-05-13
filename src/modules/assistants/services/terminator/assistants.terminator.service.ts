@@ -1,4 +1,3 @@
-import { Assistant } from 'openai/resources/beta/assistants/assistants';
 import { AssistantName } from '../../enums/enums';
 import { AssistantsAbstractService } from '../assistants.abstract.service';
 import { DetermineStoryGoodEnoughException } from '../../exceptions/terminator/determine-story-good-enough.exception';
@@ -8,11 +7,12 @@ import { ImageNotTextException } from 'src/shared/exceptions/image-not-text.exce
 import { InitializingAssistantException } from '../../exceptions/initializing-assistant.exception';
 import { Injectable } from '@nestjs/common';
 import { Run } from 'openai/resources/beta/threads/runs/runs';
-import { ThreadMessage } from 'openai/resources/beta/threads/messages/messages';
 import {
   Thread,
   ThreadCreateParams,
 } from 'openai/resources/beta/threads/threads';
+import OpenAI from 'openai';
+import { Assistant } from 'openai/resources/beta/assistants';
 
 /**
  * This service is responsible for the 'Terminator' assistant.
@@ -68,7 +68,7 @@ export class AssistantsTerminatorService extends AssistantsAbstractService {
    */
   async determineIfStoryIsGoodEnough(threadId: string): Promise<boolean> {
     try {
-      const threadMessages: ThreadMessage[] =
+      const threadMessages: OpenAI.Beta.Threads.Messages.Message[] =
         await this.openaiMessagesService.listMessages(threadId);
       this.myLogger.debug(
         'determineIfStoryIsGoodEnough - Questioner thread messages retrieved',
@@ -105,7 +105,7 @@ export class AssistantsTerminatorService extends AssistantsAbstractService {
         'determineIfStoryIsGoodEnough - Terminator run retrieved',
       );
 
-      const terminatorThreadMessages: ThreadMessage[] =
+      const terminatorThreadMessages: OpenAI.Beta.Threads.Messages.Message[] =
         await this.openaiMessagesService.listMessages(thread.id);
       this.myLogger.debug(
         'determineIfStoryIsGoodEnough - Terminator thread messages retrieved',

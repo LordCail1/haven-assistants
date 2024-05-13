@@ -14,11 +14,11 @@ import { PromptCreatorService } from 'src/modules/prompt-creator/services/prompt
 import { ResponseObject } from '../dto/response-object.dto';
 import { Run } from 'openai/resources/beta/threads/runs/runs';
 import { Thread } from 'openai/resources/beta/threads/threads';
-import { ThreadMessage } from 'openai/resources/beta/threads/messages/messages';
 import { UserMessage } from 'src/shared/interfaces/interfaces';
 import { AssistantsCriteriaParserService } from 'src/modules/assistants/services/criteriaParser/assistants.criteriaParser.service';
 import { MyLogger } from 'src/modules/logger/services/logger.service';
 import { AssistantsLanguageSimplifierService } from 'src/modules/assistants/services/languageSimplifier/assistants.languageSimplifier.service';
+import OpenAI from 'openai';
 
 /**
  * This service is responsible for managing the Haven AI agent.
@@ -89,7 +89,7 @@ export class HavenAiAgentService {
       this.myLogger.debug('criteriaParser run retrieved', criteriaParserRun);
 
       //retrieving the messages for criteriaParser
-      const criteriaParserThreadMessages: ThreadMessage[] =
+      const criteriaParserThreadMessages: OpenAI.Beta.Threads.Messages.Message[] =
         await this.openaiMessagesService.listMessages(criteriaParserThread.id);
       this.myLogger.debug(
         'criteriaParser thread messages retrieved',
@@ -136,7 +136,7 @@ export class HavenAiAgentService {
       await this.openaiRunsService.retrieveRun(thread.id, run.id);
       this.myLogger.debug('Questioner run retrieved', run);
 
-      const threadMessages: ThreadMessage[] =
+      const threadMessages: OpenAI.Beta.Threads.Messages.Message[] =
         await this.openaiMessagesService.listMessages(thread.id);
       this.myLogger.debug(
         'Questioner thread messages retrieved',
@@ -215,7 +215,7 @@ export class HavenAiAgentService {
       await this.openaiRunsService.retrieveRun(threadId, run.id);
       this.myLogger.debug('Questioner run retrieved', run);
 
-      const threadMessages: ThreadMessage[] =
+      const threadMessages: OpenAI.Beta.Threads.Messages.Message[] =
         await this.openaiMessagesService.listMessages(threadId);
       this.myLogger.debug(
         'Questioner thread messages retrieved',

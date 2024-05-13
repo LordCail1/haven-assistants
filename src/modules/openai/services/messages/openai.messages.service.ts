@@ -1,7 +1,6 @@
 import { CreateMessageException } from '../../exceptions/messages/create-message.exception';
 import { Injectable } from '@nestjs/common';
 import { ListMessagesException } from '../../exceptions/messages/list-messages.exception';
-import { ThreadMessage } from 'openai/resources/beta/threads/messages/messages';
 import { UserMessage } from 'src/shared/interfaces/interfaces';
 import OpenAI from 'openai';
 
@@ -21,7 +20,7 @@ export class OpenaiMessagesService {
   async createMessage(
     threadId: string,
     userMessage: UserMessage,
-  ): Promise<ThreadMessage> {
+  ): Promise<OpenAI.Beta.Threads.Messages.Message> {
     try {
       return await this.openai.beta.threads.messages.create(
         threadId,
@@ -37,7 +36,9 @@ export class OpenaiMessagesService {
    * @param threadId The thread id associated with the run
    * @returns An array of thread messages
    */
-  async listMessages(threadId: string): Promise<ThreadMessage[]> {
+  async listMessages(
+    threadId: string,
+  ): Promise<OpenAI.Beta.Threads.Messages.Message[]> {
     try {
       const { data } = await this.openai.beta.threads.messages.list(threadId);
       return data;

@@ -17,6 +17,7 @@ import * as request from 'supertest';
 import { MyLogger } from 'src/modules/logger/services/logger.service';
 import { ali_complete } from './__mocks__/refugees/second_generation/Ali/complete/refugees.ali.complete.mock';
 import { GenerateFirstQuestionDto } from 'src/modules/haven-ai-agent/dto/generate-first-question.dto';
+import { russia_Anastasia } from './__mocks__/refugees/russia/refugees.russia.mock';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -46,7 +47,7 @@ describe('AppController (e2e)', () => {
     );
     configService = moduleFixture.get<ConfigService>(ConfigService);
     myLogger = moduleFixture.get<MyLogger>(MyLogger);
-    refugeeProfile = ali_complete;
+    refugeeProfile = russia_Anastasia;
 
     app = moduleFixture.createNestApplication();
     httpServer = app.getHttpServer();

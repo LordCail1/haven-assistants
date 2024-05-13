@@ -1,10 +1,10 @@
-import { Assistant } from 'openai/resources/beta/assistants/assistants';
 import { AssistantName } from '../../enums/enums';
 import { AssistantsAbstractService } from '../assistants.abstract.service';
 import { GettingAssistantException } from '../../exceptions/geting-assistant.exception';
 import { Gpt_Models } from 'src/modules/openai/enums/enums';
 import { Injectable } from '@nestjs/common';
 import { InitializingAssistantException } from '../../exceptions/initializing-assistant.exception';
+import { Assistant } from 'openai/resources/beta/assistants';
 
 /**
  * This service is responsible for the 'Questioner' assistant.
