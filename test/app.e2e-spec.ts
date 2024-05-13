@@ -16,7 +16,7 @@ import { Thread } from 'openai/resources/beta/threads/threads';
 import * as request from 'supertest';
 import { MyLogger } from 'src/modules/logger/services/logger.service';
 import { ali_complete } from './__mocks__/refugees/second_generation/Ali/complete/refugees.ali.complete.mock';
-
+import { GenerateFirstQuestionDto } from 'src/modules/haven-ai-agent/dto/generate-first-question.dto';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -27,6 +27,7 @@ describe('AppController (e2e)', () => {
   let assistantsRefugeeService: AssistantsRefugeeService;
   let configService: ConfigService;
   let myLogger: MyLogger;
+  let refugeeProfile: GenerateFirstQuestionDto;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -45,6 +46,7 @@ describe('AppController (e2e)', () => {
     );
     configService = moduleFixture.get<ConfigService>(ConfigService);
     myLogger = moduleFixture.get<MyLogger>(MyLogger);
+    refugeeProfile = ali_complete;
 
     app = moduleFixture.createNestApplication();
     httpServer = app.getHttpServer();
@@ -63,7 +65,6 @@ describe('AppController (e2e)', () => {
     expect(configService).toBeDefined();
 
     expect(myLogger).toBeDefined();
-
   });
 
   describe('BearerTokenGuard', () => {
@@ -72,7 +73,7 @@ describe('AppController (e2e)', () => {
       const response = await request(httpServer)
         .post('/api/v1/haven-ai-agent/generate-first-question') // Use the correct endpoint
         .set('Authorization', `Bearer ${secretToken}`)
-        .send(ali_complete);
+        .send(refugeeProfile);
 
       expect(response.statusCode).not.toBe(401); // Assuming a successful request does not return 401
     }, 600000);
@@ -80,7 +81,7 @@ describe('AppController (e2e)', () => {
     it('should deny access without a bearer token', async () => {
       const response = await request(httpServer)
         .post('/api/v1/haven-ai-agent/generate-first-question') // Use the correct endpoint
-        .send(ali_complete);
+        .send(refugeeProfile);
 
       expect(response.statusCode).toBe(401); // Expecting a 401 Unauthorized response
     }, 600000);
@@ -94,13 +95,8 @@ describe('AppController (e2e)', () => {
         .post('/api/v1/haven-ai-agent/generate-first-question')
         .set('Authorization', `Bearer ${secretToken}`)
 
-   
-      
-
-        .send(ali_complete);
+        .send(refugeeProfile);
       myLogger.test('this is how long it took', Date.now() - startTime);
-
-
 
       await loopUntilStoryIsGoodEnough(response.body, secretToken);
     }, 600000);

@@ -14,7 +14,7 @@ export const assistantStub = (): Assistant => {
     file_ids: ['test'],
     instructions: null,
     metadata: null,
-    model: Gpt_Models.GPT_4_TURBO_1106_PREVIEW,
+    model: Gpt_Models.GPT_VERSION,
     name: 'random assistant',
     object: 'assistant',
     tools: [],

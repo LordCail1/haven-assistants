@@ -47,7 +47,7 @@ export class AssistantsCriteriaParserService extends AssistantsAbstractService {
         name: AssistantName.CRITERIA_PARSER,
         description,
         instructions,
-        model: Gpt_Models.GPT_4_TURBO_1106_PREVIEW,
+        model: Gpt_Models.GPT_VERSION,
       });
     } catch (error) {
       throw new InitializingAssistantException(

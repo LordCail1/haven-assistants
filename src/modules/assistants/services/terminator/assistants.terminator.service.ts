@@ -40,7 +40,7 @@ export class AssistantsTerminatorService extends AssistantsAbstractService {
 
       const instructions = await this.loadInstructions(
         __dirname,
-        'v4/instructions.txt',
+        'v5/instructions.txt',
         AssistantName.TERMINATOR,
       );
 
@@ -54,7 +54,7 @@ export class AssistantsTerminatorService extends AssistantsAbstractService {
         name: AssistantName.TERMINATOR,
         description,
         instructions,
-        model: Gpt_Models.GPT_4_TURBO_1106_PREVIEW,
+        model: Gpt_Models.GPT_VERSION,
       });
     } catch (error) {
       throw new InitializingAssistantException(AssistantName.TERMINATOR, error);
@@ -74,6 +74,10 @@ export class AssistantsTerminatorService extends AssistantsAbstractService {
         'determineIfStoryIsGoodEnough - Questioner thread messages retrieved',
         threadMessages,
       );
+
+      if (threadMessages.length >= 17) {
+        return true;
+      }
 
       const messages: ThreadCreateParams.Message[] =
         this.helpersService.convertThreadMessagesToMessageArray(threadMessages);
@@ -113,10 +117,18 @@ export class AssistantsTerminatorService extends AssistantsAbstractService {
           terminatorThreadMessages[0].content[0].text.value;
         this.myLogger.log(terminatorResponseText);
 
-        const isStoryGoodEnough: boolean =
-          this.helpersService.parseTerminatorResponseForJson(
-            terminatorResponseText,
+        let isStoryGoodEnough: boolean = false;
+        try {
+          isStoryGoodEnough =
+            this.helpersService.parseTerminatorResponseForJson(
+              terminatorResponseText,
+            );
+        } catch (error) {
+          this.myLogger.error(
+            'Error parsing terminator response. Skipping.',
+            error,
           );
+        }
         this.myLogger.debug(
           'determineIfStoryIsGoodEnough - isStoryGoodEnough',
           isStoryGoodEnough,

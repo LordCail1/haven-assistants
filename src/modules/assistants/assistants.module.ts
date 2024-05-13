@@ -11,6 +11,8 @@ import { Module } from '@nestjs/common';
 import { AssistantsCriteriaParserService } from './services/criteriaParser/assistants.criteriaParser.service';
 import { MyLogger } from '../logger/services/logger.service';
 import { LoggerModule } from '../logger/logger.module';
+import { AssistantsLanguageSimplifierService } from './services/languageSimplifier/assistants.languageSimplifier.service';
+import { PromptCreatorService } from '../prompt-creator/services/prompt-creator.service';
 /**
  * This module is responsible for managing the assistants that are created in OpenAI.
  */
@@ -18,10 +20,12 @@ import { LoggerModule } from '../logger/logger.module';
   imports: [HelpersModule, OpenaiModule, LoggerModule],
   providers: [
     AssistantsCriteriaParserService,
+    AssistantsLanguageSimplifierService,
     AssistantsQuestionerService,
     AssistantsRefugeeService,
     AssistantsSummarizerService,
     AssistantsTerminatorService,
+    PromptCreatorService,
     {
       provide: OpenAI,
       useFactory: (configService: ConfigService) => {
@@ -37,16 +41,18 @@ import { LoggerModule } from '../logger/logger.module';
     },
   ],
   exports: [
-    AssistantsQuestionerService,
-    AssistantsTerminatorService,
-    AssistantsSummarizerService,
     AssistantsCriteriaParserService,
+    AssistantsLanguageSimplifierService,
+    AssistantsQuestionerService,
     AssistantsRefugeeService,
+    AssistantsSummarizerService,
+    AssistantsTerminatorService,
   ],
 })
 export class AssistantsModule {
   constructor(
     private readonly assistantsCriteriaParserService: AssistantsCriteriaParserService,
+    private readonly assistantsLanguageSimplifierService: AssistantsLanguageSimplifierService,
     private readonly assistantsQuestionerService: AssistantsQuestionerService,
     private readonly assistantsRefugeeService: AssistantsRefugeeService,
     private readonly assistantsSummarizerService: AssistantsSummarizerService,
@@ -64,5 +70,7 @@ export class AssistantsModule {
     this.myLoger.log('Summarizer assistant initialized');
     await this.assistantsTerminatorService.initializeAssistant();
     this.myLoger.log('Terminator assistant initialized');
+    await this.assistantsLanguageSimplifierService.initializeAssistant();
+    this.myLoger.log('Language simplifier assistant initialized');
   }
 }

@@ -18,7 +18,7 @@ export const runStub = (): Run => {
     instructions: 'random instructions',
     last_error: null,
     metadata: null,
-    model: Gpt_Models.GPT_4_TURBO_1106_PREVIEW,
+    model: Gpt_Models.GPT_VERSION,
     object: 'thread.run',
     required_action: null,
     started_at: null,

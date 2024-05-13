@@ -67,7 +67,7 @@ describe('HavenAiAgentController', () => {
       expect(response.isStoryGoodEnough).toBe(false);
       expect(response.response).toBeDefined();
       expect(response.threadId).toBeDefined();
-      expect(response.summarizedStory).toBeUndefined();
+      expect(response.simplifiedStory).toBeUndefined();
     });
   });
 
@@ -112,7 +112,7 @@ describe('HavenAiAgentController', () => {
         expect(response.isStoryGoodEnough).toBe(false);
         expect(response.response).toBeDefined();
         expect(response.threadId).toBeDefined();
-        expect(response.summarizedStory).toBeUndefined();
+        expect(response.simplifiedStory).toBeUndefined();
       });
     });
 
@@ -124,7 +124,7 @@ describe('HavenAiAgentController', () => {
             const responseObject: ResponseObject = {
               isStoryGoodEnough: true,
               threadId: uuid(),
-              summarizedStory: 'summarized story',
+              simplifiedStory: 'summarized story',
             };
             return Promise.resolve(responseObject);
           });
@@ -134,7 +134,7 @@ describe('HavenAiAgentController', () => {
             generateFollowUpQuestionDto,
           );
         expect(response.isStoryGoodEnough).toBe(true);
-        expect(response.summarizedStory).toBeDefined();
+        expect(response.simplifiedStory).toBeDefined();
         expect(response.threadId).toBeDefined();
         expect(response.response).toBeUndefined();
       });

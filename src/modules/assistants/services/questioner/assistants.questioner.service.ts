@@ -32,7 +32,7 @@ export class AssistantsQuestionerService extends AssistantsAbstractService {
 
       const instructions = await this.loadInstructions(
         __dirname,
-        'v4/instructions.txt',
+        'v5/instructions.txt',
         AssistantName.QUESTIONER,
       );
 
@@ -46,7 +46,7 @@ export class AssistantsQuestionerService extends AssistantsAbstractService {
         name: AssistantName.QUESTIONER,
         description,
         instructions,
-        model: Gpt_Models.GPT_4_TURBO_1106_PREVIEW,
+        model: Gpt_Models.GPT_VERSION,
       });
     } catch (error) {
       throw new InitializingAssistantException(AssistantName.QUESTIONER, error);
