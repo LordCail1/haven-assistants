@@ -1,4 +1,3 @@
-import { Assistant } from 'openai/resources/beta/assistants/assistants';
 import { AssistantsTerminatorService } from 'src/modules/assistants/services/terminator/assistants.terminator.service';
 import { GettingAssistantException } from 'src/modules/assistants/exceptions/geting-assistant.exception';
 import { HelpersService } from 'src/modules/helpers/services/helpers.service';
@@ -26,6 +25,7 @@ import { messageContentImageFileStub } from 'src/modules/openai/test/stubs/opena
 import { threadMessageStub } from 'src/modules/openai/test/stubs/openai.threadMessage.stub';
 import { MyLogger } from 'src/modules/logger/services/logger.service';
 import { MyLoggerMock } from 'src/modules/logger/test/__mocks__/logger.service.mock';
+import { Assistant } from 'openai/resources/beta/assistants';
 
 describe('AssistantsAbstractService', () => {
   let assistantsTerminatorService: AssistantsTerminatorService;

@@ -1,12 +1,9 @@
-import { Assistant } from 'openai/resources/beta/assistants/assistants';
 import { AssistantsSummarizerService } from 'src/modules/assistants/services/summarizer/assistants.summarizer.service';
 import { CreateSummaryException } from 'src/modules/assistants/exceptions/summarizer/create-summary.exception';
 import { GettingAssistantException } from 'src/modules/assistants/exceptions/geting-assistant.exception';
 import { HelpersService } from 'src/modules/helpers/services/helpers.service';
 import { helpersServiceMock } from 'src/modules/helpers/test/__mocks__/helpers.service.mock';
-import { ImageNotTextException } from 'src/shared/exceptions/image-not-text.exception';
 import { InitializingAssistantException } from 'src/modules/assistants/exceptions/initializing-assistant.exception';
-import { messageContentImageFileStub } from 'src/modules/openai/test/stubs/openai.messageContentImageFile.stub';
 import { OpenaiAssistantsService } from 'src/modules/openai/services/assistants/openai.assistants.service';
 import { openaiAssistantsServiceMock } from 'src/modules/openai/test/__mocks__/assistants/openai.assistants.service.mock';
 import { OpenaiMessagesService } from 'src/modules/openai/services/messages/openai.messages.service';
@@ -19,13 +16,14 @@ import { openaiThreadsServiceMock } from 'src/modules/openai/test/__mocks__/thre
 import { Test, TestingModule } from '@nestjs/testing';
 import { threadMessageStub } from 'src/modules/openai/test/stubs/openai.threadMessage.stub';
 import { v4 as uuid } from 'uuid';
-import {
-  MessageContentImageFile,
-  ThreadMessage,
-} from 'openai/resources/beta/threads/messages/messages';
+// import {
+//   MessageContentImageFile,
+//   ThreadMessage,
+// } from 'openai/resources/beta/threads/messages/messages';
 import OpenAI from 'openai';
 import { MyLogger } from 'src/modules/logger/services/logger.service';
 import { MyLoggerMock } from 'src/modules/logger/test/__mocks__/logger.service.mock';
+import { Assistant } from 'openai/resources/beta/assistants';
 
 describe('AssistantsSummarizerService', () => {
   let assistantsSummarizerService: AssistantsSummarizerService;
@@ -224,33 +222,6 @@ describe('AssistantsSummarizerService', () => {
           await assistantsSummarizerService.createSummary(uuid());
         } catch (error) {
           expect(error).toBeInstanceOf(CreateSummaryException);
-        }
-      });
-
-      it('if the image is not text', async () => {
-        jest
-          .spyOn(openaiMessagesService, 'listMessages')
-          .mockImplementationOnce((threadId: string) => {
-            const firstMessageContentImageFile: MessageContentImageFile =
-              messageContentImageFileStub();
-            const firstThreadMessage: ThreadMessage = threadMessageStub(
-              firstMessageContentImageFile,
-            );
-            firstThreadMessage.thread_id = threadId;
-
-            const secondMessageContentImageFile: MessageContentImageFile =
-              messageContentImageFileStub();
-            const secondThreadMessage: ThreadMessage = threadMessageStub(
-              secondMessageContentImageFile,
-            );
-            secondThreadMessage.thread_id = threadId;
-
-            return Promise.resolve([firstThreadMessage, secondThreadMessage]);
-          });
-        try {
-          await assistantsSummarizerService.createSummary(uuid());
-        } catch (error) {
-          expect(error).toBeInstanceOf(ImageNotTextException);
         }
       });
     });

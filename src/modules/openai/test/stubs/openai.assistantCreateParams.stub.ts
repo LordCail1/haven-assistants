@@ -1,4 +1,4 @@
-import { AssistantCreateParams } from 'openai/resources/beta/assistants/assistants';
+import { AssistantCreateParams } from 'openai/resources/beta/assistants';
 import { Gpt_Models } from '../../enums/enums';
 
 /**

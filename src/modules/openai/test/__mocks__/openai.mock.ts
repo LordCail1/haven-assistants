@@ -5,11 +5,7 @@ import {
   ThreadCreateParams,
   ThreadDeleted,
 } from 'openai/resources/beta/threads/threads';
-import {
-  MessageContentText,
-  MessageCreateParams,
-  ThreadMessage,
-} from 'openai/resources/beta/threads/messages/messages';
+
 import {
   Assistant,
   AssistantCreateParams,
@@ -21,6 +17,7 @@ import { threadMessageStub } from '../stubs/openai.threadMessage.stub';
 import { assistantStub } from '../stubs/openai.assistant.stub';
 import { assistantDeletedStub } from '../stubs/openai.assistantDeleted.stub';
 import { threadDeletedStub } from '../stubs/openai.threadDeleted.stub';
+import OpenAI from 'openai';
 
 /**
  * This mock is responsible for mocking the openAI API.
@@ -69,7 +66,7 @@ export const openaiMock = {
                 messageContentTextStub();
               messageContentText.text.value = messageCreateParams.content;
 
-              const threadMessage: ThreadMessage =
+              const threadMessage: OpenAI.Beta.Threads.Messages.Message =
                 threadMessageStub(messageContentText);
 
               threadMessage.content = [messageContentText];
