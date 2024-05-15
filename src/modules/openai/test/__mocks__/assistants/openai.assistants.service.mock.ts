@@ -30,6 +30,14 @@ export const openaiAssistantsServiceMock = {
       questioner.name = AssistantName.QUESTIONER;
       assistants.push(questioner);
 
+      const criteriaParser: Assistant = assistantStub();
+      criteriaParser.name = AssistantName.CRITERIA_PARSER;
+      assistants.push(criteriaParser);
+
+      const languageSimplifier: Assistant = assistantStub();
+      languageSimplifier.name = AssistantName.LANGUAGE_SIMPLIFIER;
+      assistants.push(languageSimplifier);
+
       return Promise.resolve({ data: assistants });
     }),
   createAssistant: jest

@@ -4,9 +4,10 @@ import { Assistant } from 'openai/resources/beta/assistants';
 import { GettingAssistantException } from 'src/modules/assistants/exceptions/geting-assistant.exception';
 import { InitializingAssistantException } from 'src/modules/assistants/exceptions/initializing-assistant.exception';
 import { AssistantsCriteriaParserService } from 'src/modules/assistants/services/criteriaParser/assistants.criteriaParser.service';
-import { AssistantsQuestionerService } from 'src/modules/assistants/services/questioner/assistants.questioner.service';
 import { HelpersService } from 'src/modules/helpers/services/helpers.service';
 import { helpersServiceMock } from 'src/modules/helpers/test/__mocks__/helpers.service.mock';
+import { MyLogger } from 'src/modules/logger/services/logger.service';
+import { MyLoggerMock } from 'src/modules/logger/test/__mocks__/logger.service.mock';
 import { OpenaiAssistantsService } from 'src/modules/openai/services/assistants/openai.assistants.service';
 import { OpenaiMessagesService } from 'src/modules/openai/services/messages/openai.messages.service';
 import { OpenaiRunsService } from 'src/modules/openai/services/runs/openai.runs.service';
@@ -25,11 +26,12 @@ describe('AssistantsCriteriaParserService', () => {
   let openaiMessagesService: OpenaiMessagesService;
   let openaiRunsService: OpenaiRunsService;
   let openaiThreadsService: OpenaiThreadsService;
+  let myLogger: MyLogger;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        AssistantsQuestionerService,
+        AssistantsCriteriaParserService,
         { provide: OpenAI, useValue: openaiMock },
         { provide: HelpersService, useValue: helpersServiceMock },
         {
@@ -39,6 +41,7 @@ describe('AssistantsCriteriaParserService', () => {
         { provide: OpenaiMessagesService, useValue: openaiMessagesServiceMock },
         { provide: OpenaiRunsService, useValue: openaiRunsServiceMock },
         { provide: OpenaiThreadsService, useValue: openaiThreadsServiceMock },
+        { provide: MyLogger, useValue: MyLoggerMock },
       ],
     }).compile();
 
@@ -57,6 +60,7 @@ describe('AssistantsCriteriaParserService', () => {
     openaiRunsService = module.get<OpenaiRunsService>(OpenaiRunsService);
     openaiThreadsService =
       module.get<OpenaiThreadsService>(OpenaiThreadsService);
+    myLogger = module.get<MyLogger>(MyLogger);
   });
 
   afterEach(() => {
@@ -72,6 +76,7 @@ describe('AssistantsCriteriaParserService', () => {
     expect(openaiMessagesService).toBeDefined();
     expect(openaiRunsService).toBeDefined();
     expect(openaiThreadsService).toBeDefined();
+    expect(myLogger).toBeDefined();
   });
 
   describe('getAssistant', () => {

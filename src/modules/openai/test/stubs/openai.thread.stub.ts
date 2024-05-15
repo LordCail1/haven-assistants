@@ -9,6 +9,7 @@ export const threadStub = (): Thread => {
   return {
     id: uuid(),
     created_at: new Date().getTime(),
+    tool_resources: null,
     object: 'thread',
     metadata: null,
   };

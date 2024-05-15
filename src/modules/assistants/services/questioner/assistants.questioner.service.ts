@@ -26,6 +26,7 @@ export class AssistantsQuestionerService extends AssistantsAbstractService {
     try {
       const assistant: Assistant | undefined =
         await this.checkIfAssistantAlreadyExists(AssistantName.QUESTIONER);
+
       if (assistant) {
         await this.openaiAssistantsService.deleteAssistant(assistant.id);
       }

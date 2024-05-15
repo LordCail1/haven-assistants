@@ -10,7 +10,12 @@ export const assistantCreateParamsStub = (): AssistantCreateParams => {
     name: 'test',
     model: Gpt_Models.GPT_VERSION,
     description: 'test',
-    file_ids: [],
+    metadata: null,
+    response_format: null,
+    temperature: null,
+    tool_resources: null,
+    tools: null,
+    top_p: null,
     instructions: 'test',
   };
 };
