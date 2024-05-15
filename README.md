@@ -48,6 +48,20 @@ The `helpers` module includes various utility methods that support other modules
 
 Tasked with processing information from the interviewed refugees, the `prompt-creator` module generates formatted prompts compatible with the OpenAI API. It ensures that the data collected during interviews is structured appropriately for efficient and accurate processing by the AI system.
 
+### 6. 'logger' Module
+
+The `logger` module provides a centralized logging mechanism for the project, avoiding the need to scatter `console.log` statements throughout the codebase. Logging levels can be configured via the environment variable `LOG_LEVELS`.
+
+#### Configuration
+
+Set the following environment variable in your `.env` file and in the Azure environment configuration:
+
+```
+LOG_LEVELS=log,error,warn,debug,verbose,test
+```
+
+Adjust the levels as needed to include or exclude specific logs.
+
 ---
 
 ## Deployment
@@ -62,6 +76,7 @@ The HavenOpenaiApi is currently deployed as a Web App, with essential configurat
    - **OPENAI_KEY**: The API key from OpenAI.
    - **ORGANIZATION_ID**: Identifies the organization linked to the OpenAI API key.
    - **BEARER_TOKEN**: A security token required for authenticating API requests. This token has been set up in Azure to secure access to the API endpoints.
+   - **LOG_LEVELS**: Specifies the logging levels for the `logger` module.
 
 These environment variables are currently configured in the Web App's settings. If modifications are required, the above information will be useful.
 
@@ -81,7 +96,6 @@ Our project follows the NestJS structure, with each API feature encapsulated in 
 
 Before running the project locally, ensure that the environment variables are set up correctly. You should have three `.env` files corresponding to different environments (`development`, `production`, `test`). Each file should include the `OPENAI_KEY`, `ORGANIZATION_ID`, and `BEARER_TOKEN`. The `BEARER_TOKEN` is essential for authenticating requests to the API locally, mirroring the setup in the Azure deployment.
 
-
 Before running the project locally, ensure that the environment variables are set up correctly. NestJS manages environment variables through `.env` files. You should have three `.env` files:
 
 - `.env.development`
@@ -90,8 +104,9 @@ Before running the project locally, ensure that the environment variables are se
 
 Each file should include:
 - `OPENAI_KEY`
-- `ORGANIZATION_ID` 
+- `ORGANIZATION_ID`
 - `BEARER_TOKEN`
+- `LOG_LEVELS`
 
 The `BEARER_TOKEN` is essential for authenticating requests to the API locally, mirroring the setup in the Azure deployment. You have the flexibility to use different OpenAI API keys for different environments, such as testing, development, and production. The appropriate `.env` file is automatically loaded based on the `NODE_ENV` value, which is determined by the start-up command used from `package.json`.
 
