@@ -36,4 +36,12 @@ export const promptCreatorServiceMock = {
 
     return userMessage;
   }),
+  createPromptForLanguageSimplifier: jest.fn().mockImplementation(() => {
+    const userMessage: UserMessage = {
+      content: 'Hello, I am a refugee from Syria. I am looking for a job.',
+      role: 'user',
+    };
+
+    return userMessage;
+  }),
 };

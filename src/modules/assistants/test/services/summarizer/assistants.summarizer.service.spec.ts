@@ -14,12 +14,7 @@ import { openaiRunsServiceMock } from 'src/modules/openai/test/__mocks__/runs/op
 import { OpenaiThreadsService } from 'src/modules/openai/services/threads/openai.threads.service';
 import { openaiThreadsServiceMock } from 'src/modules/openai/test/__mocks__/threads/openai.threads.service.mock';
 import { Test, TestingModule } from '@nestjs/testing';
-import { threadMessageStub } from 'src/modules/openai/test/stubs/openai.threadMessage.stub';
 import { v4 as uuid } from 'uuid';
-// import {
-//   MessageContentImageFile,
-//   ThreadMessage,
-// } from 'openai/resources/beta/threads/messages/messages';
 import OpenAI from 'openai';
 import { MyLogger } from 'src/modules/logger/services/logger.service';
 import { MyLoggerMock } from 'src/modules/logger/test/__mocks__/logger.service.mock';
@@ -35,7 +30,7 @@ describe('AssistantsSummarizerService', () => {
   let openaiThreadsService: OpenaiThreadsService;
   let myLogger: MyLogger;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AssistantsSummarizerService,
