@@ -1,9 +1,9 @@
+import { AssistantName } from 'src/modules/assistants/enums/enums';
+import { assistantStub } from '../../stubs/openai.assistant.stub';
 import {
   Assistant,
   AssistantCreateParams,
-} from 'openai/resources/beta/assistants/assistants';
-import { AssistantName } from 'src/modules/assistants/enums/enums';
-import { assistantStub } from '../../stubs/openai.assistant.stub';
+} from 'openai/resources/beta/assistants';
 
 /**
  * Mock of OpenAI Assistants Service
@@ -40,7 +40,10 @@ export const openaiAssistantsServiceMock = {
           name,
           model,
           description,
-          file_ids,
+          response_format,
+          temperature,
+          tool_resources,
+          top_p,
           instructions,
           metadata,
           tools,
@@ -50,7 +53,10 @@ export const openaiAssistantsServiceMock = {
         assistant.name = name;
         assistant.model = model;
         assistant.description = description;
-        assistant.file_ids = file_ids;
+        assistant.response_format = response_format;
+        assistant.temperature = temperature;
+        assistant.tool_resources = tool_resources;
+        assistant.top_p = top_p;
         assistant.instructions = instructions;
         assistant.metadata = metadata;
         assistant.tools = tools;
