@@ -1,4 +1,3 @@
-import { Assistant } from 'openai/resources/beta/assistants/assistants';
 import { AssistantName } from '../enums/enums';
 import { HelpersService } from 'src/modules/helpers/services/helpers.service';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
@@ -10,6 +9,7 @@ import { OpenaiThreadsService } from 'src/modules/openai/services/threads/openai
 import { promises as fs } from 'fs';
 import OpenAI from 'openai';
 import { MyLogger } from 'src/modules/logger/services/logger.service';
+import { Assistant } from 'openai/resources/beta/assistants';
 /**
  * This is an abstract service that all the assistants will extend.
  * It contains all the common functionality that all the assistants will use.
@@ -64,6 +64,7 @@ export abstract class AssistantsAbstractService {
   ): Promise<string> {
     try {
       const filePath = join(dirname, fileLocation);
+
       return fs.readFile(filePath, 'utf-8');
     } catch (error) {
       throw new HttpException(

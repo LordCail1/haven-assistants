@@ -5,15 +5,7 @@ import {
   ThreadCreateParams,
   ThreadDeleted,
 } from 'openai/resources/beta/threads/threads';
-import {
-  MessageContentText,
-  MessageCreateParams,
-  ThreadMessage,
-} from 'openai/resources/beta/threads/messages/messages';
-import {
-  Assistant,
-  AssistantCreateParams,
-} from 'openai/resources/beta/assistants/assistants';
+
 import { threadStub } from '../stubs/openai.thread.stub';
 import { runStub } from '../stubs/openai.run.stub';
 import { messageContentTextStub } from '../stubs/openai.messageContentText.stub';
@@ -21,6 +13,15 @@ import { threadMessageStub } from '../stubs/openai.threadMessage.stub';
 import { assistantStub } from '../stubs/openai.assistant.stub';
 import { assistantDeletedStub } from '../stubs/openai.assistantDeleted.stub';
 import { threadDeletedStub } from '../stubs/openai.threadDeleted.stub';
+import OpenAI from 'openai';
+import {
+  MessageContent,
+  MessageCreateParams,
+} from 'openai/resources/beta/threads/messages';
+import {
+  Assistant,
+  AssistantCreateParams,
+} from 'openai/resources/beta/assistants';
 
 /**
  * This mock is responsible for mocking the openAI API.
@@ -65,11 +66,16 @@ export const openaiMock = {
           .fn()
           .mockImplementation(
             (threadId: string, messageCreateParams: MessageCreateParams) => {
-              const messageContentText: MessageContentText =
+              const messageContentText: MessageContent =
                 messageContentTextStub();
-              messageContentText.text.value = messageCreateParams.content;
 
-              const threadMessage: ThreadMessage =
+              if (typeof messageCreateParams.content === 'string') {
+                if ('text' in messageContentText) {
+                  messageContentText.text.value = messageCreateParams.content;
+                }
+              }
+
+              const threadMessage: OpenAI.Beta.Threads.Messages.Message =
                 threadMessageStub(messageContentText);
 
               threadMessage.content = [messageContentText];
@@ -99,18 +105,24 @@ export const openaiMock = {
         .fn()
         .mockImplementation((assistantCreateParams: AssistantCreateParams) => {
           const {
-            model,
             description,
-            file_ids,
             instructions,
             metadata,
+            model,
             name,
+            response_format,
+            temperature,
+            tool_resources,
             tools,
+            top_p,
           } = assistantCreateParams;
           const assistant: Assistant = assistantStub();
           assistant.model = model;
           assistant.description = description;
-          assistant.file_ids = file_ids;
+          assistant.response_format = response_format;
+          assistant.temperature = temperature;
+          assistant.tool_resources = tool_resources;
+          assistant.top_p = top_p;
           assistant.instructions = instructions;
           assistant.metadata = metadata;
           assistant.name = name;

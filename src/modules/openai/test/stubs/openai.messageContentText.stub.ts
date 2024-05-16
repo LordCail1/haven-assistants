@@ -1,10 +1,10 @@
-import { MessageContentText } from 'openai/resources/beta/threads/messages/messages';
+import { MessageContent } from 'openai/resources/beta/threads/messages';
 
 /**
  * returns a message content text stub
  * @returns a message content text stub
  */
-export const messageContentTextStub = (): MessageContentText => {
+export const messageContentTextStub = (): MessageContent => {
   return {
     text: {
       annotations: [],

@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import OpenAI from 'openai';
-import { Assistant } from 'openai/resources/beta/assistants/assistants';
+import { Assistant } from 'openai/resources/beta/assistants';
 import { GettingAssistantException } from 'src/modules/assistants/exceptions/geting-assistant.exception';
 import { InitializingAssistantException } from 'src/modules/assistants/exceptions/initializing-assistant.exception';
 import { AssistantsQuestionerService } from 'src/modules/assistants/services/questioner/assistants.questioner.service';

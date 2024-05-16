@@ -1,4 +1,4 @@
-import { AssistantDeleted } from 'openai/resources/beta/assistants/assistants';
+import { AssistantDeleted } from 'openai/resources/beta/assistants';
 import { v4 as uuid } from 'uuid';
 
 /**

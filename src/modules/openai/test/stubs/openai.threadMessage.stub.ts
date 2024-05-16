@@ -1,8 +1,6 @@
-import {
-  MessageContentImageFile,
-  MessageContentText,
-  ThreadMessage,
-} from 'openai/resources/beta/threads/messages/messages';
+import OpenAI from 'openai';
+import { MessageContent } from 'openai/resources/beta/threads/messages';
+
 import { v4 as uuid } from 'uuid';
 
 /**
@@ -12,14 +10,18 @@ import { v4 as uuid } from 'uuid';
  * @returns a thread message stub
  */
 export const threadMessageStub = (
-  content: MessageContentImageFile | MessageContentText,
-): ThreadMessage => {
+  content: MessageContent,
+): OpenAI.Beta.Threads.Messages.Message => {
   return {
     id: uuid(),
     assistant_id: uuid(),
     content: [content],
     created_at: new Date().getTime(),
-    file_ids: ['first_id'],
+    attachments: null,
+    completed_at: null,
+    incomplete_at: null,
+    incomplete_details: null,
+    status: 'completed',
     metadata: null,
     object: 'thread.message',
     role: 'user',

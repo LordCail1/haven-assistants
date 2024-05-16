@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { ThreadMessage } from 'openai/resources/beta/threads/messages/messages';
+import OpenAI from 'openai';
 import { ThreadCreateParams } from 'openai/resources/beta/threads/threads';
 import { threadCreateParamsMessageStub } from 'src/modules/openai/test/stubs/openai.assistants.message.stub';
 
@@ -11,7 +11,9 @@ export const helpersServiceMock = {
   convertThreadMessagesToMessageArray: jest
     .fn()
     .mockImplementation(
-      (threadMessages: ThreadMessage[]): ThreadCreateParams.Message[] => {
+      (
+        threadMessages: OpenAI.Beta.Threads.Messages.Message[],
+      ): ThreadCreateParams.Message[] => {
         const messages: ThreadCreateParams.Message[] = [];
         for (let i = 0; i < 2; i++) {
           messages.push(threadCreateParamsMessageStub());

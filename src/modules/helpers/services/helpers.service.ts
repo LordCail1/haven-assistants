@@ -4,7 +4,7 @@ import { IsNotBooleanException } from '../exceptions/is-not-boolean.exception';
 import { MessageConversionException } from '../exceptions/message-conversion.exception';
 import { ParseLastResponseForJsonException } from '../exceptions/parse-last-response-for-json.exception';
 import { ThreadCreateParams } from 'openai/resources/beta/threads/threads';
-import { ThreadMessage } from 'openai/resources/beta/threads/messages/messages';
+import OpenAI from 'openai';
 
 /**
  * This service is a helper service. It groups together some helper functions
@@ -47,19 +47,21 @@ export class HelpersService {
    * @returns An array of messages that is in the right format
    */
   convertThreadMessagesToMessageArray(
-    threadMessages: ThreadMessage[],
+    threadMessages: OpenAI.Beta.Threads.Messages.Message[],
   ): ThreadCreateParams.Message[] {
     try {
-      return threadMessages.map((message: ThreadMessage) => {
-        if ('text' in message.content[0]) {
-          return {
-            content: message.content[0].text.value,
-            role: 'user',
-          };
-        } else {
-          throw new ImageNotTextException();
-        }
-      });
+      return threadMessages.map(
+        (message: OpenAI.Beta.Threads.Messages.Message) => {
+          if ('text' in message.content[0]) {
+            return {
+              content: message.content[0].text.value,
+              role: 'user',
+            };
+          } else {
+            throw new ImageNotTextException();
+          }
+        },
+      );
     } catch (error) {
       if (error instanceof HttpException) {
         throw error;

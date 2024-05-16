@@ -1,3 +1,7 @@
+import { AssistantsCriteriaParserService } from 'src/modules/assistants/services/criteriaParser/assistants.criteriaParser.service';
+import { assistantsCriteriaParserServiceMock } from 'src/modules/assistants/test/__mocks__/criteriaParser/assistants.criteriaParser.service.mock';
+import { AssistantsLanguageSimplifierService } from 'src/modules/assistants/services/languageSimplifier/assistants.languageSimplifier.service';
+import { assistantsLanguageSimplifierServiceMock } from 'src/modules/assistants/test/__mocks__/languageSimplifier/assistants.languageSimplifier.service.mock';
 import { AssistantsQuestionerService } from 'src/modules/assistants/services/questioner/assistants.questioner.service';
 import { assistantsQuestionerServiceMock } from 'src/modules/assistants/test/__mocks__/questioner/assistants.questioner.service.mock';
 import { AssistantsSummarizerService } from 'src/modules/assistants/services/summarizer/assistants.summarizer.service';
@@ -6,9 +10,12 @@ import { AssistantsTerminatorService } from 'src/modules/assistants/services/ter
 import { assistantsTerminatorServiceMock } from 'src/modules/assistants/test/__mocks__/terminator/assistants.terminator.service.mock';
 import { GenerateFirstQuestionDto } from '../../dto/generate-first-question.dto';
 import { generateFirstQuestionDtoStub } from '../stubs/generate-first-question.dto.stub';
+import { GenerateFollowUpQuestionDto } from '../../dto/generate-followUp-question.dto';
+import { generateFollowupQuestionDtoStub } from '../stubs/generate-followup-question.dto.stub';
+import { GenerateFollowUpQuestionException } from '../../exceptions/generate-follow-up-question.exception';
 import { HavenAiAgentService } from '../../services/haven-ai-agent.service';
-import { ImageNotTextException } from 'src/shared/exceptions/image-not-text.exception';
-import { messageContentImageFileStub } from 'src/modules/openai/test/stubs/openai.messageContentImageFile.stub';
+import { MyLogger } from 'src/modules/logger/services/logger.service';
+import { MyLoggerMock } from 'src/modules/logger/test/__mocks__/logger.service.mock';
 import { OpenaiMessagesService } from 'src/modules/openai/services/messages/openai.messages.service';
 import { openaiMessagesServiceMock } from 'src/modules/openai/test/__mocks__/messages/openai.messages.service.mock';
 import { OpenaiRunsService } from 'src/modules/openai/services/runs/openai.runs.service';
@@ -19,58 +26,52 @@ import { PromptCreatorService } from 'src/modules/prompt-creator/services/prompt
 import { promptCreatorServiceMock } from 'src/modules/prompt-creator/test/__mocks__/prompt-creator.service.mock';
 import { ResponseObject } from '../../dto/response-object.dto';
 import { Test, TestingModule } from '@nestjs/testing';
-import { threadMessageStub } from 'src/modules/openai/test/stubs/openai.threadMessage.stub';
-import {
-  MessageContentImageFile,
-  ThreadMessage,
-} from 'openai/resources/beta/threads/messages/messages';
-import { GenerateFollowUpQuestionDto } from '../../dto/generate-followUp-question.dto';
-import { generateFollowupQuestionDtoStub } from '../stubs/generate-followup-question.dto.stub';
-import { GenerateFollowUpQuestionException } from '../../exceptions/generate-follow-up-question.exception';
-import { AssistantsCriteriaParserService } from 'src/modules/assistants/services/criteriaParser/assistants.criteriaParser.service';
-import { assistantsCriteriaParserServiceMock } from 'src/modules/assistants/test/__mocks__/criteriaParser/assistants.criteriaParser.service.mock';
-import { MyLogger } from 'src/modules/logger/services/logger.service';
-import { MyLoggerMock } from 'src/modules/logger/test/__mocks__/logger.service.mock';
 
 describe('HavenAiAgentService', () => {
+  let assistantsCriteriaParserService: AssistantsCriteriaParserService;
+  let assistantsLanguageSimplifierService: AssistantsLanguageSimplifierService;
+  let assistantsQuestionerService: AssistantsQuestionerService;
+  let assistantsSummarizerService: AssistantsSummarizerService;
+  let assistantsTerminatorService: AssistantsTerminatorService;
   let havenAiAgentService: HavenAiAgentService;
-  let promptCreatorService: PromptCreatorService;
-  let openaiThreadsService: OpenaiThreadsService;
+  let myLogger: MyLogger;
   let openaiMessagesService: OpenaiMessagesService;
   let openaiRunsService: OpenaiRunsService;
-  let assistantsQuestionerService: AssistantsQuestionerService;
-  let assistantsTerminatorService: AssistantsTerminatorService;
-  let assistantsSummarizerService: AssistantsSummarizerService;
-  let assistantsCriteriaParserService: AssistantsCriteriaParserService;
-  let myLogger: MyLogger;
+  let openaiThreadsService: OpenaiThreadsService;
+  let promptCreatorService: PromptCreatorService;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        HavenAiAgentService,
-        { provide: PromptCreatorService, useValue: promptCreatorServiceMock },
-        { provide: OpenaiThreadsService, useValue: openaiThreadsServiceMock },
-        { provide: OpenaiMessagesService, useValue: openaiMessagesServiceMock },
-        { provide: OpenaiRunsService, useValue: openaiRunsServiceMock },
         {
           provide: AssistantsQuestionerService,
           useValue: assistantsQuestionerServiceMock,
-        },
-        {
-          provide: AssistantsTerminatorService,
-          useValue: assistantsTerminatorServiceMock,
         },
         {
           provide: AssistantsSummarizerService,
           useValue: assistantsSummarizerServiceMock,
         },
         {
+          provide: AssistantsTerminatorService,
+          useValue: assistantsTerminatorServiceMock,
+        },
+        {
           provide: AssistantsCriteriaParserService,
           useValue: assistantsCriteriaParserServiceMock,
         },
+        {
+          provide: AssistantsLanguageSimplifierService,
+          useValue: assistantsLanguageSimplifierServiceMock,
+        },
         { provide: MyLogger, useValue: MyLoggerMock },
+        { provide: OpenaiMessagesService, useValue: openaiMessagesServiceMock },
+        { provide: OpenaiRunsService, useValue: openaiRunsServiceMock },
+        { provide: OpenaiThreadsService, useValue: openaiThreadsServiceMock },
+        { provide: PromptCreatorService, useValue: promptCreatorServiceMock },
+        HavenAiAgentService,
       ],
     }).compile();
+
     havenAiAgentService = module.get<HavenAiAgentService>(HavenAiAgentService);
     promptCreatorService =
       module.get<PromptCreatorService>(PromptCreatorService);
@@ -89,6 +90,10 @@ describe('HavenAiAgentService', () => {
     assistantsSummarizerService = module.get<AssistantsSummarizerService>(
       AssistantsSummarizerService,
     );
+    assistantsLanguageSimplifierService =
+      module.get<AssistantsLanguageSimplifierService>(
+        AssistantsLanguageSimplifierService,
+      );
     assistantsCriteriaParserService =
       module.get<AssistantsCriteriaParserService>(
         AssistantsCriteriaParserService,
@@ -111,6 +116,7 @@ describe('HavenAiAgentService', () => {
     expect(assistantsTerminatorService).toBeDefined();
     expect(assistantsSummarizerService).toBeDefined();
     expect(assistantsCriteriaParserService).toBeDefined();
+    expect(assistantsLanguageSimplifierService).toBeDefined();
     expect(myLogger).toBeDefined();
   });
 
@@ -136,33 +142,6 @@ describe('HavenAiAgentService', () => {
       expect(responseObject.isStoryGoodEnough).toBe(false);
       expect(responseObject.response).toBeDefined();
       expect(responseObject.threadId).toBeDefined();
-    });
-
-    it('it should throw an error if the AI tries to send an image', async () => {
-      jest
-        .spyOn(openaiMessagesService, 'listMessages')
-        .mockImplementationOnce((threadId: string) => {
-          const messageContentImageFile: MessageContentImageFile =
-            messageContentImageFileStub();
-
-          const threadMessage: ThreadMessage = threadMessageStub(
-            messageContentImageFile,
-          );
-          threadMessage.thread_id = threadId;
-
-          return Promise.resolve([threadMessage]);
-        });
-
-      try {
-        const responseObject: ResponseObject =
-          await havenAiAgentService.generateFirstQuestion(
-            generateFirstQuestionDto,
-          );
-        expect(responseObject).toBeUndefined();
-        fail('should have thrown an error');
-      } catch (error) {
-        expect(error).toBeInstanceOf(ImageNotTextException);
-      }
     });
   });
 
@@ -204,34 +183,7 @@ describe('HavenAiAgentService', () => {
         expect(responseObject.threadId).toEqual(
           generateFollowUpQuestionDto.threadId,
         );
-        expect(responseObject.summarizedStory).toBeUndefined();
-      });
-
-      it('it should throw an error if the AI tries to send an image', async () => {
-        jest
-          .spyOn(openaiMessagesService, 'listMessages')
-          .mockImplementationOnce((threadId: string) => {
-            const messageContentImageFile: MessageContentImageFile =
-              messageContentImageFileStub();
-
-            const threadMessage: ThreadMessage = threadMessageStub(
-              messageContentImageFile,
-            );
-            threadMessage.thread_id = threadId;
-
-            return Promise.resolve([threadMessage]);
-          });
-
-        try {
-          const responseObject: ResponseObject =
-            await havenAiAgentService.generateFollowUpQuestion(
-              generateFollowUpQuestionDto,
-            );
-          expect(responseObject).toBeUndefined();
-          fail('should have thrown an error');
-        } catch (error) {
-          expect(error).toBeInstanceOf(ImageNotTextException);
-        }
+        expect(responseObject.simplifiedStory).toBeUndefined();
       });
     });
 
@@ -270,7 +222,7 @@ describe('HavenAiAgentService', () => {
           await havenAiAgentService.generateFollowUpQuestion(
             generateFollowUpQuestionDto,
           );
-        expect(responseObject.summarizedStory).toBeDefined();
+        expect(responseObject.simplifiedStory).toBeDefined();
         expect(responseObject.isStoryGoodEnough).toBe(true);
         expect(responseObject.threadId).toBeDefined();
         expect(responseObject.response).toBeUndefined();

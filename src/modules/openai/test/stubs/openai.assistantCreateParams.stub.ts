@@ -1,4 +1,4 @@
-import { AssistantCreateParams } from 'openai/resources/beta/assistants/assistants';
+import { AssistantCreateParams } from 'openai/resources/beta/assistants';
 import { Gpt_Models } from '../../enums/enums';
 
 /**
@@ -8,9 +8,14 @@ import { Gpt_Models } from '../../enums/enums';
 export const assistantCreateParamsStub = (): AssistantCreateParams => {
   return {
     name: 'test',
-    model: Gpt_Models.GPT_4_TURBO_1106_PREVIEW,
+    model: Gpt_Models.GPT_VERSION,
     description: 'test',
-    file_ids: [],
+    metadata: null,
+    response_format: null,
+    temperature: null,
+    tool_resources: null,
+    tools: null,
+    top_p: null,
     instructions: 'test',
   };
 };

@@ -1,10 +1,10 @@
-import { Assistant } from 'openai/resources/beta/assistants/assistants';
 import { AssistantName } from '../../enums/enums';
 import { AssistantsAbstractService } from '../assistants.abstract.service';
 import { GettingAssistantException } from '../../exceptions/geting-assistant.exception';
 import { Gpt_Models } from 'src/modules/openai/enums/enums';
 import { InitializingAssistantException } from '../../exceptions/initializing-assistant.exception';
 import { Injectable } from '@nestjs/common';
+import { Assistant } from 'openai/resources/beta/assistants';
 
 /**
  * This service is responsible for the 'Refugee' assistant.
@@ -33,7 +33,7 @@ export class AssistantsRefugeeService extends AssistantsAbstractService {
 
       const instructions = await this.loadInstructions(
         __dirname,
-        'second_generation/Ali/complete/instructions.txt',
+        'russia/Anastasia/v1/instructions.txt',
         AssistantName.REFUGEE,
       );
 
@@ -47,7 +47,7 @@ export class AssistantsRefugeeService extends AssistantsAbstractService {
         name: AssistantName.REFUGEE,
         description,
         instructions,
-        model: Gpt_Models.GPT_4_TURBO_1106_PREVIEW,
+        model: Gpt_Models.GPT_VERSION,
       });
     } catch (error) {
       throw new InitializingAssistantException(AssistantName.REFUGEE, error);

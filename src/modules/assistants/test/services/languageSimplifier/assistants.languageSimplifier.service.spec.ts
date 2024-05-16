@@ -1,12 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import OpenAI from 'openai';
-import { Assistant } from 'openai/resources/beta/assistants/assistants';
+import { Assistant } from 'openai/resources/beta/assistants';
 import { GettingAssistantException } from 'src/modules/assistants/exceptions/geting-assistant.exception';
 import { InitializingAssistantException } from 'src/modules/assistants/exceptions/initializing-assistant.exception';
-import { AssistantsCriteriaParserService } from 'src/modules/assistants/services/criteriaParser/assistants.criteriaParser.service';
-import { AssistantsQuestionerService } from 'src/modules/assistants/services/questioner/assistants.questioner.service';
+import { AssistantsLanguageSimplifierService } from 'src/modules/assistants/services/languageSimplifier/assistants.languageSimplifier.service';
 import { HelpersService } from 'src/modules/helpers/services/helpers.service';
 import { helpersServiceMock } from 'src/modules/helpers/test/__mocks__/helpers.service.mock';
+import { MyLogger } from 'src/modules/logger/services/logger.service';
+import { MyLoggerMock } from 'src/modules/logger/test/__mocks__/logger.service.mock';
 import { OpenaiAssistantsService } from 'src/modules/openai/services/assistants/openai.assistants.service';
 import { OpenaiMessagesService } from 'src/modules/openai/services/messages/openai.messages.service';
 import { OpenaiRunsService } from 'src/modules/openai/services/runs/openai.runs.service';
@@ -16,20 +17,25 @@ import { openaiMessagesServiceMock } from 'src/modules/openai/test/__mocks__/mes
 import { openaiMock } from 'src/modules/openai/test/__mocks__/openai.mock';
 import { openaiRunsServiceMock } from 'src/modules/openai/test/__mocks__/runs/openai.runs.service.mock';
 import { openaiThreadsServiceMock } from 'src/modules/openai/test/__mocks__/threads/openai.threads.service.mock';
+import { PromptCreatorService } from 'src/modules/prompt-creator/services/prompt-creator.service';
+import { promptCreatorServiceMock } from 'src/modules/prompt-creator/test/__mocks__/prompt-creator.service.mock';
 
-describe('AssistantsCriteriaParserService', () => {
-  let assistantsCriteriaParserService: AssistantsCriteriaParserService;
+describe('AssistantsLanguageParserService', () => {
+  let assistantsLanguageSimplifierService: AssistantsLanguageSimplifierService;
   let openai: OpenAI;
   let helpersService: HelpersService;
   let openaiAssistantsService: OpenaiAssistantsService;
   let openaiMessagesService: OpenaiMessagesService;
   let openaiRunsService: OpenaiRunsService;
   let openaiThreadsService: OpenaiThreadsService;
+  let promptCreatorService: PromptCreatorService;
+  let myLogger: MyLogger;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        AssistantsQuestionerService,
+        AssistantsLanguageSimplifierService,
+
         { provide: OpenAI, useValue: openaiMock },
         { provide: HelpersService, useValue: helpersServiceMock },
         {
@@ -39,12 +45,14 @@ describe('AssistantsCriteriaParserService', () => {
         { provide: OpenaiMessagesService, useValue: openaiMessagesServiceMock },
         { provide: OpenaiRunsService, useValue: openaiRunsServiceMock },
         { provide: OpenaiThreadsService, useValue: openaiThreadsServiceMock },
+        { provide: PromptCreatorService, useValue: promptCreatorServiceMock },
+        { provide: MyLogger, useValue: MyLoggerMock },
       ],
     }).compile();
 
-    assistantsCriteriaParserService =
-      module.get<AssistantsCriteriaParserService>(
-        AssistantsCriteriaParserService,
+    assistantsLanguageSimplifierService =
+      module.get<AssistantsLanguageSimplifierService>(
+        AssistantsLanguageSimplifierService,
       );
     openai = module.get<OpenAI>(OpenAI);
     helpersService = module.get<HelpersService>(HelpersService);
@@ -55,8 +63,11 @@ describe('AssistantsCriteriaParserService', () => {
       OpenaiMessagesService,
     );
     openaiRunsService = module.get<OpenaiRunsService>(OpenaiRunsService);
+    promptCreatorService =
+      module.get<PromptCreatorService>(PromptCreatorService);
     openaiThreadsService =
       module.get<OpenaiThreadsService>(OpenaiThreadsService);
+    myLogger = module.get<MyLogger>(MyLogger);
   });
 
   afterEach(() => {
@@ -65,21 +76,23 @@ describe('AssistantsCriteriaParserService', () => {
   });
 
   it('should be defined', () => {
-    expect(assistantsCriteriaParserService).toBeDefined();
-    expect(openai).toBeDefined();
+    expect(assistantsLanguageSimplifierService).toBeDefined();
     expect(helpersService).toBeDefined();
+    expect(myLogger).toBeDefined();
+    expect(openai).toBeDefined();
     expect(openaiAssistantsService).toBeDefined();
     expect(openaiMessagesService).toBeDefined();
     expect(openaiRunsService).toBeDefined();
     expect(openaiThreadsService).toBeDefined();
+    expect(promptCreatorService).toBeDefined();
   });
 
   describe('getAssistant', () => {
     let assistant: Assistant;
 
     it('should return the assistant', async () => {
-      await assistantsCriteriaParserService.initializeAssistant();
-      assistant = assistantsCriteriaParserService.getAssistant();
+      await assistantsLanguageSimplifierService.initializeAssistant();
+      assistant = assistantsLanguageSimplifierService.getAssistant();
       expect(assistant).toBeDefined();
     });
 
@@ -87,9 +100,9 @@ describe('AssistantsCriteriaParserService', () => {
       jest
         .spyOn(openaiAssistantsService, 'createAssistant')
         .mockResolvedValueOnce(undefined);
-      await assistantsCriteriaParserService.initializeAssistant();
+      await assistantsLanguageSimplifierService.initializeAssistant();
       try {
-        assistant = assistantsCriteriaParserService.getAssistant();
+        assistant = assistantsLanguageSimplifierService.getAssistant();
       } catch (error) {
         expect(error).toBeInstanceOf(GettingAssistantException);
       }
@@ -98,7 +111,7 @@ describe('AssistantsCriteriaParserService', () => {
 
   describe('initializeAssistant', () => {
     it('should call all of the correct services', async () => {
-      await assistantsCriteriaParserService.initializeAssistant();
+      await assistantsLanguageSimplifierService.initializeAssistant();
 
       expect(openaiAssistantsService.listAllAssistants).toHaveBeenCalledTimes(
         1,
@@ -113,7 +126,7 @@ describe('AssistantsCriteriaParserService', () => {
           .spyOn(openaiAssistantsService, 'deleteAssistant')
           .mockRejectedValueOnce(new Error());
         try {
-          await assistantsCriteriaParserService.initializeAssistant();
+          await assistantsLanguageSimplifierService.initializeAssistant();
         } catch (error) {
           expect(error).toBeInstanceOf(InitializingAssistantException);
         }
@@ -125,11 +138,31 @@ describe('AssistantsCriteriaParserService', () => {
           .mockRejectedValueOnce(new Error());
 
         try {
-          await assistantsCriteriaParserService.initializeAssistant();
+          await assistantsLanguageSimplifierService.initializeAssistant();
         } catch (error) {
           expect(error).toBeInstanceOf(InitializingAssistantException);
         }
       });
+    });
+  });
+
+  describe('simplifyLanguage', () => {
+    beforeEach(async () => {
+      await assistantsLanguageSimplifierService.initializeAssistant();
+    });
+
+    it('should call the correct services', async () => {
+      await assistantsLanguageSimplifierService.simplifyLanguage(
+        'summarizedText',
+      );
+      expect(openaiThreadsService.createThread).toHaveBeenCalledTimes(1);
+      expect(
+        promptCreatorService.createPromptForLanguageSimplifier,
+      ).toHaveBeenCalledTimes(1);
+      expect(openaiMessagesService.createMessage).toHaveBeenCalledTimes(1);
+      expect(openaiRunsService.createRun).toHaveBeenCalledTimes(1);
+      expect(openaiRunsService.retrieveRun).toHaveBeenCalledTimes(1);
+      expect(openaiMessagesService.listMessages).toHaveBeenCalledTimes(1);
     });
   });
 });

@@ -3,7 +3,6 @@ import { ListMessagesException } from 'src/modules/openai/exceptions/messages/li
 import { OpenaiMessagesService } from 'src/modules/openai/services/messages/openai.messages.service';
 import { openaiMock } from '../../__mocks__/openai.mock';
 import { Test, TestingModule } from '@nestjs/testing';
-import { ThreadMessage } from 'openai/resources/beta/threads/messages/messages';
 import { UserMessage } from 'src/shared/interfaces/interfaces';
 import { v4 as uuid } from 'uuid';
 import OpenAI from 'openai';
@@ -71,7 +70,7 @@ describe('OpenaiMessagesService', () => {
 
   describe('listMessages', () => {
     let threadId: string;
-    let threadMessages: ThreadMessage[];
+    let threadMessages: OpenAI.Beta.Threads.Messages.Message[];
 
     beforeEach(async () => {
       threadId = uuid();

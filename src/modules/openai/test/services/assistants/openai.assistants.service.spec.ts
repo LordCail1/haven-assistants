@@ -3,17 +3,18 @@ import { OpenaiAssistantsService } from 'src/modules/openai/services/assistants/
 import { Test, TestingModule } from '@nestjs/testing';
 import OpenAI from 'openai';
 import { openaiMock } from '../../__mocks__/openai.mock';
-import {
-  Assistant,
-  AssistantCreateParams,
-  AssistantDeleted,
-  AssistantsPage,
-} from 'openai/resources/beta/assistants/assistants';
+
 import { ListAllAssistantsException } from 'src/modules/openai/exceptions/assistants/list-all-assistants.exception';
 import { CreateAssistantException } from 'src/modules/openai/exceptions/assistants/create-assistant.exception';
 import { DeleteAssistantException } from 'src/modules/openai/exceptions/assistants/delete-assistant.exception';
 import { assistantCreateParamsStub } from '../../stubs/openai.assistantCreateParams.stub';
 import { v4 as uuid } from 'uuid';
+import {
+  Assistant,
+  AssistantCreateParams,
+  AssistantDeleted,
+  AssistantsPage,
+} from 'openai/resources/beta/assistants';
 
 describe('OpenaiAssistantsService', () => {
   let openaiAssistantsService: OpenaiAssistantsService;
