@@ -183,7 +183,7 @@ describe('HavenAiAgentService', () => {
         expect(responseObject.threadId).toEqual(
           generateFollowUpQuestionDto.threadId,
         );
-        expect(responseObject.simplifiedStory).toBeUndefined();
+        expect(responseObject.summarizedStory).toBeUndefined();
       });
     });
 
@@ -222,7 +222,7 @@ describe('HavenAiAgentService', () => {
           await havenAiAgentService.generateFollowUpQuestion(
             generateFollowUpQuestionDto,
           );
-        expect(responseObject.simplifiedStory).toBeDefined();
+        expect(responseObject.summarizedStory).toBeDefined();
         expect(responseObject.isStoryGoodEnough).toBe(true);
         expect(responseObject.threadId).toBeDefined();
         expect(responseObject.response).toBeUndefined();

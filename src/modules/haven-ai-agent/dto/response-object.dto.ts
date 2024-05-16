@@ -4,6 +4,6 @@
 export class ResponseObject {
   isStoryGoodEnough: boolean;
   response?: string;
-  simplifiedStory?: string;
+  summarizedStory?: string;
   threadId: string;
 }

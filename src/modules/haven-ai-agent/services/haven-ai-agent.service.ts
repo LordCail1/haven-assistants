@@ -186,22 +186,22 @@ export class HavenAiAgentService {
       this.myLogger.debug('is story good enough', isStoryGoodEnough);
 
       if (isStoryGoodEnough) {
-        const summarizedStory =
+        const preSummarizedStory =
           await this.assistantsSummarizerService.createSummary(threadId);
-        this.myLogger.test('summarized story', summarizedStory);
+        this.myLogger.test('summarized story', preSummarizedStory);
 
-        const simplifiedStory =
+        const summarizedStory =
           await this.assistantsLanguageSimplifierService.simplifyLanguage(
-            summarizedStory,
+            preSummarizedStory,
           );
-        this.myLogger.test('simplified story', simplifiedStory);
+        this.myLogger.test('simplified story', summarizedStory);
 
         await this.openaiThreadsService.deleteThread(threadId);
         this.myLogger.log('thread deleted', threadId);
 
         return {
           isStoryGoodEnough: true,
-          simplifiedStory,
+          summarizedStory,
           threadId,
         };
       }
