@@ -8,6 +8,7 @@ export const threadCreateParamsMessageStub = (): ThreadCreateParams.Message => {
   return {
     content: 'message',
     role: 'user',
-    file_ids: [],
+    attachments: null,
+    metadata: null,
   };
 };

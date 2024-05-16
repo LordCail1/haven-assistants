@@ -1,4 +1,3 @@
-import { Assistant } from 'openai/resources/beta/assistants/assistants';
 import { AssistantName } from '../../enums/enums';
 import { AssistantsAbstractService } from '../assistants.abstract.service';
 import { DetermineStoryGoodEnoughException } from '../../exceptions/terminator/determine-story-good-enough.exception';
@@ -8,11 +7,12 @@ import { ImageNotTextException } from 'src/shared/exceptions/image-not-text.exce
 import { InitializingAssistantException } from '../../exceptions/initializing-assistant.exception';
 import { Injectable } from '@nestjs/common';
 import { Run } from 'openai/resources/beta/threads/runs/runs';
-import { ThreadMessage } from 'openai/resources/beta/threads/messages/messages';
 import {
   Thread,
   ThreadCreateParams,
 } from 'openai/resources/beta/threads/threads';
+import OpenAI from 'openai';
+import { Assistant } from 'openai/resources/beta/assistants';
 
 /**
  * This service is responsible for the 'Terminator' assistant.
@@ -40,7 +40,7 @@ export class AssistantsTerminatorService extends AssistantsAbstractService {
 
       const instructions = await this.loadInstructions(
         __dirname,
-        'v4/instructions.txt',
+        'v5/instructions.txt',
         AssistantName.TERMINATOR,
       );
 
@@ -54,7 +54,7 @@ export class AssistantsTerminatorService extends AssistantsAbstractService {
         name: AssistantName.TERMINATOR,
         description,
         instructions,
-        model: Gpt_Models.GPT_4_TURBO_1106_PREVIEW,
+        model: Gpt_Models.GPT_VERSION,
       });
     } catch (error) {
       throw new InitializingAssistantException(AssistantName.TERMINATOR, error);
@@ -68,12 +68,16 @@ export class AssistantsTerminatorService extends AssistantsAbstractService {
    */
   async determineIfStoryIsGoodEnough(threadId: string): Promise<boolean> {
     try {
-      const threadMessages: ThreadMessage[] =
+      const threadMessages: OpenAI.Beta.Threads.Messages.Message[] =
         await this.openaiMessagesService.listMessages(threadId);
       this.myLogger.debug(
         'determineIfStoryIsGoodEnough - Questioner thread messages retrieved',
         threadMessages,
       );
+
+      if (threadMessages.length >= 17) {
+        return true;
+      }
 
       const messages: ThreadCreateParams.Message[] =
         this.helpersService.convertThreadMessagesToMessageArray(threadMessages);
@@ -101,7 +105,7 @@ export class AssistantsTerminatorService extends AssistantsAbstractService {
         'determineIfStoryIsGoodEnough - Terminator run retrieved',
       );
 
-      const terminatorThreadMessages: ThreadMessage[] =
+      const terminatorThreadMessages: OpenAI.Beta.Threads.Messages.Message[] =
         await this.openaiMessagesService.listMessages(thread.id);
       this.myLogger.debug(
         'determineIfStoryIsGoodEnough - Terminator thread messages retrieved',
@@ -113,10 +117,18 @@ export class AssistantsTerminatorService extends AssistantsAbstractService {
           terminatorThreadMessages[0].content[0].text.value;
         this.myLogger.log(terminatorResponseText);
 
-        const isStoryGoodEnough: boolean =
-          this.helpersService.parseTerminatorResponseForJson(
-            terminatorResponseText,
+        let isStoryGoodEnough: boolean = false;
+        try {
+          isStoryGoodEnough =
+            this.helpersService.parseTerminatorResponseForJson(
+              terminatorResponseText,
+            );
+        } catch (error) {
+          this.myLogger.error(
+            'Error parsing terminator response. Skipping.',
+            error,
           );
+        }
         this.myLogger.debug(
           'determineIfStoryIsGoodEnough - isStoryGoodEnough',
           isStoryGoodEnough,

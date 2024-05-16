@@ -1,10 +1,10 @@
-import { Assistant } from 'openai/resources/beta/assistants/assistants';
 import { AssistantName } from '../../enums/enums';
 import { AssistantsAbstractService } from '../assistants.abstract.service';
 import { GettingAssistantException } from '../../exceptions/geting-assistant.exception';
 import { Gpt_Models } from 'src/modules/openai/enums/enums';
 import { Injectable } from '@nestjs/common';
 import { InitializingAssistantException } from '../../exceptions/initializing-assistant.exception';
+import { Assistant } from 'openai/resources/beta/assistants';
 
 /**
  * This service is responsible for the 'Questioner' assistant.
@@ -26,13 +26,14 @@ export class AssistantsQuestionerService extends AssistantsAbstractService {
     try {
       const assistant: Assistant | undefined =
         await this.checkIfAssistantAlreadyExists(AssistantName.QUESTIONER);
+
       if (assistant) {
         await this.openaiAssistantsService.deleteAssistant(assistant.id);
       }
 
       const instructions = await this.loadInstructions(
         __dirname,
-        'v4/instructions.txt',
+        'v5/instructions.txt',
         AssistantName.QUESTIONER,
       );
 
@@ -46,7 +47,7 @@ export class AssistantsQuestionerService extends AssistantsAbstractService {
         name: AssistantName.QUESTIONER,
         description,
         instructions,
-        model: Gpt_Models.GPT_4_TURBO_1106_PREVIEW,
+        model: Gpt_Models.GPT_VERSION,
       });
     } catch (error) {
       throw new InitializingAssistantException(AssistantName.QUESTIONER, error);

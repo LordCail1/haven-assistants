@@ -4,4 +4,5 @@ export enum AssistantName {
   REFUGEE = 'Refugee',
   SUMMARIZER = 'Summarizer',
   TERMINATOR = 'Terminator',
+  LANGUAGE_SIMPLIFIER = 'Language Simplifier',
 }

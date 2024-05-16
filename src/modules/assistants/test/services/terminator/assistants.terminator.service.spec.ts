@@ -1,4 +1,3 @@
-import { Assistant } from 'openai/resources/beta/assistants/assistants';
 import { AssistantsTerminatorService } from 'src/modules/assistants/services/terminator/assistants.terminator.service';
 import { GettingAssistantException } from 'src/modules/assistants/exceptions/geting-assistant.exception';
 import { HelpersService } from 'src/modules/helpers/services/helpers.service';
@@ -17,15 +16,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import OpenAI from 'openai';
 import { v4 as uuid } from 'uuid';
 import { DetermineStoryGoodEnoughException } from 'src/modules/assistants/exceptions/terminator/determine-story-good-enough.exception';
-import {
-  MessageContentImageFile,
-  ThreadMessage,
-} from 'openai/resources/beta/threads/messages/messages';
-import { ImageNotTextException } from 'src/shared/exceptions/image-not-text.exception';
-import { messageContentImageFileStub } from 'src/modules/openai/test/stubs/openai.messageContentImageFile.stub';
-import { threadMessageStub } from 'src/modules/openai/test/stubs/openai.threadMessage.stub';
 import { MyLogger } from 'src/modules/logger/services/logger.service';
 import { MyLoggerMock } from 'src/modules/logger/test/__mocks__/logger.service.mock';
+import { Assistant } from 'openai/resources/beta/assistants';
 
 describe('AssistantsAbstractService', () => {
   let assistantsTerminatorService: AssistantsTerminatorService;
@@ -264,36 +257,6 @@ describe('AssistantsAbstractService', () => {
           );
         } catch (error) {
           expect(error).toBeInstanceOf(DetermineStoryGoodEnoughException);
-        }
-      });
-
-      it('if the first message is not text', async () => {
-        jest
-          .spyOn(openaiMessagesService, 'listMessages')
-          .mockImplementationOnce((threadId: string) => {
-            const firstMessageContentImageFile: MessageContentImageFile =
-              messageContentImageFileStub();
-            const firstThreadMessage: ThreadMessage = threadMessageStub(
-              firstMessageContentImageFile,
-            );
-            firstThreadMessage.thread_id = threadId;
-
-            const secondMessageContentImageFile: MessageContentImageFile =
-              messageContentImageFileStub();
-            const secondThreadMessage: ThreadMessage = threadMessageStub(
-              secondMessageContentImageFile,
-            );
-            secondThreadMessage.thread_id = threadId;
-
-            return Promise.resolve([firstThreadMessage, secondThreadMessage]);
-          });
-
-        try {
-          await assistantsTerminatorService.determineIfStoryIsGoodEnough(
-            uuid(),
-          );
-        } catch (error) {
-          expect(error).toBeInstanceOf(ImageNotTextException);
         }
       });
     });

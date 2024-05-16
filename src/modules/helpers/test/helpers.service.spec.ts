@@ -3,8 +3,8 @@ import { ImageNotTextException } from 'src/shared/exceptions/image-not-text.exce
 import { IsNotBooleanException } from '../exceptions/is-not-boolean.exception';
 import { ParseLastResponseForJsonException } from '../exceptions/parse-last-response-for-json.exception';
 import { Test, TestingModule } from '@nestjs/testing';
-import { ThreadMessage } from 'openai/resources/beta/threads/messages/messages';
 import { v4 as uuid } from 'uuid';
+import OpenAI from 'openai';
 
 describe('HelpersService', () => {
   let helpersService: HelpersService;
@@ -63,7 +63,7 @@ describe('HelpersService', () => {
   });
 
   describe('convertThreadMessagesToMessageArray', () => {
-    let threadMessages: ThreadMessage[];
+    let threadMessages: OpenAI.Beta.Threads.Messages.Message[];
 
     it('should work if the thread messages are in the right format', async () => {
       threadMessages = [
@@ -80,7 +80,11 @@ describe('HelpersService', () => {
             },
           ],
           created_at: new Date().getTime(),
-          file_ids: [],
+          attachments: null,
+          completed_at: null,
+          incomplete_at: null,
+          incomplete_details: null,
+          status: 'completed',
           object: 'thread.message',
           run_id: uuid(),
           thread_id: uuid(),
@@ -109,7 +113,11 @@ describe('HelpersService', () => {
             },
           ],
           created_at: new Date().getTime(),
-          file_ids: [],
+          attachments: null,
+          completed_at: null,
+          incomplete_at: null,
+          incomplete_details: null,
+          status: 'completed',
           object: 'thread.message',
           run_id: uuid(),
           thread_id: uuid(),

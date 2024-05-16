@@ -3,7 +3,7 @@ import OpenAI from 'openai';
 import { Assistant } from 'openai/resources/beta/assistants';
 import { GettingAssistantException } from 'src/modules/assistants/exceptions/geting-assistant.exception';
 import { InitializingAssistantException } from 'src/modules/assistants/exceptions/initializing-assistant.exception';
-import { AssistantsRefugeeService } from 'src/modules/assistants/services/refugee/assistants.refugee.service';
+import { AssistantsCriteriaParserService } from 'src/modules/assistants/services/criteriaParser/assistants.criteriaParser.service';
 import { HelpersService } from 'src/modules/helpers/services/helpers.service';
 import { helpersServiceMock } from 'src/modules/helpers/test/__mocks__/helpers.service.mock';
 import { MyLogger } from 'src/modules/logger/services/logger.service';
@@ -18,8 +18,8 @@ import { openaiMock } from 'src/modules/openai/test/__mocks__/openai.mock';
 import { openaiRunsServiceMock } from 'src/modules/openai/test/__mocks__/runs/openai.runs.service.mock';
 import { openaiThreadsServiceMock } from 'src/modules/openai/test/__mocks__/threads/openai.threads.service.mock';
 
-describe('AssistantsRefugeeService', () => {
-  let assistantsRefugeeService: AssistantsRefugeeService;
+describe('AssistantsCriteriaParserService', () => {
+  let assistantsCriteriaParserService: AssistantsCriteriaParserService;
   let openai: OpenAI;
   let helpersService: HelpersService;
   let openaiAssistantsService: OpenaiAssistantsService;
@@ -31,7 +31,7 @@ describe('AssistantsRefugeeService', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        AssistantsRefugeeService,
+        AssistantsCriteriaParserService,
         { provide: OpenAI, useValue: openaiMock },
         { provide: HelpersService, useValue: helpersServiceMock },
         {
@@ -45,9 +45,10 @@ describe('AssistantsRefugeeService', () => {
       ],
     }).compile();
 
-    assistantsRefugeeService = module.get<AssistantsRefugeeService>(
-      AssistantsRefugeeService,
-    );
+    assistantsCriteriaParserService =
+      module.get<AssistantsCriteriaParserService>(
+        AssistantsCriteriaParserService,
+      );
     openai = module.get<OpenAI>(OpenAI);
     helpersService = module.get<HelpersService>(HelpersService);
     openaiAssistantsService = module.get<OpenaiAssistantsService>(
@@ -68,7 +69,7 @@ describe('AssistantsRefugeeService', () => {
   });
 
   it('should be defined', () => {
-    expect(assistantsRefugeeService).toBeDefined();
+    expect(assistantsCriteriaParserService).toBeDefined();
     expect(openai).toBeDefined();
     expect(helpersService).toBeDefined();
     expect(openaiAssistantsService).toBeDefined();
@@ -82,8 +83,8 @@ describe('AssistantsRefugeeService', () => {
     let assistant: Assistant;
 
     it('should return the assistant', async () => {
-      await assistantsRefugeeService.initializeAssistant();
-      assistant = assistantsRefugeeService.getAssistant();
+      await assistantsCriteriaParserService.initializeAssistant();
+      assistant = assistantsCriteriaParserService.getAssistant();
       expect(assistant).toBeDefined();
     });
 
@@ -91,9 +92,9 @@ describe('AssistantsRefugeeService', () => {
       jest
         .spyOn(openaiAssistantsService, 'createAssistant')
         .mockResolvedValueOnce(undefined);
-      await assistantsRefugeeService.initializeAssistant();
+      await assistantsCriteriaParserService.initializeAssistant();
       try {
-        assistant = assistantsRefugeeService.getAssistant();
+        assistant = assistantsCriteriaParserService.getAssistant();
       } catch (error) {
         expect(error).toBeInstanceOf(GettingAssistantException);
       }
@@ -102,7 +103,7 @@ describe('AssistantsRefugeeService', () => {
 
   describe('initializeAssistant', () => {
     it('should call all of the correct services', async () => {
-      await assistantsRefugeeService.initializeAssistant();
+      await assistantsCriteriaParserService.initializeAssistant();
 
       expect(openaiAssistantsService.listAllAssistants).toHaveBeenCalledTimes(
         1,
@@ -117,7 +118,7 @@ describe('AssistantsRefugeeService', () => {
           .spyOn(openaiAssistantsService, 'deleteAssistant')
           .mockRejectedValueOnce(new Error());
         try {
-          await assistantsRefugeeService.initializeAssistant();
+          await assistantsCriteriaParserService.initializeAssistant();
         } catch (error) {
           expect(error).toBeInstanceOf(InitializingAssistantException);
         }
@@ -129,7 +130,7 @@ describe('AssistantsRefugeeService', () => {
           .mockRejectedValueOnce(new Error());
 
         try {
-          await assistantsRefugeeService.initializeAssistant();
+          await assistantsCriteriaParserService.initializeAssistant();
         } catch (error) {
           expect(error).toBeInstanceOf(InitializingAssistantException);
         }
